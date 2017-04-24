@@ -1,6 +1,16 @@
-'From Cuis 5.0 of 7 November 2016 [latest update: #3068] on 20 April 2017 at 9:56:31 pm'!
+'From Cuis 5.0 of 7 November 2016 [latest update: #3068] on 24 April 2017 at 4:10:07 pm'!
 'Description Please enter a description for this package'!
 !provides: 'Idiom-Exercise' 1 0!
+!classDefinition: #NotFound category: #'Idiom-Exercise'!
+Error subclass: #NotFound
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Idiom-Exercise'!
+!classDefinition: 'NotFound class' category: #'Idiom-Exercise'!
+NotFound class
+	instanceVariableNames: ''!
+
 !classDefinition: #IdiomTest category: #'Idiom-Exercise'!
 TestCase subclass: #IdiomTest
 	instanceVariableNames: ''
@@ -22,98 +32,71 @@ CustomerBook class
 	instanceVariableNames: ''!
 
 
-!IdiomTest methodsFor: 'Tools' stamp: 'JI 4/20/2017 21:06:26'!
-calculateMillisecondsOfMethod: aMethodInAClousure isLessThan: someMilliseconds 
-	"calculates the time of the method in the closure in less than someMilliseconds"
-
+!IdiomTest methodsFor: 'testing' stamp: 'JK 4/22/2017 16:09:46'!
+assert: aBlock shouldNotTakeMoreThan: milliseconds
 
 	| millisecondsBeforeRunning millisecondsAfterRunning |
 	
 	millisecondsBeforeRunning := Time millisecondClockValue.
-	aMethodInAClousure value.
+	aBlock value.
 	millisecondsAfterRunning := Time millisecondClockValue.
 	
-	self assert: (millisecondsAfterRunning-millisecondsBeforeRunning) < someMilliseconds ! !
+	self assert: (millisecondsAfterRunning-millisecondsBeforeRunning) < milliseconds 
+	
+! !
 
-!IdiomTest methodsFor: 'testing' stamp: 'HAW 4/14/2017 16:56:37'!
+!IdiomTest methodsFor: 'testing' stamp: 'JI 4/24/2017 16:04:52'!
+assert: aBlock withError: errorType conditionWithErrorAsArgument: argumentCondition conditionWithoutArgument: simpleCondition
+
+	[ aBlock value. 
+		self fail ]
+		on: errorType
+		do: [ :anError |
+			self assert: (argumentCondition  value: anError) .
+			self assert: simpleCondition value ].
+	
+	
+! !
+
+!IdiomTest methodsFor: 'testing' stamp: 'JK 4/22/2017 16:11:45'!
 test01AddingCustomerShouldNotTakeMoreThan50Milliseconds
 
-	| customerBook millisecondsBeforeRunning millisecondsAfterRunning |
+	| customerBook |
 	
 	customerBook := CustomerBook  new.
 	
-	millisecondsBeforeRunning := Time millisecondClockValue.
-	customerBook addCustomerNamed: 'John Lennon'.
-	millisecondsAfterRunning := Time millisecondClockValue.
-	
-	self assert: (millisecondsAfterRunning-millisecondsBeforeRunning) < 50 
+	self assert: [ customerBook addCustomerNamed: 'John Lennon' ] shouldNotTakeMoreThan: 50.
 	
 ! !
 
-!IdiomTest methodsFor: 'testing' stamp: 'JI 4/20/2017 21:35:15'!
-test01AddingCustomerShouldNotTakeMoreThan50MillisecondsV2
-
-	| customerBook aBlock |
-	
-	customerBook := CustomerBook  new.
-	
-	aBlock _ [  	customerBook addCustomerNamed: 'John Lennon'. ].
-
-	self calculateMillisecondsOfMethod: aBlock isLessThan: 50.
- 
-	
-! !
-
-!IdiomTest methodsFor: 'testing' stamp: 'HernanWilkinson 4/11/2016 20:29'!
+!IdiomTest methodsFor: 'testing' stamp: 'JK 4/22/2017 16:12:54'!
 test02RemovingCustomerShouldNotTakeMoreThan100Milliseconds
 
-	| customerBook millisecondsBeforeRunning millisecondsAfterRunning paulMcCartney |
+	| customerBook paulMcCartney |
 	
 	customerBook := CustomerBook  new.
 	paulMcCartney := 'Paul McCartney'.
 	
 	customerBook addCustomerNamed: paulMcCartney.
 	  
-	millisecondsBeforeRunning := Time millisecondClockValue.
-	customerBook removeCustomerNamed: paulMcCartney.
-	millisecondsAfterRunning := Time millisecondClockValue.
-	
-	self assert: (millisecondsAfterRunning-millisecondsBeforeRunning) < 100 
+	self assert: [customerBook removeCustomerNamed: paulMcCartney] shouldNotTakeMoreThan: 100 
 	
 ! !
 
-!IdiomTest methodsFor: 'testing' stamp: 'JI 4/20/2017 21:32:34'!
-test02RemovingCustomerShouldNotTakeMoreThan100MillisecondsV2
-
-	| aCustomerBook paulMcCartney aBlock |
-	
-		
-	aCustomerBook := CustomerBook  new.
-	paulMcCartney := 'Paul McCartney'.
-	
-	aCustomerBook addCustomerNamed: paulMcCartney.
-	  
-
-	aBlock _ [ aCustomerBook removeCustomerNamed: paulMcCartney. ].
-
-	self calculateMillisecondsOfMethod: aBlock  isLessThan: 100.
-! !
-
-!IdiomTest methodsFor: 'testing' stamp: 'HernanWilkinson 5/9/2012 18:12'!
-test03CanNotAddACustomerWithEmptyName 
+!IdiomTest methodsFor: 'testing' stamp: 'JI 4/24/2017 16:08:36'!
+test03CanNotAddACustomerWithEmptyName
 
 	| customerBook |
 			
 	customerBook := CustomerBook new.
 
-	[ customerBook addCustomerNamed: ''.
-	self fail ]
-		on: Error 
-		do: [ :anError | 
-			self assert: anError messageText = CustomerBook customerCanNotBeEmptyErrorMessage.
-			self assert: customerBook isEmpty ]! !
+	self assert: [ customerBook addCustomerNamed: ''] 
+		withError: Error
+		conditionWithErrorAsArgument: [ :arg |
+			 arg messageText = CustomerBook customerCanNotBeEmptyErrorMessage ]
+		conditionWithoutArgument: [ customerBook  isEmpty ]! !
 
-!IdiomTest methodsFor: 'testing' stamp: 'HernanWilkinson 5/16/2012 16:50'!
+!IdiomTest methodsFor: 'testing' stamp: 'JI 4/24/2017 16:08:23'!
 test04CanNotRemoveAndInvalidCustomer
 	
 	| customerBook johnLennon |
@@ -122,13 +105,10 @@ test04CanNotRemoveAndInvalidCustomer
 	johnLennon := 'John Lennon'.
 	customerBook addCustomerNamed: johnLennon.
 	
-	[ customerBook removeCustomerNamed: 'Paul McCartney'.
-	self fail ]
-		on: NotFound 
-		do: [ :anError | 
-			self assert: customerBook numberOfCustomers = 1.
-			self assert: (customerBook includesCustomerNamed: johnLennon) ]
-! !
+	self assert: [ customerBook removeCustomerNamed: 'Paul McCartney']
+		withError: NotFound
+		conditionWithErrorAsArgument: [ :arg | customerBook numberOfCustomers = 1]
+		conditionWithoutArgument: [ customerBook includesCustomerNamed: johnLennon ]! !
 
 !CustomerBook methodsFor: 'customer management' stamp: 'HernanWilkinson 7/6/2011 17:42'!
 addCustomerNamed: aName
