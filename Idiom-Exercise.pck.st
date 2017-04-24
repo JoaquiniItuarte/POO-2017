@@ -1,6 +1,6 @@
-'From Cuis 5.0 of 7 November 2016 [latest update: #3068] on 24 April 2017 at 4:10:07 pm'!
+'From Cuis 5.0 of 7 November 2016 [latest update: #3068] on 24 April 2017 at 5:46:27 pm'!
 'Description Please enter a description for this package'!
-!provides: 'Idiom-Exercise' 1 0!
+!provides: 'Idiom-Exercise' 1 1!
 !classDefinition: #NotFound category: #'Idiom-Exercise'!
 Error subclass: #NotFound
 	instanceVariableNames: ''
@@ -58,6 +58,20 @@ assert: aBlock withError: errorType conditionWithErrorAsArgument: argumentCondit
 	
 ! !
 
+!IdiomTest methodsFor: 'testing' stamp: 'JI 4/24/2017 17:37:14'!
+assert: aBlock withError: errorType conditionsWithErrorAsArgument: listOfConditionsWithErrorArgument conditionsWithoutArgument: listOfConditionsWithoutErrorArgument
+
+	[ aBlock value. 
+		self fail ]
+		on: errorType
+		do: [ :anError |
+			listOfConditionsWithErrorArgument do: [ :cond | self assert: (cond value: anError) ].
+			listOfConditionsWithoutErrorArgument do: [ :cond | self assert: (cond value) ].
+			].
+	
+	
+! !
+
 !IdiomTest methodsFor: 'testing' stamp: 'JK 4/22/2017 16:11:45'!
 test01AddingCustomerShouldNotTakeMoreThan50Milliseconds
 
@@ -83,8 +97,29 @@ test02RemovingCustomerShouldNotTakeMoreThan100Milliseconds
 	
 ! !
 
-!IdiomTest methodsFor: 'testing' stamp: 'JI 4/24/2017 16:08:36'!
+!IdiomTest methodsFor: 'testing' stamp: 'JI 4/24/2017 17:37:54'!
 test03CanNotAddACustomerWithEmptyName
+
+	| customerBook listOfConditionsWithErrorArg listOfConditionsWithoutErrorArg |
+			
+	customerBook := CustomerBook new.
+
+	'Creates a list of conditions that use the error as an argument'.
+	listOfConditionsWithErrorArg _ OrderedCollection new.
+	listOfConditionsWithErrorArg add: [ :arg | 
+		arg messageText = CustomerBook customerCanNotBeEmptyErrorMessage ].
+		
+	'Creates a list of conditions that do not use arguments'.
+	listOfConditionsWithoutErrorArg _ OrderedCollection new.
+	listOfConditionsWithoutErrorArg add: [ customerBook isEmpty ].
+	
+	self assert: [ customerBook addCustomerNamed: ''] 
+		withError: Error
+		conditionsWithErrorAsArgument: listOfConditionsWithErrorArg 
+		conditionsWithoutArgument: listOfConditionsWithoutErrorArg .! !
+
+!IdiomTest methodsFor: 'testing' stamp: 'JI 4/24/2017 16:25:27'!
+test03CanNotAddACustomerWithEmptyNameV2
 
 	| customerBook |
 			
@@ -96,8 +131,30 @@ test03CanNotAddACustomerWithEmptyName
 			 arg messageText = CustomerBook customerCanNotBeEmptyErrorMessage ]
 		conditionWithoutArgument: [ customerBook  isEmpty ]! !
 
-!IdiomTest methodsFor: 'testing' stamp: 'JI 4/24/2017 16:08:23'!
+!IdiomTest methodsFor: 'testing' stamp: 'JI 4/24/2017 17:31:46'!
 test04CanNotRemoveAndInvalidCustomer
+	
+	| customerBook johnLennon listOfConditionsWithErrorArg listOfConditionsWithoutErrorArg |
+			
+	customerBook := CustomerBook new.
+	johnLennon := 'John Lennon'.
+	customerBook addCustomerNamed: johnLennon.
+	
+	'Creates a list of conditions that use the error as an argument'.
+	listOfConditionsWithErrorArg _ OrderedCollection new.
+	
+	'Creates a list of conditions that do not use the error as an argument'.
+	listOfConditionsWithoutErrorArg _ OrderedCollection new.
+	listOfConditionsWithoutErrorArg add: [ customerBook numberOfCustomers = 1]; 
+										add: [ customerBook includesCustomerNamed: johnLennon ].
+	
+	self assert: [ customerBook addCustomerNamed: ''] 
+		withError: Error
+		conditionsWithErrorAsArgument: listOfConditionsWithErrorArg 
+		conditionsWithoutArgument: listOfConditionsWithoutErrorArg .! !
+
+!IdiomTest methodsFor: 'testing' stamp: 'JI 4/24/2017 16:25:36'!
+test04CanNotRemoveAndInvalidCustomerV2
 	
 	| customerBook johnLennon |
 			
