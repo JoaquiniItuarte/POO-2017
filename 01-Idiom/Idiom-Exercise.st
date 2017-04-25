@@ -1,17 +1,36 @@
+'From Cuis 5.0 of 7 November 2016 [latest update: #3068] on 25 April 2017 at 12:12:44 pm'!
+'Description Please enter a description for this package'!
+!provides: 'Idiom-Exercise' 1 2!
 !classDefinition: #NotFound category: #'Idiom-Exercise'!
 Error subclass: #NotFound
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Idiom-Exercise'!
+!classDefinition: 'NotFound class' category: #'Idiom-Exercise'!
+NotFound class
+	instanceVariableNames: ''!
 
-
 !classDefinition: #IdiomTest category: #'Idiom-Exercise'!
 TestCase subclass: #IdiomTest
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Idiom-Exercise'!
+!classDefinition: 'IdiomTest class' category: #'Idiom-Exercise'!
+IdiomTest class
+	instanceVariableNames: ''!
+
+!classDefinition: #CustomerBook category: #'Idiom-Exercise'!
+Object subclass: #CustomerBook
+	instanceVariableNames: 'customers'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Idiom-Exercise'!
+!classDefinition: 'CustomerBook class' category: #'Idiom-Exercise'!
+CustomerBook class
+	instanceVariableNames: ''!
+
 
 !IdiomTest methodsFor: 'testing' stamp: 'JK 4/22/2017 16:09:46'!
 assert: aBlock shouldNotTakeMoreThan: milliseconds
@@ -26,16 +45,19 @@ assert: aBlock shouldNotTakeMoreThan: milliseconds
 	
 ! !
 
-!IdiomTest methodsFor: 'testing' stamp: 'JK 4/22/2017 19:21:32'!
-assert: aBlock withError: errorType checkMessage: msgType withConditions: aListOfBlocksOfConditions
+!IdiomTest methodsFor: 'testing' stamp: 'JI 4/24/2017 17:37:14'!
+assert: aBlock withError: errorType conditionsWithErrorAsArgument: listOfConditionsWithErrorArgument conditionsWithoutArgument: listOfConditionsWithoutErrorArgument
 
 	[ aBlock value. 
 		self fail ]
 		on: errorType
 		do: [ :anError |
-			self assert: anError messageText = msgType.
-			self assert: aListOfBlocksOfConditions value ]
-	! !
+			listOfConditionsWithErrorArgument do: [ :cond | self assert: (cond value: anError) ].
+			listOfConditionsWithoutErrorArgument do: [ :cond | self assert: (cond value) ].
+			].
+	
+	
+! !
 
 !IdiomTest methodsFor: 'testing' stamp: 'JK 4/22/2017 16:11:45'!
 test01AddingCustomerShouldNotTakeMoreThan50Milliseconds
@@ -62,59 +84,48 @@ test02RemovingCustomerShouldNotTakeMoreThan100Milliseconds
 	
 ! !
 
-!IdiomTest methodsFor: 'testing' stamp: 'JK 4/22/2017 19:20:16'!
+!IdiomTest methodsFor: 'testing' stamp: 'JI 4/24/2017 17:37:54'!
 test03CanNotAddACustomerWithEmptyName
 
-	| customerBook |
+	| customerBook listOfConditionsWithErrorArg listOfConditionsWithoutErrorArg |
 			
 	customerBook := CustomerBook new.
 
+	'Creates a list of conditions that use the error as an argument'.
+	listOfConditionsWithErrorArg _ OrderedCollection new.
+	listOfConditionsWithErrorArg add: [ :arg | 
+		arg messageText = CustomerBook customerCanNotBeEmptyErrorMessage ].
+		
+	'Creates a list of conditions that do not use arguments'.
+	listOfConditionsWithoutErrorArg _ OrderedCollection new.
+	listOfConditionsWithoutErrorArg add: [ customerBook isEmpty ].
+	
 	self assert: [ customerBook addCustomerNamed: ''] 
-		withError: Error 
-		checkMessage: CustomerBook customerCanNotBeEmptyErrorMessage
-		withConditions:  [ customerBook  isEmpty ]! !
+		withError: Error
+		conditionsWithErrorAsArgument: listOfConditionsWithErrorArg 
+		conditionsWithoutArgument: listOfConditionsWithoutErrorArg .! !
 
-!IdiomTest methodsFor: 'testing' stamp: 'JK 4/22/2017 19:21:47'!
+!IdiomTest methodsFor: 'testing' stamp: 'JI 4/24/2017 17:31:46'!
 test04CanNotRemoveAndInvalidCustomer
 	
-	| customerBook johnLennon |
+	| customerBook johnLennon listOfConditionsWithErrorArg listOfConditionsWithoutErrorArg |
 			
 	customerBook := CustomerBook new.
 	johnLennon := 'John Lennon'.
 	customerBook addCustomerNamed: johnLennon.
 	
-	self assert: [ customerBook removeCustomerNamed: 'Paul McCartney']
-		withError: NotFound 
-		checkMessage: nil
-		withConditions:[customerBook numberOfCustomers = 1.
-			(customerBook includesCustomerNamed: johnLennon) ]
-! !
-
-
-!classDefinition: #CustomerBook category: #'Idiom-Exercise'!
-Object subclass: #CustomerBook
-	instanceVariableNames: 'customers'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'Idiom-Exercise'!
-
-!CustomerBook methodsFor: 'testing' stamp: 'HernanWilkinson 7/6/2011 17:56'!
-includesCustomerNamed: aName
-
-	^customers includes: aName ! !
-
-!CustomerBook methodsFor: 'testing' stamp: 'HernanWilkinson 7/6/2011 17:48'!
-isEmpty
+	'Creates a list of conditions that use the error as an argument'.
+	listOfConditionsWithErrorArg _ OrderedCollection new.
 	
-	^customers isEmpty  ! !
-
-
-!CustomerBook methodsFor: 'initialization' stamp: 'HernanWilkinson 7/6/2011 17:42'!
-initialize
-
-	super initialize.
-	customers := OrderedCollection new! !
-
+	'Creates a list of conditions that do not use the error as an argument'.
+	listOfConditionsWithoutErrorArg _ OrderedCollection new.
+	listOfConditionsWithoutErrorArg add: [ customerBook numberOfCustomers = 1]; 
+										add: [ customerBook includesCustomerNamed: johnLennon ].
+	
+	self assert: [ customerBook addCustomerNamed: ''] 
+		withError: Error
+		conditionsWithErrorAsArgument: listOfConditionsWithErrorArg 
+		conditionsWithoutArgument: listOfConditionsWithoutErrorArg .! !
 
 !CustomerBook methodsFor: 'customer management' stamp: 'HernanWilkinson 7/6/2011 17:42'!
 addCustomerNamed: aName
@@ -123,6 +134,22 @@ addCustomerNamed: aName
 	(customers includes: aName) ifTrue: [ self signalCustomerAlreadyExists ].
 	
 	customers add: aName ! !
+
+!CustomerBook methodsFor: 'testing' stamp: 'HernanWilkinson 7/6/2011 17:56'!
+includesCustomerNamed: aName
+
+	^customers includes: aName ! !
+
+!CustomerBook methodsFor: 'initialization' stamp: 'HernanWilkinson 7/6/2011 17:42'!
+initialize
+
+	super initialize.
+	customers := OrderedCollection new! !
+
+!CustomerBook methodsFor: 'testing' stamp: 'HernanWilkinson 7/6/2011 17:48'!
+isEmpty
+	
+	^customers isEmpty  ! !
 
 !CustomerBook methodsFor: 'customer management' stamp: 'HernanWilkinson 7/6/2011 17:56'!
 numberOfCustomers
@@ -143,12 +170,6 @@ signalCustomerAlreadyExists
 signalCustomerNameCannotBeEmpty 
 
 	self error: self class customerCanNotBeEmptyErrorMessage ! !
-
-"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
-
-!classDefinition: 'CustomerBook class' category: #'Idiom-Exercise'!
-CustomerBook class
-	instanceVariableNames: ''!
 
 !CustomerBook class methodsFor: 'error messages' stamp: 'HernanWilkinson 7/6/2011 17:57'!
 customerAlreadyExistsErrorMessage
