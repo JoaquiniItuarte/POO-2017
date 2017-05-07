@@ -137,6 +137,14 @@ test10CanNotTopWhenThereAreNoObjectsInTheStack
 ! !
 
 
+!classDefinition: #NameOfSubclass category: #'Stack-Exercise'!
+Object subclass: #NameOfSubclass
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Stack-Exercise'!
+
+
 !classDefinition: #OOStack category: #'Stack-Exercise'!
 Object subclass: #OOStack
 	instanceVariableNames: 'stack'
@@ -144,9 +152,17 @@ Object subclass: #OOStack
 	poolDictionaries: ''
 	category: 'Stack-Exercise'!
 
-!OOStack methodsFor: 'as yet unclassified' stamp: 'JI 5/7/2017 13:43:17'!
+!OOStack methodsFor: 'initialization' stamp: 'JI 5/7/2017 13:43:08'!
+initialize
+	super initialize .
+	
+	stack _ OrderedCollection new.! !
+
+
+!OOStack methodsFor: 'inspecting' stamp: 'JI 5/7/2017 13:43:17'!
 isEmpty
 	^ stack isEmpty ! !
+
 
 !OOStack methodsFor: 'as yet unclassified' stamp: 'JI 5/7/2017 14:32:22'!
 pop
@@ -161,9 +177,9 @@ pop
 push: anElement 
 	stack addLast: anElement.! !
 
-!OOStack methodsFor: 'as yet unclassified' stamp: 'JI 5/7/2017 12:28:28'!
+!OOStack methodsFor: 'as yet unclassified' stamp: 'jak 5/7/2017 17:28:49'!
 size
-	^1! !
+	^stack size ! !
 
 !OOStack methodsFor: 'as yet unclassified' stamp: 'JI 5/7/2017 14:33:21'!
 top
@@ -171,13 +187,6 @@ top
 	stack isEmpty ifTrue: [ self error: self class stackEmptyErrorDescription ].
 	^ stack at: stack size 
 	! !
-
-
-!OOStack methodsFor: 'initialization' stamp: 'JI 5/7/2017 13:43:08'!
-initialize
-	super initialize .
-	
-	stack _ OrderedCollection new.! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
