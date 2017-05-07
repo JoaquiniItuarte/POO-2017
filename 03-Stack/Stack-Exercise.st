@@ -105,7 +105,7 @@ test08CanNotPopWhenThereAreNoObjectsInTheStack
 		
 ! !
 
-!OOStackTest methodsFor: 'test' stamp: 'HAW 4/14/2017 22:48:36'!
+!OOStackTest methodsFor: 'test' stamp: 'JI 5/7/2017 14:29:31'!
 test09CanNotPopWhenThereAreNoObjectsInTheStackAndTheStackHadObjects
 
 	| stack  |
@@ -139,22 +139,45 @@ test10CanNotTopWhenThereAreNoObjectsInTheStack
 
 !classDefinition: #OOStack category: #'Stack-Exercise'!
 Object subclass: #OOStack
-	instanceVariableNames: 'lastElement'
+	instanceVariableNames: 'stack'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Stack-Exercise'!
 
-!OOStack methodsFor: 'as yet unclassified' stamp: 'JAK 5/5/2017 09:20:07'!
+!OOStack methodsFor: 'as yet unclassified' stamp: 'JI 5/7/2017 13:43:17'!
 isEmpty
-	^ lastElement isNil ! !
+	^ stack isEmpty ! !
 
-!OOStack methodsFor: 'as yet unclassified' stamp: 'JAK 5/5/2017 09:25:17'!
+!OOStack methodsFor: 'as yet unclassified' stamp: 'JI 5/7/2017 14:32:22'!
 pop
-	lastElement := nil! !
+	
+	| lastElement |
+	stack isEmpty ifTrue: [ self error: self class stackEmptyErrorDescription ] .
+	lastElement _ self top.
+	stack removeLast .
+	^ lastElement! !
 
-!OOStack methodsFor: 'as yet unclassified' stamp: 'JAK 5/5/2017 09:19:06'!
+!OOStack methodsFor: 'as yet unclassified' stamp: 'JI 5/7/2017 13:44:57'!
 push: anElement 
-	lastElement := anElement.! !
+	stack addLast: anElement.! !
+
+!OOStack methodsFor: 'as yet unclassified' stamp: 'JI 5/7/2017 12:28:28'!
+size
+	^1! !
+
+!OOStack methodsFor: 'as yet unclassified' stamp: 'JI 5/7/2017 14:33:21'!
+top
+
+	stack isEmpty ifTrue: [ self error: self class stackEmptyErrorDescription ].
+	^ stack at: stack size 
+	! !
+
+
+!OOStack methodsFor: 'initialization' stamp: 'JI 5/7/2017 13:43:08'!
+initialize
+	super initialize .
+	
+	stack _ OrderedCollection new.! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
