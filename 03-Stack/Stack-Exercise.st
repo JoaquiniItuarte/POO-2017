@@ -137,12 +137,70 @@ test10CanNotTopWhenThereAreNoObjectsInTheStack
 ! !
 
 
-!classDefinition: #NameOfSubclass category: #'Stack-Exercise'!
-Object subclass: #NameOfSubclass
-	instanceVariableNames: ''
+!classDefinition: #Container category: #'Stack-Exercise'!
+Object subclass: #Container
+	instanceVariableNames: 'element'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Stack-Exercise'!
+
+!Container methodsFor: 'initialization' stamp: 'JI 5/8/2017 15:22:52'!
+initializeWith: anObject
+
+	element _ anObject ! !
+
+
+!Container methodsFor: 'elementObtainer' stamp: 'JI 5/8/2017 15:25:26'!
+element
+	^element ! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'Container class' category: #'Stack-Exercise'!
+Container class
+	instanceVariableNames: ''!
+
+!Container class methodsFor: 'instance creation' stamp: 'JI 5/8/2017 15:22:23'!
+initializeWith: anObject
+
+	^self new initializeWith: anObject 
+	! !
+
+
+!classDefinition: #EmptyContainer category: #'Stack-Exercise'!
+Object subclass: #EmptyContainer
+	instanceVariableNames: 'element'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Stack-Exercise'!
+
+!EmptyContainer methodsFor: 'initialization' stamp: 'JI 5/8/2017 15:26:53'!
+initialize
+
+! !
+
+
+!EmptyContainer methodsFor: 'elementObtainer' stamp: 'JI 5/8/2017 15:47:53'!
+element
+
+	(self error: (self class  stackEmptyErrorDescription ) )! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'EmptyContainer class' category: #'Stack-Exercise'!
+EmptyContainer class
+	instanceVariableNames: ''!
+
+!EmptyContainer class methodsFor: 'instance creation' stamp: 'JI 5/8/2017 15:29:42'!
+initialize
+
+	^self new initialize ! !
+
+
+!EmptyContainer class methodsFor: 'error handling' stamp: 'JI 5/8/2017 15:48:10'!
+stackEmptyErrorDescription
+
+	^OOStack stackEmptyErrorDescription! !
 
 
 !classDefinition: #OOStack category: #'Stack-Exercise'!
@@ -152,41 +210,43 @@ Object subclass: #OOStack
 	poolDictionaries: ''
 	category: 'Stack-Exercise'!
 
-!OOStack methodsFor: 'initialization' stamp: 'JI 5/7/2017 13:43:08'!
+!OOStack methodsFor: 'as yet unclassified' stamp: 'JI 5/8/2017 15:38:23'!
+isEmpty
+	^ (self size  = 0)! !
+
+!OOStack methodsFor: 'as yet unclassified' stamp: 'JI 5/8/2017 15:37:57'!
+pop
+	
+	| lastContainer lastElement |
+	
+	lastContainer _ stack removeLast.
+	lastElement _ (lastContainer element).
+	
+	
+	^ lastElement! !
+
+!OOStack methodsFor: 'as yet unclassified' stamp: 'JI 5/8/2017 15:37:17'!
+push: anElement 
+	stack addLast: (Container initializeWith: anElement).! !
+
+!OOStack methodsFor: 'as yet unclassified' stamp: 'JI 5/8/2017 15:38:12'!
+size
+	^ stack size-1! !
+
+!OOStack methodsFor: 'as yet unclassified' stamp: 'JI 5/8/2017 15:41:20'!
+top
+
+	^ (stack at: (stack size)) element
+	! !
+
+
+!OOStack methodsFor: 'initialization' stamp: 'JI 5/8/2017 15:35:52'!
 initialize
 	super initialize .
 	
-	stack _ OrderedCollection new.! !
-
-
-!OOStack methodsFor: 'inspecting' stamp: 'JI 5/7/2017 13:43:17'!
-isEmpty
-	^ stack isEmpty ! !
-
-
-!OOStack methodsFor: 'as yet unclassified' stamp: 'JI 5/7/2017 14:32:22'!
-pop
+	stack _ OrderedCollection new.
 	
-	| lastElement |
-	stack isEmpty ifTrue: [ self error: self class stackEmptyErrorDescription ] .
-	lastElement _ self top.
-	stack removeLast .
-	^ lastElement! !
-
-!OOStack methodsFor: 'as yet unclassified' stamp: 'JI 5/7/2017 13:44:57'!
-push: anElement 
-	stack addLast: anElement.! !
-
-!OOStack methodsFor: 'as yet unclassified' stamp: 'jak 5/7/2017 17:28:49'!
-size
-	^stack size ! !
-
-!OOStack methodsFor: 'as yet unclassified' stamp: 'JI 5/7/2017 14:33:21'!
-top
-
-	stack isEmpty ifTrue: [ self error: self class stackEmptyErrorDescription ].
-	^ stack at: stack size 
-	! !
+	stack add: EmptyContainer initialize .! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -198,3 +258,5 @@ OOStack class
 stackEmptyErrorDescription
 	
 	^ 'Stack is empty'! !
+
+EmptyContainer initialize!
