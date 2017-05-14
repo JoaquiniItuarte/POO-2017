@@ -72,7 +72,7 @@ Object subclass: #GameOfLife
 	poolDictionaries: ''
 	category: 'GOL'!
 
-!GameOfLife methodsFor: 'as yet unclassified' stamp: 'HAW 5/12/2017 09:10:31'!
+!GameOfLife methodsFor: 'as yet unclassified' stamp: 'JI 5/14/2017 17:16:53'!
 deadCells
 	
 	| deadCells |
@@ -80,7 +80,7 @@ deadCells
 	deadCells _ OrderedCollection new.
 	0 to: size x do: [ :x |
 		0 to: size y do: [ :y |
-			(aliveCells includes: x@y) not ifTrue: [ deadCells add: x@y]]].
+			(self isDeadAt: x@y ) ifTrue: [ deadCells add: x@y]]].
 	^deadCells ! !
 
 !GameOfLife methodsFor: 'as yet unclassified' stamp: 'HAW 5/11/2017 21:11:17'!
