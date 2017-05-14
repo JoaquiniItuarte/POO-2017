@@ -5,8 +5,8 @@ TestCase subclass: #GOLTest
 	poolDictionaries: ''
 	category: 'GOL'!
 
-!GOLTest methodsFor: 'as yet unclassified' stamp: 'HAW 5/11/2017 21:14:07'!
-test01AliveCellWithLessThanTwoAliveNeighDies
+!GOLTest methodsFor: 'as yet unclassified' stamp: 'JI 5/14/2017 16:23:28'!
+test01AliveCellWithLessThanTwoAliveNeighboursDies
 
 	|gameOfLife |
 	
@@ -15,8 +15,8 @@ test01AliveCellWithLessThanTwoAliveNeighDies
 	
 	self assert: (gameOfLife isDeadAt: 1@1) ! !
 
-!GOLTest methodsFor: 'as yet unclassified' stamp: 'HAW 5/11/2017 21:14:14'!
-test02AliveCellWithTwoAliveNeighStaysAlive
+!GOLTest methodsFor: 'as yet unclassified' stamp: 'JI 5/14/2017 16:23:24'!
+test02AliveCellWithTwoAliveNeighboursStaysAlive
 
 	|gameOfLife |
 	
@@ -25,8 +25,8 @@ test02AliveCellWithTwoAliveNeighStaysAlive
 	
 	self deny: (gameOfLife isDeadAt: 1@1) ! !
 
-!GOLTest methodsFor: 'as yet unclassified' stamp: 'HAW 5/11/2017 21:14:19'!
-test03AliveCellWithThreeAliveNeighStaysAlive
+!GOLTest methodsFor: 'as yet unclassified' stamp: 'JI 5/14/2017 16:23:20'!
+test03AliveCellWithThreeAliveNeighboursStaysAlive
 
 	|gameOfLife |
 	
@@ -35,8 +35,8 @@ test03AliveCellWithThreeAliveNeighStaysAlive
 	
 	self deny: (gameOfLife isDeadAt: 1@1) ! !
 
-!GOLTest methodsFor: 'as yet unclassified' stamp: 'HAW 5/11/2017 21:14:25'!
-test04AliveCellWithMoreThanThreeAliveNeighDies
+!GOLTest methodsFor: 'as yet unclassified' stamp: 'JI 5/14/2017 16:23:13'!
+test04AliveCellWithMoreThanThreeAliveNeighboursDies
 
 	|gameOfLife |
 	
@@ -45,8 +45,8 @@ test04AliveCellWithMoreThanThreeAliveNeighDies
 	
 	self assert: (gameOfLife isDeadAt: 1@1) ! !
 
-!GOLTest methodsFor: 'as yet unclassified' stamp: 'HAW 5/11/2017 21:01:13'!
-test05DeadCellWithThreeAliveNeighResurects
+!GOLTest methodsFor: 'as yet unclassified' stamp: 'JI 5/14/2017 16:22:51'!
+test05DeadCellWithThreeAliveNeighboursResurrects
 
 	|gameOfLife |
 	
@@ -55,8 +55,8 @@ test05DeadCellWithThreeAliveNeighResurects
 	
 	self deny: (gameOfLife isDeadAt: 1@1) ! !
 
-!GOLTest methodsFor: 'as yet unclassified' stamp: 'HAW 5/11/2017 20:59:58'!
-test06CreateCellOutsideBounds
+!GOLTest methodsFor: 'as yet unclassified' stamp: 'JI 5/14/2017 16:22:26'!
+test06CreateCellOutsideBoundsRaisesError
 
 	self 
 		should: [ GameOfLife withLiveCells: { 2@0. 1@0. 1@4 } withSize: 3@3 ]
@@ -97,18 +97,12 @@ hasToSurvive: aCell
 	
 	^numberOfAliveNeighbours = 2 or:  [numberOfAliveNeighbours = 3]! !
 
-!GameOfLife methodsFor: 'as yet unclassified' stamp: 'HAW 5/9/2017 20:53:16'!
-initializeWith: aCollectionOfAliveCells 
+!GameOfLife methodsFor: 'as yet unclassified' stamp: 'JI 5/14/2017 16:46:01'!
+initializeWith: aCollectionOfAliveCells withSize: aPointAsUpperRightCorner
 
-	aliveCells := aCollectionOfAliveCells ! !
-
-!GameOfLife methodsFor: 'as yet unclassified' stamp: 'HAW 5/11/2017 20:40:27'!
-initializeWith: aCollectionOfAliveCells withSize: aSize
-
-	size := aSize.
+	size := aPointAsUpperRightCorner .
 	aliveCells := aCollectionOfAliveCells.
-	(aliveCells allSatisfy: [:aCell |
-		(aCell x between: 0 and: size x) and: [ aCell y between: 0 and: size y]]) ifFalse: [ self error: 'celda fuera de rango' ]! !
+	! !
 
 !GameOfLife methodsFor: 'as yet unclassified' stamp: 'HAW 5/10/2017 10:28:24'!
 isDeadAt: aCell
@@ -132,12 +126,18 @@ numberOfAliveNeighboursOf: aCell
 GameOfLife class
 	instanceVariableNames: ''!
 
-!GameOfLife class methodsFor: 'as yet unclassified' stamp: 'HAW 5/9/2017 20:52:29'!
-withLiveCells: aCollectionOfAliveCells
-
-	^self new initializeWith: aCollectionOfAliveCells ! !
-
-!GameOfLife class methodsFor: 'as yet unclassified' stamp: 'HAW 5/11/2017 20:38:14'!
-withLiveCells: aCollectionOfAliveCells withSize: aPoint 
+!GameOfLife class methodsFor: 'as yet unclassified' stamp: 'JI 5/14/2017 16:47:04'!
+cells: aCollectionOfAliveCells areInRange: aPointAsUpperRightCorner
 	
-	^self new initializeWith: aCollectionOfAliveCells withSize: aPoint ! !
+	(aCollectionOfAliveCells allSatisfy: [:aCell |
+			(aCell x between: 0 and: aPointAsUpperRightCorner x) 
+				and: [ aCell y between: 0 and: aPointAsUpperRightCorner y]]) 
+		ifFalse: [ self error: 'celda fuera de rango' ].! !
+
+!GameOfLife class methodsFor: 'as yet unclassified' stamp: 'JI 5/14/2017 16:46:12'!
+withLiveCells: aCollectionOfAliveCells withSize: aPointAsUpperRightCorner 
+	
+	self cells: aCollectionOfAliveCells areInRange: aPointAsUpperRightCorner   .
+	
+	
+	^self new initializeWith: aCollectionOfAliveCells withSize: aPointAsUpperRightCorner ! !
