@@ -147,18 +147,19 @@ nextGeneration
 GameOfLife class
 	instanceVariableNames: ''!
 
-!GameOfLife class methodsFor: 'as yet unclassified' stamp: 'JI 5/14/2017 16:47:04'!
-cells: aCollectionOfAliveCells areInRange: aPointAsUpperRightCorner
-	
-	(aCollectionOfAliveCells allSatisfy: [:aCell |
-			(aCell x between: 0 and: aPointAsUpperRightCorner x) 
-				and: [ aCell y between: 0 and: aPointAsUpperRightCorner y]]) 
-		ifFalse: [ self error: 'celda fuera de rango' ].! !
-
-!GameOfLife class methodsFor: 'as yet unclassified' stamp: 'JI 5/14/2017 16:46:12'!
+!GameOfLife class methodsFor: 'initialization' stamp: 'JI 5/14/2017 16:46:12'!
 withLiveCells: aCollectionOfAliveCells withSize: aPointAsUpperRightCorner 
 	
 	self cells: aCollectionOfAliveCells areInRange: aPointAsUpperRightCorner   .
 	
 	
 	^self new initializeWith: aCollectionOfAliveCells withSize: aPointAsUpperRightCorner ! !
+
+
+!GameOfLife class methodsFor: 'private' stamp: 'JI 5/14/2017 16:47:04'!
+cells: aCollectionOfAliveCells areInRange: aPointAsUpperRightCorner
+	
+	(aCollectionOfAliveCells allSatisfy: [:aCell |
+			(aCell x between: 0 and: aPointAsUpperRightCorner x) 
+				and: [ aCell y between: 0 and: aPointAsUpperRightCorner y]]) 
+		ifFalse: [ self error: 'celda fuera de rango' ].! !
