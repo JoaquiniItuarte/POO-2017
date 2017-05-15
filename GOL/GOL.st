@@ -1,74 +1,74 @@
 !classDefinition: #GOLTest category: #GOL!
 TestCase subclass: #GOLTest
-	instanceVariableNames: 'cellAtOneOne cellAtThreeThree cellAtTwoZero cellAtOneZero cellAtOneTwo cellAtZeroOne cellAtZeroZero cellAtOneFour pointAtThreeThree pointAtOneOne'
+	instanceVariableNames: 'cellAtOneOne cellAtThreeThree cellAtTwoZero cellAtOneZero cellAtOneTwo cellAtZeroOne cellAtZeroZero cellAtOneFour pointAtThreeThree pointAtOneOne boardFromZeroZeroToThreeThree'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'GOL'!
 
-!GOLTest methodsFor: 'tests' stamp: 'JAK 5/15/2017 08:58:36'!
+!GOLTest methodsFor: 'tests' stamp: 'JAK 5/15/2017 12:22:06'!
 test01AliveCellWithLessThanTwoAliveNeighboursDies
 
 	|gameOfLife |
 	
-	gameOfLife := GameOfLife withLiveCells: { cellAtOneOne }  withSize: pointAtThreeThree.
+	gameOfLife := GameOfLife withLiveCells: { cellAtOneOne }  withBoard: boardFromZeroZeroToThreeThree .
 	gameOfLife nextGeneration.
 	
 	self assert: (gameOfLife isDeadAt: pointAtOneOne ) ! !
 
-!GOLTest methodsFor: 'tests' stamp: 'JAK 5/15/2017 08:59:55'!
+!GOLTest methodsFor: 'tests' stamp: 'JAK 5/15/2017 12:44:24'!
 test02AliveCellWithTwoAliveNeighboursStaysAlive
 
 	|gameOfLife |
 	
 	gameOfLife := GameOfLife withLiveCells: { cellAtOneOne . cellAtTwoZero . cellAtOneZero . }  
-	withSize: pointAtThreeThree .
+	withBoard: boardFromZeroZeroToThreeThree .
 	gameOfLife nextGeneration.
 	
 	self deny: (gameOfLife isDeadAt: pointAtOneOne ) ! !
 
-!GOLTest methodsFor: 'tests' stamp: 'JAK 5/15/2017 09:01:15'!
+!GOLTest methodsFor: 'tests' stamp: 'JAK 5/15/2017 12:44:20'!
 test03AliveCellWithThreeAliveNeighboursStaysAlive
 
 	|gameOfLife |
 	
 	gameOfLife := GameOfLife withLiveCells: { cellAtOneOne . cellAtTwoZero . cellAtOneZero . cellAtOneTwo . }  
-	withSize: pointAtThreeThree .
+	withBoard: boardFromZeroZeroToThreeThree .
 	gameOfLife nextGeneration.
 	
 	self deny: (gameOfLife isDeadAt: pointAtOneOne ) ! !
 
-!GOLTest methodsFor: 'tests' stamp: 'JAK 5/15/2017 09:01:49'!
+!GOLTest methodsFor: 'tests' stamp: 'JAK 5/15/2017 12:44:17'!
 test04AliveCellWithMoreThanThreeAliveNeighboursDies
 
 	|gameOfLife |
 	
 	gameOfLife := GameOfLife withLiveCells: { cellAtOneOne . cellAtTwoZero . cellAtOneZero . cellAtOneTwo . cellAtZeroOne } 
-	withSize: pointAtThreeThree .
+	withBoard: boardFromZeroZeroToThreeThree .
 	gameOfLife nextGeneration.
 	
 	self assert: (gameOfLife isDeadAt: pointAtOneOne ) ! !
 
-!GOLTest methodsFor: 'tests' stamp: 'JAK 5/15/2017 09:02:18'!
+!GOLTest methodsFor: 'tests' stamp: 'JAK 5/15/2017 12:39:04'!
 test05DeadCellWithThreeAliveNeighboursResurrects
 
 	|gameOfLife |
 	
-	gameOfLife := GameOfLife withLiveCells: { cellAtTwoZero . cellAtOneZero . cellAtZeroZero } withSize: pointAtThreeThree .
+	gameOfLife := GameOfLife withLiveCells: { cellAtTwoZero . cellAtOneZero . cellAtZeroZero } withBoard: boardFromZeroZeroToThreeThree .
 	gameOfLife nextGeneration.
 	
 	self deny: (gameOfLife isDeadAt: pointAtOneOne ) ! !
 
-!GOLTest methodsFor: 'tests' stamp: 'JAK 5/15/2017 09:02:44'!
+!GOLTest methodsFor: 'tests' stamp: 'JAK 5/15/2017 12:38:54'!
 test06CreateCellOutsideBoundsRaisesError
 
 	self 
-		should: [ GameOfLife withLiveCells: { cellAtTwoZero . cellAtOneZero . cellAtOneFour } withSize: pointAtThreeThree ]
+		should: [ GameOfLife withLiveCells: { cellAtTwoZero . cellAtOneZero . cellAtOneFour } withBoard: boardFromZeroZeroToThreeThree ]
 		raise: Error - MessageNotUnderstood 
 		withExceptionDo: [ :anError |
 			self assert: anError messageText equals: 'celda fuera de rango' ]! !
 
 
-!GOLTest methodsFor: 'setUp' stamp: 'JAK 5/15/2017 08:58:01'!
+!GOLTest methodsFor: 'setUp' stamp: 'JAK 5/15/2017 12:38:24'!
 setUp
 	cellAtOneOne := 1@1.
 	cellAtThreeThree := 3@3.
@@ -80,32 +80,33 @@ setUp
 	cellAtZeroZero := 0@0.
 	cellAtOneFour := 1@4.
 	pointAtThreeThree := 3@3.
-	pointAtOneOne := 1@1.! !
+	pointAtOneOne := 1@1.
+	boardFromZeroZeroToThreeThree := Rectangle left: 0 right: 3 top: 0 bottom: 3! !
 
 
 !classDefinition: #GameOfLife category: #GOL!
 Object subclass: #GameOfLife
-	instanceVariableNames: 'aliveCells size'
+	instanceVariableNames: 'aliveCells size theBoard'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'GOL'!
 
-!GameOfLife methodsFor: 'initialization' stamp: 'JI 5/14/2017 16:46:01'!
-initializeWith: aCollectionOfAliveCells withSize: aPointAsUpperRightCorner
+!GameOfLife methodsFor: 'initialization' stamp: 'JAK 5/15/2017 12:23:19'!
+initializeWith: aCollectionOfAliveCells withBoard: aBoard
 
-	size := aPointAsUpperRightCorner .
+	theBoard := aBoard .
 	aliveCells := aCollectionOfAliveCells.
 	! !
 
 
-!GameOfLife methodsFor: 'private' stamp: 'JI 5/14/2017 17:16:53'!
+!GameOfLife methodsFor: 'private' stamp: 'JAK 5/15/2017 12:44:31'!
 deadCells
 	
 	| deadCells |
 	
 	deadCells _ OrderedCollection new.
-	0 to: size x do: [ :x |
-		0 to: size y do: [ :y |
+	0 to: theBoard right do: [ :x |
+		0 to: theBoard bottom do: [ :y |
 			(self isDeadAt: x@y ) ifTrue: [ deadCells add: x@y]]].
 	^deadCells ! !
 
@@ -147,19 +148,8 @@ nextGeneration
 GameOfLife class
 	instanceVariableNames: ''!
 
-!GameOfLife class methodsFor: 'initialization' stamp: 'JI 5/14/2017 16:46:12'!
-withLiveCells: aCollectionOfAliveCells withSize: aPointAsUpperRightCorner 
-	
-	self cells: aCollectionOfAliveCells areInRange: aPointAsUpperRightCorner   .
-	
-	
-	^self new initializeWith: aCollectionOfAliveCells withSize: aPointAsUpperRightCorner ! !
+!GameOfLife class methodsFor: 'initialization' stamp: 'JAK 5/15/2017 12:32:46'!
+withLiveCells: aCollectionOfAliveCells withBoard: aBoard 
 
-
-!GameOfLife class methodsFor: 'private' stamp: 'JI 5/14/2017 16:47:04'!
-cells: aCollectionOfAliveCells areInRange: aPointAsUpperRightCorner
-	
-	(aCollectionOfAliveCells allSatisfy: [:aCell |
-			(aCell x between: 0 and: aPointAsUpperRightCorner x) 
-				and: [ aCell y between: 0 and: aPointAsUpperRightCorner y]]) 
-		ifFalse: [ self error: 'celda fuera de rango' ].! !
+	(aCollectionOfAliveCells allSatisfy: [:aCell | aBoard containsPoint: aCell]) ifFalse: [ self error: 'celda fuera de rango' ].
+	^self new initializeWith: aCollectionOfAliveCells withBoard: aBoard ! !
