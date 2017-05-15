@@ -1,6 +1,6 @@
 !classDefinition: #GOLTest category: #GOL!
 TestCase subclass: #GOLTest
-	instanceVariableNames: 'cellAtOneOne cellAtThreeThree cellAtTwoZero cellAtOneZero cellAtOneTwo cellAtZeroOne cellAtZeroZero cellAtOneFour pointAtThreeThree pointAtOneOne boardFromZeroZeroToThreeThree'
+	instanceVariableNames: 'cellAtOneOne cellAtThreeThree cellAtTwoZero cellAtOneZero cellAtOneTwo cellAtZeroOne cellAtZeroZero cellAtOneFour pointAtThreeThree pointAtOneOne boardFromZeroZeroToThreeThree pointAtOneFour'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'GOL'!
@@ -67,8 +67,19 @@ test06CreateCellOutsideBoundsRaisesError
 		withExceptionDo: [ :anError |
 			self assert: anError messageText equals: 'celda fuera de rango' ]! !
 
+!GOLTest methodsFor: 'tests' stamp: 'JAK 5/15/2017 16:11:40'!
+test07AskForACellOutsideBoundsRaisesError
 
-!GOLTest methodsFor: 'setUp' stamp: 'JAK 5/15/2017 12:38:24'!
+	| gameOfLife |
+	gameOfLife := GameOfLife withLiveCells: { cellAtTwoZero . cellAtOneZero } withBoard: boardFromZeroZeroToThreeThree.
+	self 
+		should: [ gameOfLife isDeadAt: pointAtOneFour]
+		raise: Error - MessageNotUnderstood 
+		withExceptionDo: [ :anError |
+			self assert: anError messageText equals: 'posicion fuera de rango' ]! !
+
+
+!GOLTest methodsFor: 'setUp' stamp: 'JAK 5/15/2017 16:07:17'!
 setUp
 	cellAtOneOne := 1@1.
 	cellAtThreeThree := 3@3.
@@ -81,6 +92,7 @@ setUp
 	cellAtOneFour := 1@4.
 	pointAtThreeThree := 3@3.
 	pointAtOneOne := 1@1.
+	pointAtOneFour := 1@4.
 	boardFromZeroZeroToThreeThree := Rectangle left: 0 right: 3 top: 0 bottom: 3! !
 
 
@@ -99,14 +111,14 @@ initializeWith: aCollectionOfAliveCells withBoard: aBoard
 	! !
 
 
-!GameOfLife methodsFor: 'private' stamp: 'JAK 5/15/2017 12:44:31'!
+!GameOfLife methodsFor: 'private' stamp: 'JAK 5/15/2017 16:25:28'!
 deadCells
 	
 	| deadCells |
 	
 	deadCells _ OrderedCollection new.
-	0 to: theBoard right do: [ :x |
-		0 to: theBoard bottom do: [ :y |
+	0 to: theBoard right - 1 do: [ :x |
+		0 to: theBoard bottom -1 do: [ :y |
 			(self isDeadAt: x@y ) ifTrue: [ deadCells add: x@y]]].
 	^deadCells ! !
 
@@ -130,8 +142,10 @@ numberOfAliveNeighboursOf: aCell
 	^(aCell eightNeighbors intersection: aliveCells) size! !
 
 
-!GameOfLife methodsFor: 'inspecting' stamp: 'HAW 5/10/2017 10:28:24'!
+!GameOfLife methodsFor: 'inspecting' stamp: 'JAK 5/15/2017 16:10:09'!
 isDeadAt: aCell
+
+	(theBoard containsPoint: aCell ) ifFalse: [self error: 'posicion fuera de rango'].
 
 	^(aliveCells includes: aCell) not! !
 
