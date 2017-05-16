@@ -153,16 +153,11 @@ Object subclass: #BoardOfCells
 	poolDictionaries: ''
 	category: 'GOL'!
 
-!BoardOfCells methodsFor: 'accessing' stamp: 'JI 5/16/2017 14:54:15'!
+!BoardOfCells methodsFor: 'accessing' stamp: 'JAK 5/16/2017 16:05:25'!
 aliveCellsPoints
 	
-	| somePoints |
-	
-	somePoints _ OrderedCollection new.
-	
-	self allPointsOfTheBoard do: [ :aPoint | (self cellAt: aPoint) ifAliveGetAddedTo: somePoints asPoint: aPoint ].
-	
-	^somePoints ! !
+	^self allPointsOfTheBoard select: [ :aPoint | (self cellAt: aPoint ) isAlive ].
+ ! !
 
 !BoardOfCells methodsFor: 'accessing' stamp: 'JI 5/16/2017 15:06:24'!
 allPointsOfTheBoard
@@ -173,17 +168,10 @@ cellAt: aPoint
 	
 	^matrix elementAt: aPoint! !
 
-!BoardOfCells methodsFor: 'accessing' stamp: 'JI 5/16/2017 14:53:28'!
+!BoardOfCells methodsFor: 'accessing' stamp: 'JAK 5/16/2017 16:05:48'!
 deadCellPoints
 
-	| somePoints |
-	
-	somePoints _ OrderedCollection new.
-	
-	
-	self allPointsOfTheBoard do: [ :aPoint | (self cellAt: aPoint) ifDeadGetAddedTo: somePoints asPoint: aPoint ].
-	
-	^somePoints ! !
+	^self allPointsOfTheBoard difference: (self aliveCellsPoints ).! !
 
 !BoardOfCells methodsFor: 'accessing' stamp: 'JI 5/16/2017 15:04:50'!
 upperRightCorner
