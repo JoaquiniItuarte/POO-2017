@@ -5,8 +5,8 @@ TestCase subclass: #GOLTest
 	poolDictionaries: ''
 	category: 'GOL'!
 
-!GOLTest methodsFor: 'tests' stamp: 'JI 5/15/2017 19:07:07'!
-test000CreateGameWithNoAliveCells
+!GOLTest methodsFor: 'tests' stamp: 'JI 5/16/2017 01:08:14'!
+test01CreateGameWithNoAliveCells
 	
 	| aGameOfLife tmp |
 	
@@ -15,8 +15,8 @@ test000CreateGameWithNoAliveCells
 	tmp _ (aGameOfLife aliveCellsPoints) .
 	self assert: tmp isEmpty .! !
 
-!GOLTest methodsFor: 'tests' stamp: 'JI 5/15/2017 19:07:31'!
-test001CreateGameWithSomeAliveCells
+!GOLTest methodsFor: 'tests' stamp: 'JI 5/16/2017 01:08:08'!
+test02CreateGameWithSomeAliveCells
 	
 	| aGameOfLife |
 	
@@ -24,8 +24,8 @@ test001CreateGameWithSomeAliveCells
 	
 	self assert: (aGameOfLife aliveCellsPoints size = 2) .! !
 
-!GOLTest methodsFor: 'tests' stamp: 'JI 5/15/2017 19:07:51'!
-test01AliveCellWithLessThanTwoAliveNeighboursDies
+!GOLTest methodsFor: 'tests' stamp: 'JI 5/16/2017 01:08:02'!
+test03AliveCellWithLessThanTwoAliveNeighboursDies
 
 	|gameOfLife |
 	
@@ -34,8 +34,8 @@ test01AliveCellWithLessThanTwoAliveNeighboursDies
 	
 	self assert: (gameOfLife isDeadAt: point1x1 ) ! !
 
-!GOLTest methodsFor: 'tests' stamp: 'JI 5/15/2017 19:09:18'!
-test02AliveCellWithTwoAliveNeighboursStaysAlive
+!GOLTest methodsFor: 'tests' stamp: 'JI 5/16/2017 01:07:56'!
+test04AliveCellWithTwoAliveNeighboursStaysAlive
 
 	|gameOfLife |
 	
@@ -44,8 +44,8 @@ test02AliveCellWithTwoAliveNeighboursStaysAlive
 	
 	self deny: (gameOfLife isDeadAt: point2x2) ! !
 
-!GOLTest methodsFor: 'tests' stamp: 'JI 5/15/2017 19:10:48'!
-test03AliveCellWithThreeAliveNeighboursStaysAlive
+!GOLTest methodsFor: 'tests' stamp: 'JI 5/16/2017 01:07:34'!
+test05AliveCellWithThreeAliveNeighboursStaysAlive
 
 	|gameOfLife |
 	
@@ -54,8 +54,8 @@ test03AliveCellWithThreeAliveNeighboursStaysAlive
 	
 	self deny: (gameOfLife isDeadAt: point2x2 ) ! !
 
-!GOLTest methodsFor: 'tests' stamp: 'JI 5/15/2017 19:15:50'!
-test04AliveCellWithMoreThanThreeAliveNeighboursDies
+!GOLTest methodsFor: 'tests' stamp: 'JI 5/16/2017 01:07:26'!
+test06AliveCellWithMoreThanThreeAliveNeighboursDies
 
 	|gameOfLife |
 	
@@ -64,8 +64,8 @@ test04AliveCellWithMoreThanThreeAliveNeighboursDies
 	
 	self assert: (gameOfLife isDeadAt: point2x2 ) ! !
 
-!GOLTest methodsFor: 'tests' stamp: 'JI 5/15/2017 19:16:15'!
-test05DeadCellWithThreeAliveNeighboursResurrects
+!GOLTest methodsFor: 'tests' stamp: 'JI 5/16/2017 01:07:20'!
+test07DeadCellWithThreeAliveNeighboursResurrects
 
 	|gameOfLife |
 	
@@ -74,8 +74,8 @@ test05DeadCellWithThreeAliveNeighboursResurrects
 	
 	self deny: (gameOfLife isDeadAt: point2x2 ) ! !
 
-!GOLTest methodsFor: 'tests' stamp: 'JI 5/15/2017 19:17:05'!
-test06CreateCellOutsideBoundsRaisesError
+!GOLTest methodsFor: 'tests' stamp: 'JI 5/16/2017 01:07:13'!
+test08CreateCellOutsideBoundsRaisesError
 
 	self 
 		should: [ GameOfLife withLiveCellsAt: {point1x2 . point2x1 .point1x3. } withBoardWithUpperRightCornerAt: point2x2. ]
@@ -83,8 +83,8 @@ test06CreateCellOutsideBoundsRaisesError
 		withExceptionDo: [ :anError |
 			self assert: anError messageText equals: 'celda fuera de rango' ]! !
 
-!GOLTest methodsFor: 'tests' stamp: 'JI 5/15/2017 19:37:21'!
-test07AskForACellOutsideBoundsRaisesError
+!GOLTest methodsFor: 'tests' stamp: 'JI 5/16/2017 01:07:02'!
+test09AskForACellOutsideBoundsRaisesError
 
 	| gameOfLife |
 	
@@ -133,11 +133,7 @@ Object subclass: #BoardOfCells
 	poolDictionaries: ''
 	category: 'GOL'!
 
-!BoardOfCells methodsFor: 'as yet unclassified' stamp: 'JI 5/15/2017 17:55:40'!
-aliveCells
-	self shouldBeImplemented! !
-
-!BoardOfCells methodsFor: 'as yet unclassified' stamp: 'JI 5/15/2017 18:18:24'!
+!BoardOfCells methodsFor: 'accessing' stamp: 'JI 5/16/2017 01:04:48'!
 aliveCellsPoints
 	
 	| somePoints |
@@ -146,45 +142,21 @@ aliveCellsPoints
 	
 	1 to: matrix size do: [ :i | | row |
 		row _ matrix at: i.
-		1 to: row size do: [ :j | | aPoint |
+		1 to: row size do: [ :j | | aPoint aCell |
 			aPoint _ i@j.
-			(self cellIsAliveAt: aPoint )
-			ifTrue: [
-				somePoints add: aPoint.
-				].
+			aCell _ self cellAt: aPoint.
+			aCell ifAliveGetAddedTo: somePoints asPoint: aPoint.
 			].		
 		].
 	
 	^somePoints ! !
 
-!BoardOfCells methodsFor: 'as yet unclassified' stamp: 'JI 5/15/2017 18:55:40'!
-cellIsAliveAt: aPoint 
-	^ ( (matrix at: aPoint x) at: aPoint y) isAlive .! !
+!BoardOfCells methodsFor: 'accessing' stamp: 'JI 5/16/2017 00:59:10'!
+cellAt: aPoint 
+	
+	^(matrix at: (aPoint x) ) at: (aPoint y)! !
 
-!BoardOfCells methodsFor: 'as yet unclassified' stamp: 'JI 5/15/2017 18:37:43'!
-cellIsDeadAt: aPoint 
-	
-	^ (self cellIsAliveAt: aPoint) not! !
-
-!BoardOfCells methodsFor: 'as yet unclassified' stamp: 'JI 5/15/2017 19:40:01'!
-createBoardWithAliveCellsAt: somePoints withBoardWithUpperRightCornerAt: aPoint 
-	
-	upperRightCorner _ aPoint .
-	matrix _ OrderedCollection new .
-	
-	1 to: aPoint x do: [ :i | | row |
-		row _ OrderedCollection new.
-		1 to: aPoint y do: [ :j | | cell |
-			cell _ Cell createDeadCell.
-			row add: cell.
-			].
-		matrix add: row.
-		].
-	
-	self reviveCellsAt: somePoints .
-	! !
-
-!BoardOfCells methodsFor: 'as yet unclassified' stamp: 'JI 5/15/2017 18:36:33'!
+!BoardOfCells methodsFor: 'accessing' stamp: 'JI 5/16/2017 01:04:38'!
 deadCellPoints
 
 	| somePoints |
@@ -193,39 +165,64 @@ deadCellPoints
 	
 	1 to: matrix size do: [ :i | | row |
 		row _ matrix at: i.
-		1 to: row size do: [ :j | | aPoint |
+		1 to: row size do: [ :j | | aPoint aCell |
 			aPoint _ i@j.
-			(self cellIsDeadAt: aPoint )
-			ifTrue: [
-				somePoints add: aPoint.
-				].
+			aCell _ self cellAt: aPoint.
+			aCell ifDeadGetAddedTo: somePoints asPoint: aPoint.
 			].		
 		].
 	
 	^somePoints ! !
 
-!BoardOfCells methodsFor: 'as yet unclassified' stamp: 'JI 5/15/2017 19:45:44'!
+!BoardOfCells methodsFor: 'accessing' stamp: 'JI 5/15/2017 18:43:08'!
+upperRightCorner
+	^upperRightCorner! !
+
+
+!BoardOfCells methodsFor: 'cell status' stamp: 'JI 5/15/2017 18:55:40'!
+cellIsAliveAt: aPoint 
+	^ ( (matrix at: aPoint x) at: aPoint y) isAlive .! !
+
+!BoardOfCells methodsFor: 'cell status' stamp: 'JI 5/15/2017 18:37:43'!
+cellIsDeadAt: aPoint 
+	
+	^ (self cellIsAliveAt: aPoint) not! !
+
+!BoardOfCells methodsFor: 'cell status' stamp: 'JI 5/16/2017 00:28:32'!
 pointIsInBoundaries: aPoint 
 
-	^ 1@1 <= aPoint and: (aPoint <= upperRightCorner )! !
+	^ 1@1 <= aPoint and: [aPoint <= upperRightCorner ].! !
 
-!BoardOfCells methodsFor: 'as yet unclassified' stamp: 'JI 5/15/2017 18:45:11'!
+
+!BoardOfCells methodsFor: 'initialization' stamp: 'JI 5/16/2017 00:52:41'!
+createBoardWithAliveCellsAt: somePoints withBoardWithUpperRightCornerAt: aPoint 
+	
+	upperRightCorner _ aPoint .
+	matrix _ OrderedCollection new .
+	
+	1 to: aPoint x do: [ :i | | row |
+		row _ OrderedCollection new.
+		1 to: aPoint y do: [ :j | | cell |
+			cell _ DeadCell createCell.
+			row add: cell.
+			].
+		matrix add: row.
+		].
+	
+	self reviveCellsAt: somePoints .
+	! !
+
+!BoardOfCells methodsFor: 'initialization' stamp: 'JI 5/16/2017 00:50:13'!
 reviveCellAt: aPoint 
 	
-	| aCell |
+	(matrix at: (aPoint x) ) at: (aPoint y) put: (AliveCell createCell).
 	
-	aCell _ (matrix at: (aPoint x) ) at: (aPoint y) .
-	
-	aCell revive.! !
+	! !
 
-!BoardOfCells methodsFor: 'as yet unclassified' stamp: 'JI 5/15/2017 17:48:32'!
+!BoardOfCells methodsFor: 'initialization' stamp: 'JI 5/15/2017 17:48:32'!
 reviveCellsAt: somePoints
 	
 	somePoints do: [ :aPoint | self reviveCellAt: aPoint ].! !
-
-!BoardOfCells methodsFor: 'as yet unclassified' stamp: 'JI 5/15/2017 18:43:08'!
-upperRightCorner
-	^upperRightCorner! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -233,7 +230,7 @@ upperRightCorner
 BoardOfCells class
 	instanceVariableNames: 'matrix'!
 
-!BoardOfCells class methodsFor: 'as yet unclassified' stamp: 'JI 5/15/2017 17:48:15'!
+!BoardOfCells class methodsFor: 'initialization' stamp: 'JI 5/15/2017 17:48:15'!
 createBoardWithAliveCellsAt: somePoints withBoardWithUpperRightCornerAt: aPoint 
 	
 	^ self new createBoardWithAliveCellsAt: somePoints withBoardWithUpperRightCornerAt: aPoint .! !
@@ -241,27 +238,27 @@ createBoardWithAliveCellsAt: somePoints withBoardWithUpperRightCornerAt: aPoint
 
 !classDefinition: #Cell category: #GOL!
 Object subclass: #Cell
-	instanceVariableNames: 'alive'
+	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'GOL'!
 
-!Cell methodsFor: 'as yet unclassified' stamp: 'JI 5/15/2017 18:16:43'!
-createDeadCell
-
-	alive _ false! !
-
-!Cell methodsFor: 'as yet unclassified' stamp: 'JI 5/15/2017 18:17:22'!
+!Cell methodsFor: 'cell status' stamp: 'JI 5/16/2017 00:46:28'!
 isAlive
-	^ alive ! !
+	self subclassResponsibility ! !
 
-!Cell methodsFor: 'as yet unclassified' stamp: 'JI 5/15/2017 18:37:10'!
+!Cell methodsFor: 'cell status' stamp: 'JI 5/16/2017 00:46:35'!
 isDead
-	^ alive not.! !
+	self subclassResponsibility ! !
 
-!Cell methodsFor: 'as yet unclassified' stamp: 'JI 5/15/2017 18:18:56'!
-revive
-	alive _ true! !
+
+!Cell methodsFor: 'evaluating' stamp: 'JI 5/16/2017 01:05:20'!
+ifAliveGetAddedTo: anOrderedCollection asPoint: aPoint 
+	self subclassResponsibility ! !
+
+!Cell methodsFor: 'evaluating' stamp: 'JI 5/16/2017 01:05:23'!
+ifDeadGetAddedTo: anOrderedCollection asPoint: aPoint 
+	self subclassResponsibility ! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -269,15 +266,90 @@ revive
 Cell class
 	instanceVariableNames: 'alive'!
 
-!Cell class methodsFor: 'as yet unclassified' stamp: 'JI 5/15/2017 18:16:26'!
-createDeadCell
+!Cell class methodsFor: 'initialization' stamp: 'JI 5/16/2017 00:51:12'!
+createCell
 	
-	^self new createDeadCell! !
+	self subclassResponsibility ! !
 
-!Cell class methodsFor: 'as yet unclassified' stamp: 'JI 5/15/2017 17:52:48'!
-revive
+
+!classDefinition: #AliveCell category: #GOL!
+Cell subclass: #AliveCell
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'GOL'!
+
+!AliveCell methodsFor: 'cell status' stamp: 'JI 5/16/2017 00:49:02'!
+isAlive
+	^ true! !
+
+!AliveCell methodsFor: 'cell status' stamp: 'JI 5/16/2017 00:48:56'!
+isDead
+	^ false! !
+
+
+!AliveCell methodsFor: 'evaluating' stamp: 'JI 5/16/2017 01:00:22'!
+getAddedTo: anOrderedCollection asPoint: aPoint 
 	
-	alive _ true! !
+	anOrderedCollection add: aPoint ! !
+
+!AliveCell methodsFor: 'evaluating' stamp: 'JI 5/16/2017 01:05:46'!
+ifAliveGetAddedTo: anOrderedCollection asPoint: aPoint 
+	
+	anOrderedCollection add: aPoint ! !
+
+!AliveCell methodsFor: 'evaluating' stamp: 'JI 5/16/2017 01:05:53'!
+ifDeadGetAddedTo: anOrderedCollection asPoint: aPoint 
+	
+	! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'AliveCell class' category: #GOL!
+AliveCell class
+	instanceVariableNames: 'alive'!
+
+!AliveCell class methodsFor: 'initialization' stamp: 'JI 5/16/2017 00:50:33'!
+createCell
+	
+	^self new ! !
+
+
+!classDefinition: #DeadCell category: #GOL!
+Cell subclass: #DeadCell
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'GOL'!
+
+!DeadCell methodsFor: 'cell status' stamp: 'JI 5/16/2017 00:48:12'!
+isAlive
+	^false! !
+
+!DeadCell methodsFor: 'cell status' stamp: 'JI 5/16/2017 00:48:21'!
+isDead
+	^ true! !
+
+
+!DeadCell methodsFor: 'evaluating' stamp: 'JI 5/16/2017 01:06:06'!
+ifAliveGetAddedTo: anOrderedCollection asPoint: aPoint 
+	! !
+
+!DeadCell methodsFor: 'evaluating' stamp: 'JI 5/16/2017 01:06:22'!
+ifDeadGetAddedTo: anOrderedCollection asPoint: aPoint 
+
+	anOrderedCollection add: aPoint ! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'DeadCell class' category: #GOL!
+DeadCell class
+	instanceVariableNames: 'alive'!
+
+!DeadCell class methodsFor: 'initialization' stamp: 'JI 5/16/2017 00:50:51'!
+createCell
+	
+	^self new ! !
 
 
 !classDefinition: #GameOfLife category: #GOL!
@@ -286,18 +358,6 @@ Object subclass: #GameOfLife
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'GOL'!
-
-
-!GameOfLife methodsFor: 'private' stamp: 'JAK 5/15/2017 16:25:28'!
-deadCells
-	
-	| deadCells |
-	
-	deadCells _ OrderedCollection new.
-	0 to: theBoard right - 1 do: [ :x |
-		0 to: theBoard bottom -1 do: [ :y |
-			(self isDeadAt: x@y ) ifTrue: [ deadCells add: x@y]]].
-	^deadCells ! !
 
 !GameOfLife methodsFor: 'private' stamp: 'HAW 5/11/2017 21:11:17'!
 hasToResurrect: aCell
@@ -322,6 +382,16 @@ numberOfAliveNeighboursOf: aCellPoint
 	
 	^ (eightNeighbours intersection: (self aliveCellsPoints) )  size! !
 
+!GameOfLife methodsFor: 'private' stamp: 'JI 5/15/2017 19:45:08'!
+pointIsInBoundaries: aPoint 
+	
+	^ board pointIsInBoundaries: aPoint .! !
+
+
+!GameOfLife methodsFor: 'inspecting' stamp: 'JI 5/15/2017 18:03:23'!
+aliveCellsPoints
+	
+	^ board aliveCellsPoints! !
 
 !GameOfLife methodsFor: 'inspecting' stamp: 'JI 5/15/2017 19:43:57'!
 isDeadAt: aCellPoint
@@ -350,22 +420,7 @@ nextGeneration
 	! !
 
 
-!GameOfLife methodsFor: 'as yet unclassified' stamp: 'JI 5/15/2017 17:55:33'!
-aliveCells
-	
-	^ board aliveCells! !
-
-!GameOfLife methodsFor: 'as yet unclassified' stamp: 'JI 5/15/2017 18:03:23'!
-aliveCellsPoints
-	
-	^ board aliveCellsPoints! !
-
-!GameOfLife methodsFor: 'as yet unclassified' stamp: 'JI 5/15/2017 19:45:08'!
-pointIsInBoundaries: aPoint 
-	
-	^ board pointIsInBoundaries: aPoint .! !
-
-!GameOfLife methodsFor: 'as yet unclassified' stamp: 'JI 5/15/2017 17:32:57'!
+!GameOfLife methodsFor: 'initialization' stamp: 'JI 5/15/2017 17:32:57'!
 withLiveCellsAt: somePoints withBoardWithUpperRightCornerAt: aPoint 
 	
 	board _ BoardOfCells createBoardWithAliveCellsAt: somePoints withBoardWithUpperRightCornerAt: aPoint ! !
@@ -376,18 +431,18 @@ withLiveCellsAt: somePoints withBoardWithUpperRightCornerAt: aPoint
 GameOfLife class
 	instanceVariableNames: ''!
 
+!GameOfLife class methodsFor: 'initialization' stamp: 'JI 5/15/2017 19:30:34'!
+withLiveCellsAt: anArray withBoardWithUpperRightCornerAt: aPoint 
+	
+	self satisfiesPreconditions: anArray withUpperRightCornerAt: aPoint .
+	
+	^self new withLiveCellsAt: anArray withBoardWithUpperRightCornerAt: aPoint ! !
 
-!GameOfLife class methodsFor: 'as yet unclassified' stamp: 'JI 5/15/2017 19:34:21'!
+
+!GameOfLife class methodsFor: 'preconditions' stamp: 'JI 5/15/2017 19:34:21'!
 satisfiesPreconditions: anArray withUpperRightCornerAt: aPoint 
 	
 	anArray do: [ :aCellPoint | 
 		(1@1 <= aCellPoint and: (aCellPoint <= aPoint ) )
 			ifFalse: [ self error: 'celda fuera de rango' ].
 		].! !
-
-!GameOfLife class methodsFor: 'as yet unclassified' stamp: 'JI 5/15/2017 19:30:34'!
-withLiveCellsAt: anArray withBoardWithUpperRightCornerAt: aPoint 
-	
-	self satisfiesPreconditions: anArray withUpperRightCornerAt: aPoint .
-	
-	^self new withLiveCellsAt: anArray withBoardWithUpperRightCornerAt: aPoint ! !
