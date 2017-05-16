@@ -264,7 +264,7 @@ ifDeadGetAddedTo: anOrderedCollection asPoint: aPoint
 
 !classDefinition: 'Cell class' category: #GOL!
 Cell class
-	instanceVariableNames: 'alive'!
+	instanceVariableNames: ''!
 
 !Cell class methodsFor: 'initialization' stamp: 'JI 5/16/2017 00:51:12'!
 createCell
@@ -307,7 +307,7 @@ ifDeadGetAddedTo: anOrderedCollection asPoint: aPoint
 
 !classDefinition: 'AliveCell class' category: #GOL!
 AliveCell class
-	instanceVariableNames: 'alive'!
+	instanceVariableNames: ''!
 
 !AliveCell class methodsFor: 'initialization' stamp: 'JI 5/16/2017 00:50:33'!
 createCell
@@ -344,7 +344,7 @@ ifDeadGetAddedTo: anOrderedCollection asPoint: aPoint
 
 !classDefinition: 'DeadCell class' category: #GOL!
 DeadCell class
-	instanceVariableNames: 'alive'!
+	instanceVariableNames: ''!
 
 !DeadCell class methodsFor: 'initialization' stamp: 'JI 5/16/2017 00:50:51'!
 createCell
