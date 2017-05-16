@@ -96,6 +96,26 @@ test09AskForACellOutsideBoundsRaisesError
 		withExceptionDo: [ :anError |
 			self assert: anError messageText equals: 'posicion fuera de rango' ]! !
 
+!GOLTest methodsFor: 'tests' stamp: 'JI 5/16/2017 15:18:14'!
+test10DeadCellWithLessThanThreeAliveNeighboursStaysDead
+
+	|gameOfLife |
+	
+	gameOfLife := GameOfLife withLiveCellsAt:   { point1x1 . point1x2 } withBoardWithUpperRightCornerAt: point3x3 .
+	gameOfLife nextGeneration.
+	
+	self assert: (gameOfLife isDeadAt: point2x2 ) ! !
+
+!GOLTest methodsFor: 'tests' stamp: 'JI 5/16/2017 15:18:46'!
+test11DeadCellWithMoreThanThreeAliveNeighboursStaysDead
+
+	|gameOfLife |
+	
+	gameOfLife := GameOfLife withLiveCellsAt:   { point1x1 . point1x2 .point1x3 . point2x1 } withBoardWithUpperRightCornerAt: point3x3 .
+	gameOfLife nextGeneration.
+	
+	self assert: (gameOfLife isDeadAt: point2x2 ) ! !
+
 
 !GOLTest methodsFor: 'setUp' stamp: 'JI 5/15/2017 19:06:40'!
 setUp
@@ -133,55 +153,46 @@ Object subclass: #BoardOfCells
 	poolDictionaries: ''
 	category: 'GOL'!
 
-!BoardOfCells methodsFor: 'accessing' stamp: 'JI 5/16/2017 01:04:48'!
+!BoardOfCells methodsFor: 'accessing' stamp: 'JI 5/16/2017 14:54:15'!
 aliveCellsPoints
 	
 	| somePoints |
 	
 	somePoints _ OrderedCollection new.
 	
-	1 to: matrix size do: [ :i | | row |
-		row _ matrix at: i.
-		1 to: row size do: [ :j | | aPoint aCell |
-			aPoint _ i@j.
-			aCell _ self cellAt: aPoint.
-			aCell ifAliveGetAddedTo: somePoints asPoint: aPoint.
-			].		
-		].
+	self allPointsOfTheBoard do: [ :aPoint | (self cellAt: aPoint) ifAliveGetAddedTo: somePoints asPoint: aPoint ].
 	
 	^somePoints ! !
 
-!BoardOfCells methodsFor: 'accessing' stamp: 'JI 5/16/2017 00:59:10'!
+!BoardOfCells methodsFor: 'accessing' stamp: 'JI 5/16/2017 15:06:24'!
+allPointsOfTheBoard
+	^matrix allPoints.! !
+
+!BoardOfCells methodsFor: 'accessing' stamp: 'JI 5/16/2017 15:12:53'!
 cellAt: aPoint 
 	
-	^(matrix at: (aPoint x) ) at: (aPoint y)! !
+	^matrix elementAt: aPoint! !
 
-!BoardOfCells methodsFor: 'accessing' stamp: 'JI 5/16/2017 01:04:38'!
+!BoardOfCells methodsFor: 'accessing' stamp: 'JI 5/16/2017 14:53:28'!
 deadCellPoints
 
 	| somePoints |
 	
 	somePoints _ OrderedCollection new.
 	
-	1 to: matrix size do: [ :i | | row |
-		row _ matrix at: i.
-		1 to: row size do: [ :j | | aPoint aCell |
-			aPoint _ i@j.
-			aCell _ self cellAt: aPoint.
-			aCell ifDeadGetAddedTo: somePoints asPoint: aPoint.
-			].		
-		].
+	
+	self allPointsOfTheBoard do: [ :aPoint | (self cellAt: aPoint) ifDeadGetAddedTo: somePoints asPoint: aPoint ].
 	
 	^somePoints ! !
 
-!BoardOfCells methodsFor: 'accessing' stamp: 'JI 5/15/2017 18:43:08'!
+!BoardOfCells methodsFor: 'accessing' stamp: 'JI 5/16/2017 15:04:50'!
 upperRightCorner
-	^upperRightCorner! !
+	^ matrix dimension! !
 
 
-!BoardOfCells methodsFor: 'cell status' stamp: 'JI 5/15/2017 18:55:40'!
+!BoardOfCells methodsFor: 'cell status' stamp: 'JI 5/16/2017 15:14:43'!
 cellIsAliveAt: aPoint 
-	^ ( (matrix at: aPoint x) at: aPoint y) isAlive .! !
+	^  (matrix elementAt: aPoint) isAlive .! !
 
 !BoardOfCells methodsFor: 'cell status' stamp: 'JI 5/15/2017 18:37:43'!
 cellIsDeadAt: aPoint 
@@ -194,28 +205,31 @@ pointIsInBoundaries: aPoint
 	^ 1@1 <= aPoint and: [aPoint <= upperRightCorner ].! !
 
 
-!BoardOfCells methodsFor: 'initialization' stamp: 'JI 5/16/2017 00:52:41'!
+!BoardOfCells methodsFor: 'initialization' stamp: 'JI 5/16/2017 15:21:02'!
 createBoardWithAliveCellsAt: somePoints withBoardWithUpperRightCornerAt: aPoint 
 	
 	upperRightCorner _ aPoint .
-	matrix _ OrderedCollection new .
+	matrix _ Matrix createMatrixWithSize: aPoint .
 	
-	1 to: aPoint x do: [ :i | | row |
-		row _ OrderedCollection new.
-		1 to: aPoint y do: [ :j | | cell |
-			cell _ DeadCell createCell.
-			row add: cell.
-			].
-		matrix add: row.
-		].
+	self fillBoardWithDeadCells.
 	
 	self reviveCellsAt: somePoints .
 	! !
 
-!BoardOfCells methodsFor: 'initialization' stamp: 'JI 5/16/2017 00:50:13'!
+!BoardOfCells methodsFor: 'initialization' stamp: 'JI 5/16/2017 15:01:51'!
+fillBoardWithDeadCells
+
+	
+	self allPointsOfTheBoard do: [ :aPoint | matrix putElement: (DeadCell createCell ) at: aPoint ].
+	
+	
+
+	! !
+
+!BoardOfCells methodsFor: 'initialization' stamp: 'JI 5/16/2017 15:13:50'!
 reviveCellAt: aPoint 
 	
-	(matrix at: (aPoint x) ) at: (aPoint y) put: (AliveCell createCell).
+	matrix putElement: AliveCell createCell at: aPoint 
 	
 	! !
 
@@ -245,10 +259,6 @@ Object subclass: #Cell
 
 !Cell methodsFor: 'cell status' stamp: 'JI 5/16/2017 00:46:28'!
 isAlive
-	self subclassResponsibility ! !
-
-!Cell methodsFor: 'cell status' stamp: 'JI 5/16/2017 00:46:35'!
-isDead
 	self subclassResponsibility ! !
 
 
@@ -283,15 +293,6 @@ Cell subclass: #AliveCell
 isAlive
 	^ true! !
 
-!AliveCell methodsFor: 'cell status' stamp: 'JI 5/16/2017 00:48:56'!
-isDead
-	^ false! !
-
-
-!AliveCell methodsFor: 'evaluating' stamp: 'JI 5/16/2017 01:00:22'!
-getAddedTo: anOrderedCollection asPoint: aPoint 
-	
-	anOrderedCollection add: aPoint ! !
 
 !AliveCell methodsFor: 'evaluating' stamp: 'JI 5/16/2017 01:05:46'!
 ifAliveGetAddedTo: anOrderedCollection asPoint: aPoint 
@@ -325,10 +326,6 @@ Cell subclass: #DeadCell
 !DeadCell methodsFor: 'cell status' stamp: 'JI 5/16/2017 00:48:12'!
 isAlive
 	^false! !
-
-!DeadCell methodsFor: 'cell status' stamp: 'JI 5/16/2017 00:48:21'!
-isDead
-	^ true! !
 
 
 !DeadCell methodsFor: 'evaluating' stamp: 'JI 5/16/2017 01:06:06'!
@@ -403,27 +400,23 @@ isDeadAt: aCellPoint
 ! !
 
 
-!GameOfLife methodsFor: 'evaluating' stamp: 'JI 5/15/2017 18:38:57'!
+!GameOfLife methodsFor: 'evaluating' stamp: 'JI 5/16/2017 15:29:57'!
 nextGeneration
 
-	| aliveCellPoints deadCellPoints survivors newborns newGenerationOfAliveCellsAtPoints |
+	| newGenerationOfAliveCellsAtPoints |
 
-	aliveCellPoints _ board aliveCellsPoints  .
-	deadCellPoints _ board deadCellPoints .	
-	
-	survivors _ aliveCellPoints select: [ :anAliveCellPoint | 	self hasToSurvive: anAliveCellPoint ].
-	newborns  _ 	deadCellPoints select: [ :aDeadCellPoint | self hasToResurrect: aDeadCellPoint ] .
-	
-	newGenerationOfAliveCellsAtPoints _ survivors union: newborns .
+	newGenerationOfAliveCellsAtPoints _ (board aliveCellsPoints select: [ :anAliveCellPoint | 	self hasToSurvive: anAliveCellPoint ]) 
+												union:
+												(board deadCellPoints select: [ :aDeadCellPoint | self hasToResurrect: aDeadCellPoint ] ).
 	
 	board _ BoardOfCells createBoardWithAliveCellsAt: newGenerationOfAliveCellsAtPoints withBoardWithUpperRightCornerAt: board upperRightCorner.
 	! !
 
 
-!GameOfLife methodsFor: 'initialization' stamp: 'JI 5/15/2017 17:32:57'!
-withLiveCellsAt: somePoints withBoardWithUpperRightCornerAt: aPoint 
+!GameOfLife methodsFor: 'initialization' stamp: 'JI 5/16/2017 15:25:32'!
+withLiveCellsAt: somePoints withBoardWithUpperRightCornerAt: aDimension
 	
-	board _ BoardOfCells createBoardWithAliveCellsAt: somePoints withBoardWithUpperRightCornerAt: aPoint ! !
+	board _ BoardOfCells createBoardWithAliveCellsAt: somePoints withBoardWithUpperRightCornerAt: aDimension ! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -446,3 +439,76 @@ satisfiesPreconditions: anArray withUpperRightCornerAt: aPoint
 		(1@1 <= aCellPoint and: (aCellPoint <= aPoint ) )
 			ifFalse: [ self error: 'celda fuera de rango' ].
 		].! !
+
+
+!classDefinition: #Matrix category: #GOL!
+Object subclass: #Matrix
+	instanceVariableNames: 'elements theCorner'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'GOL'!
+
+!Matrix methodsFor: 'initialization' stamp: 'JI 5/16/2017 15:21:40'!
+initializeMatrixWithSize: aCorner
+
+	theCorner := aCorner .
+	elements := OrderedCollection new.
+	1 to: aCorner x do: [ :i | | aRow | 
+				aRow := OrderedCollection new.
+				1 to: aCorner y do: [ :j | | aPosition |
+					aPosition := nil.
+					aRow add: aPosition .
+					].
+				elements add: aRow.
+				].! !
+
+
+!Matrix methodsFor: 'accessing' stamp: 'JI 5/16/2017 15:08:47'!
+allPoints
+	
+	| allThePoints |
+	allThePoints _ OrderedCollection new.
+	
+	1 to: theCorner x do: [ :i | 
+		1 to: theCorner y do: [ :j | 
+			allThePoints add: i@j .
+			].
+		].
+	
+	^allThePoints ! !
+
+!Matrix methodsFor: 'accessing' stamp: 'JI 5/16/2017 15:24:47'!
+elementAt: aPoint
+
+	(self checkPointInBoundaries: aPoint) ifFalse: [self error: 'Posicion inexistente'].
+	^(elements at: aPoint x) at: aPoint y.! !
+
+!Matrix methodsFor: 'accessing' stamp: 'JI 5/16/2017 15:23:44'!
+putElement: anElement at: aPoint
+
+	(self checkPointInBoundaries: aPoint) 
+		ifFalse: [self error: 'Posicion inexistente'].
+		
+	(elements at: aPoint x) at: aPoint y put: anElement .! !
+
+
+!Matrix methodsFor: 'evaluating' stamp: 'jak 5/15/2017 21:03:07'!
+checkPointInBoundaries: aPoint
+
+	^1@1 <= aPoint and: [aPoint <= theCorner]! !
+
+!Matrix methodsFor: 'evaluating' stamp: 'JI 5/16/2017 15:05:07'!
+dimension
+	^theCorner ! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'Matrix class' category: #GOL!
+Matrix class
+	instanceVariableNames: ''!
+
+!Matrix class methodsFor: 'initialization' stamp: 'JI 5/16/2017 15:21:32'!
+createMatrixWithSize: dimension
+	
+	(1@1 <= dimension ) ifFalse: ['La dimension debe ser al menos de 1x1'].
+	^self new initializeMatrixWithSize: dimension! !
