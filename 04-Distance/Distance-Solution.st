@@ -5,26 +5,75 @@ TestCase subclass: #DistanceTest
 	poolDictionaries: ''
 	category: 'Distance-Solution'!
 
-!DistanceTest methodsFor: 'tests' stamp: 'jak 5/24/2017 00:21:40'!
-test01AMeterIsEqualToAnotherMeter
+!DistanceTest methodsFor: 'tests' stamp: 'JI 5/25/2017 03:47:34'!
+test01_AMeterIsEqualToAnotherMeter
 	| otroMetro |
 	unMetro := Metro initializeWith: 1.
 	otroMetro := Metro initializeWith: 1.
 	self assert: unMetro = otroMetro.! !
 
-!DistanceTest methodsFor: 'tests' stamp: 'jak 5/24/2017 00:21:59'!
-test02AMeterIsEqualTo100Centimeters
+!DistanceTest methodsFor: 'tests' stamp: 'JI 5/25/2017 03:47:54'!
+test02_100CentimetersIsEqualToAMetro
 	| cienCentimetros |
 	unMetro := Metro initializeWith: 1.
 	cienCentimetros := Centimetro initializeWith: 100.
-	self assert: unMetro = cienCentimetros .! !
 
-!DistanceTest methodsFor: 'tests' stamp: 'jak 5/24/2017 00:22:22'!
-test03100CentimiterIsEquealTo1000Milimiters
+	self assert: cienCentimetros = unMetro .! !
+
+!DistanceTest methodsFor: 'tests' stamp: 'JI 5/25/2017 03:47:42'!
+test02_AMeterIsEqualTo100Centimeters
+	| cienCentimetros |
+	unMetro := Metro initializeWith: 1.
+	cienCentimetros := Centimetro initializeWith: 100.
+	self assert: unMetro = cienCentimetros .
+! !
+
+!DistanceTest methodsFor: 'tests' stamp: 'JI 5/25/2017 03:48:14'!
+test03_1000MilimitersIsEquealTo100Centimiter
 	| cienCentimetros milMilimetros |
 	cienCentimetros := Centimetro initializeWith: 100.
 	milMilimetros := Milimetros initializeWith: 1000.
-	self assert: cienCentimetros = milMilimetros..! !
+	self assert: milMilimetros = cienCentimetros .! !
+
+!DistanceTest methodsFor: 'tests' stamp: 'JI 5/25/2017 03:48:21'!
+test03_100CentimiterIsEquealTo1000Milimiters
+	| cienCentimetros milMilimetros |
+	cienCentimetros := Centimetro initializeWith: 100.
+	milMilimetros := Milimetros initializeWith: 1000.
+	self assert: cienCentimetros = milMilimetros.
+! !
+
+!DistanceTest methodsFor: 'tests' stamp: 'JI 5/25/2017 03:59:19'!
+test04_1000MilimetrosIsEqualToAMetro
+	| milMilimetros |
+	unMetro := Metro initializeWith: 1.
+	milMilimetros := Milimetros initializeWith: 1000.
+
+	self assert:  unMetro = milMilimetros.! !
+
+!DistanceTest methodsFor: 'tests' stamp: 'JI 5/25/2017 03:57:40'!
+test04_AMetroIsEqualTo1000Milimetros
+	| milMilimetros |
+	unMetro := Metro initializeWith: 1.
+	milMilimetros := Milimetros initializeWith: 1000.
+
+	self assert: milMilimetros = unMetro .! !
+
+!DistanceTest methodsFor: 'tests' stamp: 'JI 5/25/2017 04:04:43'!
+test05_ACentimetroIsEqualToAnotherCentimetro
+	| unCentimetro anotherCentimetro |
+	unCentimetro := Centimetro initializeWith: 1.
+	anotherCentimetro := Centimetro initializeWith: 1.
+
+	self assert: unCentimetro = anotherCentimetro .! !
+
+!DistanceTest methodsFor: 'tests' stamp: 'JI 5/25/2017 04:08:08'!
+test06_AMilimetroIsEqualToAnotherMilimetro
+	| aMilimetros anotherMilimetro |
+	anotherMilimetro := Milimetros initializeWith: 1.
+	aMilimetros := Milimetros initializeWith: 1.
+
+	self assert: aMilimetros = anotherMilimetro .! !
 
 
 !classDefinition: #DistanceUnits category: #'Distance-Solution'!
@@ -34,31 +83,11 @@ Object subclass: #DistanceUnits
 	poolDictionaries: ''
 	category: 'Distance-Solution'!
 
-!DistanceUnits methodsFor: 'as yet unclassified' stamp: 'jak 5/21/2017 17:19:01'!
-unit
-	self subclassResponsibility ! !
 
-
-
-!DistanceUnits methodsFor: 'comparing' stamp: 'jak 5/24/2017 00:31:13'!
+!DistanceUnits methodsFor: 'comparing' stamp: 'JI 5/25/2017 03:20:42'!
 = anotherDistance
-	^ self areEquals: anotherDistance ! !
-
-!DistanceUnits methodsFor: 'comparing' stamp: 'jak 5/24/2017 00:46:11'!
-areEquals: otherDistance 
-	^ (self isDistance and: [ otherDistance isDistance]) and: [ (self normalize) = (otherDistance normalize).]! !
-
-!DistanceUnits methodsFor: 'comparing' stamp: 'jak 5/24/2017 00:46:26'!
-isDistance
-	^true! !
-
-!DistanceUnits methodsFor: 'comparing' stamp: 'jak 5/24/2017 00:14:50'!
-normalize
-	self subclassResponsibility ! !
-
-!DistanceUnits methodsFor: 'comparing' stamp: 'jak 5/24/2017 00:11:33'!
-normalizeWithQuantity: multiplier
-	^(self unit) * multiplier! !
+	^self subclassResponsibility.
+	! !
 
 
 !DistanceUnits methodsFor: 'operating' stamp: 'jak 5/21/2017 17:18:12'!
@@ -88,14 +117,22 @@ initializeWith: aQuantity
 	quantity := aQuantity ! !
 
 
-!Centimetro methodsFor: 'as yet unclassified' stamp: 'jak 5/24/2017 00:50:09'!
-unit
-	^quantity! !
+!Centimetro methodsFor: 'as yet unclassified' stamp: 'JI 5/25/2017 03:32:01'!
+= anotherDistance
+	^ anotherDistance isEqualToCentimetros: quantity .! !
 
+!Centimetro methodsFor: 'as yet unclassified' stamp: 'JI 5/25/2017 04:05:04'!
+isEqualToCentimetros: someCentimetros
+	^ quantity = someCentimetros! !
 
-!Centimetro methodsFor: 'comparing' stamp: 'jak 5/24/2017 00:15:35'!
-normalize
-	^self normalizeWithQuantity: 10! !
+!Centimetro methodsFor: 'as yet unclassified' stamp: 'JI 5/25/2017 03:31:48'!
+isEqualToMetros: someMetros
+	^someMetros  * 100 = quantity ! !
+
+!Centimetro methodsFor: 'as yet unclassified' stamp: 'JI 5/25/2017 03:43:14'!
+isEqualToMilimetros: someMilimetros 
+	^ someMilimetros  = (quantity * 10)! !
+
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -120,19 +157,27 @@ initializeWith: aQuantity
 	quantity := aQuantity! !
 
 
-!Metro methodsFor: 'as yet unclassified' stamp: 'jak 5/21/2017 17:25:39'!
-unit
-	^quantity ! !
+!Metro methodsFor: 'as yet unclassified' stamp: 'JI 5/25/2017 03:35:13'!
+isEqualToCentimetros: someCentimetros 
+	^ someCentimetros = (quantity * 100)! !
+
+!Metro methodsFor: 'as yet unclassified' stamp: 'JI 5/25/2017 03:58:51'!
+isEqualToMilimetros: someMilimetros
+	^ quantity * 1000 = someMilimetros ! !
 
 
 !Metro methodsFor: 'operating' stamp: 'jak 5/21/2017 17:25:26'!
 + aMetro 
 	^Metro initializeWith: (quantity + aMetro unit)! !
 
+!Metro methodsFor: 'operating' stamp: 'JI 5/25/2017 03:31:35'!
+= anotherDistance
+	^ anotherDistance isEqualToMetros: quantity .! !
 
-!Metro methodsFor: 'comparing' stamp: 'jak 5/24/2017 00:16:39'!
-normalize
-	^self normalizeWithQuantity: 1000! !
+!Metro methodsFor: 'operating' stamp: 'JI 5/25/2017 03:31:22'!
+isEqualToMetros: someMetros
+	^ someMetros = quantity ! !
+
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -157,14 +202,22 @@ initializeWith: anInteger
 	quantity := anInteger ! !
 
 
-!Milimetros methodsFor: 'as yet unclassified' stamp: 'jak 5/24/2017 00:50:20'!
-unit
-	^quantity! !
+!Milimetros methodsFor: 'as yet unclassified' stamp: 'JI 5/25/2017 03:44:08'!
+= anotherDistance 
+	^anotherDistance isEqualToMilimetros: quantity ! !
 
+!Milimetros methodsFor: 'as yet unclassified' stamp: 'JI 5/25/2017 03:32:09'!
+isEqualToCentimetros: someCentimetros
+	^ someCentimetros * 10 = quantity ! !
 
-!Milimetros methodsFor: 'comparing' stamp: 'jak 5/24/2017 00:17:52'!
-normalize
-	^self normalizeWithQuantity: 1! !
+!Milimetros methodsFor: 'as yet unclassified' stamp: 'JI 5/25/2017 03:59:46'!
+isEqualToMetros: someMetros
+	^ someMetros * 1000 = quantity ! !
+
+!Milimetros methodsFor: 'as yet unclassified' stamp: 'JI 5/25/2017 04:08:31'!
+isEqualToMilimetros: someMilimetros
+	^ someMilimetros = quantity ! !
+
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
