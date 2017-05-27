@@ -165,6 +165,109 @@ test15_SomeMilimetrosPlusSomeMilimetrosAddsRight
 	
 	self assert: someMilimetros + anotherSomeMilimetros = a11122Milimetros .! !
 
+!DistanceTest methodsFor: 'tests' stamp: 'JI 5/27/2017 15:01:26'!
+test16_SomeMetrosMinusSomeMetrosSubstractRight
+	
+	|  someMetros anotherSomeMetros theResult |
+	
+	someMetros := Metro initializeWith: 1.
+	anotherSomeMetros := Metro initializeWith: 1.
+	theResult _ Metro initializeWith: 0.
+	
+	self assert: someMetros - anotherSomeMetros = theResult .! !
+
+!DistanceTest methodsFor: 'tests' stamp: 'JI 5/27/2017 15:08:49'!
+test17_SomeMetrosMinusSomeCentimetrosSubstractRight
+	
+	|  someMetros anotherSomeCentimetros theResult |
+	
+	someMetros := Metro initializeWith: 40.
+	anotherSomeCentimetros := Centimetro initializeWith: 15.
+	theResult _ Centimetro initializeWith: 3985.
+	
+	self assert: someMetros - anotherSomeCentimetros = theResult .! !
+
+!DistanceTest methodsFor: 'tests' stamp: 'JI 5/27/2017 15:11:01'!
+test18_SomeMetrosMinusSomeMilimetrosSubstractRight
+	
+	|  someMetros anotherSomeMilimetros theResult |
+	
+	someMetros := Metro initializeWith: 23.
+	anotherSomeMilimetros := Milimetros initializeWith: 431.
+	theResult _ Milimetros initializeWith: 22569.
+	
+	self assert: someMetros - anotherSomeMilimetros = theResult .! !
+
+!DistanceTest methodsFor: 'tests' stamp: 'JI 5/27/2017 15:19:59'!
+test19_SomeCentimetrosMinusSomeMetrosSubstractRight
+	
+	|  someCentimetros someMetros theResult |
+	
+	someCentimetros := Centimetro initializeWith: 41.
+	someMetros := Metro initializeWith: 23.
+	theResult _ Centimetro initializeWith: -2259.
+	
+	self assert: someCentimetros - someMetros = theResult .! !
+
+!DistanceTest methodsFor: 'tests' stamp: 'JI 5/27/2017 15:21:00'!
+test20_SomeCentimetrosMinusSomeCentimetrosSubstractRight
+	
+	|  someCentimetros anotherSomeCentimetros theResult |
+	
+	someCentimetros := Centimetro initializeWith: 41.
+	anotherSomeCentimetros := Centimetro initializeWith: 23.
+	theResult _ Centimetro initializeWith: 18.
+	
+	self assert: someCentimetros - anotherSomeCentimetros = theResult .! !
+
+!DistanceTest methodsFor: 'tests' stamp: 'JI 5/27/2017 15:21:32'!
+test21_SomeCentimetrosMinusSomeMilimetrosSubstractRight
+	
+	|  someCentimetros someMilimetros theResult |
+	
+	someCentimetros := Centimetro initializeWith: 100000.
+		someMilimetros := Milimetros initializeWith: 4231.
+
+	theResult _ Milimetros initializeWith: 995769.
+	
+	self assert: someCentimetros - someMilimetros = theResult .! !
+
+!DistanceTest methodsFor: 'tests' stamp: 'JI 5/27/2017 15:24:14'!
+test22_SomeMilimetrosMinusSomeMetrosSubstractRight
+	
+	|  someMilimetros someMetros theResult |
+	
+	someMilimetros := Milimetros initializeWith: 100001.
+	someMetros := Metro initializeWith: 10.
+
+	theResult _ Milimetros initializeWith: 90001.
+	
+	self assert: someMilimetros - someMetros = theResult .! !
+
+!DistanceTest methodsFor: 'tests' stamp: 'JI 5/27/2017 15:26:11'!
+test23_SomeMilimetrosMinusSomeCentimetrosSubstractRight
+	
+	|  someMilimetros someCentimetros theResult |
+	
+	someMilimetros := Milimetros initializeWith: 10510.
+	someCentimetros := Centimetro initializeWith: 51.
+
+	theResult _ Milimetros initializeWith: 10000.
+	
+	self assert: someMilimetros - someCentimetros = theResult .! !
+
+!DistanceTest methodsFor: 'tests' stamp: 'JI 5/27/2017 15:27:12'!
+test24_SomeMilimetrosMinusSomeMilimetrosSubstractRight
+	
+	|  someMilimetros anotherSomeMilimetros theResult |
+	
+	someMilimetros := Milimetros initializeWith: 10510.
+	anotherSomeMilimetros := Milimetros initializeWith: 51.
+
+	theResult _ Milimetros initializeWith: 10459.
+	
+	self assert: someMilimetros - anotherSomeMilimetros = theResult .! !
+
 
 !classDefinition: #DistanceUnits category: #'Distance-Solution'!
 Object subclass: #DistanceUnits
@@ -182,6 +285,11 @@ Object subclass: #DistanceUnits
 !DistanceUnits methodsFor: 'operating' stamp: 'JI 5/25/2017 19:21:11'!
 + anotherDistance
 	^ self subclassResponsibility ! !
+
+
+!DistanceUnits methodsFor: 'as yet unclassified' stamp: 'JI 5/27/2017 15:01:56'!
+- aMetro 
+	^self subclassResponsibility ! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -209,6 +317,10 @@ initializeWith: aQuantity
 !Centimetro methodsFor: 'as yet unclassified' stamp: 'JI 5/25/2017 19:22:04'!
 + someDistance
 	^ someDistance addCentimetros: quantity ! !
+
+!Centimetro methodsFor: 'as yet unclassified' stamp: 'JI 5/27/2017 15:13:47'!
+- someDistance
+	^ someDistance substractSomeCentimetros: quantity ! !
 
 !Centimetro methodsFor: 'as yet unclassified' stamp: 'JI 5/25/2017 03:32:01'!
 = anotherDistance
@@ -239,6 +351,18 @@ isEqualToMetros: someMetros
 isEqualToMilimetros: someMilimetros 
 	^ someMilimetros  = (quantity * 10)! !
 
+!Centimetro methodsFor: 'as yet unclassified' stamp: 'JI 5/27/2017 15:16:08'!
+substractSomeCentimetros: someCentimetros
+	^ Centimetro initializeWith: someCentimetros - quantity ! !
+
+!Centimetro methodsFor: 'as yet unclassified' stamp: 'JI 5/27/2017 15:08:07'!
+substractSomeMetros: someMetros
+	^ Centimetro initializeWith: someMetros*100 - quantity ! !
+
+!Centimetro methodsFor: 'as yet unclassified' stamp: 'JI 5/27/2017 15:26:34'!
+substractSomeMilimetros: someMilimetros 
+	^ Milimetros initializeWith: someMilimetros - (quantity *10)! !
+
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
 !classDefinition: 'Centimetro class' category: #'Distance-Solution'!
@@ -262,6 +386,10 @@ initializeWith: aQuantity
 	quantity := aQuantity! !
 
 
+!Metro methodsFor: 'as yet unclassified' stamp: 'JI 5/27/2017 15:04:08'!
+- someDistance 
+	^ someDistance substractSomeMetros: quantity .! !
+
 !Metro methodsFor: 'as yet unclassified' stamp: 'JI 5/25/2017 19:07:58'!
 addCentimetros: someCentimetros
 	
@@ -282,6 +410,18 @@ isEqualToCentimetros: someCentimetros
 !Metro methodsFor: 'as yet unclassified' stamp: 'JI 5/25/2017 03:58:51'!
 isEqualToMilimetros: someMilimetros
 	^ quantity * 1000 = someMilimetros ! !
+
+!Metro methodsFor: 'as yet unclassified' stamp: 'JI 5/27/2017 15:20:33'!
+substractSomeCentimetros: someCentimetros
+	^ Centimetro initializeWith: someCentimetros - (quantity * 100 )! !
+
+!Metro methodsFor: 'as yet unclassified' stamp: 'JI 5/27/2017 15:05:11'!
+substractSomeMetros: someMetros
+	^ Metro initializeWith: someMetros - quantity ! !
+
+!Metro methodsFor: 'as yet unclassified' stamp: 'JI 5/27/2017 15:25:19'!
+substractSomeMilimetros: someMilimetros
+	^Milimetros initializeWith: someMilimetros - (quantity *1000)! !
 
 
 !Metro methodsFor: 'operating' stamp: 'JI 5/25/2017 18:56:15'!
@@ -324,6 +464,10 @@ initializeWith: anInteger
 + someDistance 
 	^ someDistance addMilimetros: quantity ! !
 
+!Milimetros methodsFor: 'as yet unclassified' stamp: 'JI 5/27/2017 15:24:53'!
+- someDistance 
+	^ someDistance substractSomeMilimetros: quantity ! !
+
 !Milimetros methodsFor: 'as yet unclassified' stamp: 'JI 5/25/2017 03:44:08'!
 = anotherDistance 
 	^anotherDistance isEqualToMilimetros: quantity ! !
@@ -351,6 +495,18 @@ isEqualToMetros: someMetros
 !Milimetros methodsFor: 'as yet unclassified' stamp: 'JI 5/25/2017 04:08:31'!
 isEqualToMilimetros: someMilimetros
 	^ someMilimetros = quantity ! !
+
+!Milimetros methodsFor: 'as yet unclassified' stamp: 'JI 5/27/2017 15:17:32'!
+substractSomeCentimetros: someCentimetros 
+	^ Milimetros initializeWith: someCentimetros * 10 - quantity ! !
+
+!Milimetros methodsFor: 'as yet unclassified' stamp: 'JI 5/27/2017 15:10:16'!
+substractSomeMetros: someMetros
+	^ Milimetros initializeWith: someMetros *1000 - quantity ! !
+
+!Milimetros methodsFor: 'as yet unclassified' stamp: 'JI 5/27/2017 15:27:34'!
+substractSomeMilimetros: someMilimetros
+	^ Milimetros initializeWith: someMilimetros - quantity ! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
