@@ -341,6 +341,11 @@ test42_MilimetroLessMilimetroWorks
 	self assert: fourThousandMilimetros <  fiveThousandMilimetros . 
 	self deny:  fiveThousandMilimetros < fourThousandMilimetros .! !
 
+!DistanceTest methodsFor: 'tests' stamp: 'jak 5/28/2017 19:30:15'!
+test43_Multiply
+		
+	self assert: (oneMilimetro * 1) =  (1 * oneMilimetro) . ! !
+
 
 !DistanceTest methodsFor: 'Dependencies' stamp: 'JI 5/28/2017 17:13:05'!
 setUp
@@ -445,6 +450,10 @@ Object subclass: #DistanceUnits
 !DistanceUnits methodsFor: 'as yet unclassified' stamp: 'JI 5/28/2017 16:19:58'!
 < someDistance 
 	^ self subclassResponsibility ! !
+
+!DistanceUnits methodsFor: 'as yet unclassified' stamp: 'jak 5/28/2017 19:29:51'!
+adaptToNumber: aNumber andSend: selector 
+	^self perform: selector with: aNumber.! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -719,9 +728,9 @@ substractSomeMilimetros: someMilimetros
 	^anotherDistance isEqualToMilimetros: quantity ! !
 
 
-!Milimetros methodsFor: 'as yet unclassified' stamp: 'JI 5/28/2017 15:54:42'!
-* aSmallInteger 
-	^ Milimetros initializeWith: quantity * aSmallInteger ! !
+!Milimetros methodsFor: 'as yet unclassified' stamp: 'jak 5/28/2017 19:23:00'!
+* aMultiplier 
+	^ Milimetros initializeWith: quantity * aMultiplier ! !
 
 !Milimetros methodsFor: 'as yet unclassified' stamp: 'JI 5/28/2017 15:46:08'!
 / aSmallInteger 
