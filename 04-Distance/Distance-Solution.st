@@ -1,6 +1,6 @@
 !classDefinition: #DistanceTest category: #'Distance-Solution'!
 TestCase subclass: #DistanceTest
-	instanceVariableNames: 'unMetro distanceFactory milMilimetros unCentimetro oneMilimetro'
+	instanceVariableNames: 'unMetro distanceFactory milMilimetros unCentimetro oneMilimetro threeMetros fourMetros fiveMetros threeHundredOneCentimetros fourHundredOneCentimetros fiveHundredOneCentimetros threeThousandMilimetros fourThousandMilimetros fiveThousandMilimetros'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Distance-Solution'!
@@ -236,14 +236,217 @@ test24_SomeMilimetrosMinusSomeMilimetrosSubstractRight
 	
 	self assert: someMilimetros - anotherSomeMilimetros = theResult .! !
 
+!DistanceTest methodsFor: 'tests' stamp: 'JI 5/28/2017 15:43:26'!
+test25_SomeMetrosDividedByANumber
+	
+	|  someMetros theResult |
+	
+	someMetros := Metro initializeWith: 1.
 
-!DistanceTest methodsFor: 'Dependencies' stamp: 'jak 5/27/2017 19:48:01'!
+	theResult _ Metro initializeWith: 1/2.
+	
+	self assert: someMetros / 2 = theResult .! !
+
+!DistanceTest methodsFor: 'tests' stamp: 'JI 5/28/2017 15:44:12'!
+test26_SomeCentimetrosDividedByANumber
+	
+	|  someCentimetros theResult |
+	
+	someCentimetros := Centimetro initializeWith: 66.
+
+	theResult _ Centimetro initializeWith: 22.
+	
+	self assert: someCentimetros / 3 = theResult .! !
+
+!DistanceTest methodsFor: 'tests' stamp: 'JI 5/28/2017 15:44:38'!
+test27_SomeMilimetrosDividedByANumber
+	
+	|  someMilimetros theResult |
+	
+	someMilimetros := Milimetros initializeWith: 15.
+
+	theResult _ Milimetros initializeWith: 3.
+	
+	self assert: someMilimetros / 5 = theResult .! !
+
+!DistanceTest methodsFor: 'tests' stamp: 'JI 5/28/2017 15:51:40'!
+test28_SomeMetrosMultipliedByANumber
+	
+	|  someMetros theResult |
+	
+	someMetros := Metro initializeWith: 1.
+
+	theResult _ Metro initializeWith: 2.
+	
+	self assert: someMetros * 2 = theResult .! !
+
+!DistanceTest methodsFor: 'tests' stamp: 'JI 5/28/2017 15:52:08'!
+test29_SomeCentimetrosMultipliedByANumber
+	
+	|  someCentimetros theResult |
+	
+	someCentimetros := Centimetro initializeWith: 66.
+
+	theResult _ Centimetro initializeWith: 198.
+	
+	self assert: someCentimetros * 3 = theResult .! !
+
+!DistanceTest methodsFor: 'tests' stamp: 'JI 5/28/2017 15:52:39'!
+test30_SomeMilimetrosMultipliedByANumber
+	
+	|  someMilimetros theResult |
+	
+	someMilimetros := Milimetros initializeWith: 15.
+
+	theResult _ Milimetros initializeWith: 60.
+	
+	self assert: someMilimetros * 4 = theResult .! !
+
+!DistanceTest methodsFor: 'tests' stamp: 'JI 5/28/2017 16:14:02'!
+test31_ANumberMultipliedBySomeMetros
+	
+	|  someMetros theResult |
+	
+	someMetros := Metro initializeWith: 1.
+
+	theResult _ Metro initializeWith: 2.
+	
+	'self assert: 2 * someMetros  = theResult .'.! !
+
+!DistanceTest methodsFor: 'tests' stamp: 'JI 5/28/2017 16:15:08'!
+test32_ANumberMultipliedBySomeCentimetros
+	
+	|  someCentimetros theResult |
+	
+	someCentimetros := Centimetro initializeWith: 66.
+
+	theResult _ Centimetro initializeWith: 198.
+	
+	'self assert:  3 * someCentimetros  = theResult .'! !
+
+!DistanceTest methodsFor: 'tests' stamp: 'JI 5/28/2017 16:15:43'!
+test33_ANumberMultipliedBySomeMilimetros
+	
+	|  someMilimetros theResult |
+	
+	someMilimetros := Milimetros initializeWith: 15.
+
+	theResult _ Milimetros initializeWith: 60.
+	
+	'self assert: 4 * someMilimetros = theResult .'! !
+
+!DistanceTest methodsFor: 'tests' stamp: 'JI 5/28/2017 16:30:20'!
+test34_MetroLessMetroWorks
+	
+	|  fourMetros fiveMetros |
+	
+	fourMetros := Metro initializeWith: 4.
+
+	fiveMetros _ Metro initializeWith: 5.
+	
+	self assert: fourMetros < fiveMetros. 
+	self deny: fiveMetros < fourMetros .! !
+
+!DistanceTest methodsFor: 'tests' stamp: 'JI 5/28/2017 16:32:23'!
+test35_MetroLessCentimetroWorks
+	
+	|  fourMetros fourHundredOneCentimetros fiveMetros  |
+	
+	fourMetros := Metro initializeWith: 4.
+	fiveMetros _ Metro initializeWith: 5.
+
+	fourHundredOneCentimetros _ Centimetro initializeWith: 401.
+	
+	self assert: fourMetros < fourHundredOneCentimetros. 
+	self deny: fiveMetros < fourHundredOneCentimetros .! !
+
+!DistanceTest methodsFor: 'tests' stamp: 'JI 5/28/2017 16:33:08'!
+test36_MetroLessMilimetroWorks
+	
+	|  fourMetros fourThousandOneMilimetros fiveMetros  |
+	
+	fourMetros := Metro initializeWith: 4.
+	fiveMetros _ Metro initializeWith: 5.
+
+	fourThousandOneMilimetros _ Milimetros initializeWith: 4001.
+	
+	self assert: fourMetros < fourThousandOneMilimetros. 
+	self deny: fiveMetros < fourThousandOneMilimetros .! !
+
+!DistanceTest methodsFor: 'tests' stamp: 'JI 5/28/2017 16:34:15'!
+test37_CentimetroLessMetroWorks
+	
+	|  fourMetros fourHundredOneCentimetros fiveMetros  |
+	
+	fourMetros := Metro initializeWith: 4.
+	fiveMetros _ Metro initializeWith: 5.
+
+	fourHundredOneCentimetros _ Centimetro initializeWith: 401.
+	
+	self deny: fourHundredOneCentimetros < fourMetros. 
+	self assert: fourHundredOneCentimetros < fiveMetros .! !
+
+!DistanceTest methodsFor: 'tests' stamp: 'JI 5/28/2017 16:36:46'!
+test38_CentimetroLessCentimetroWorks
+	
+	|  threeHundredOneCentimetros fourHundredOneCentimetros fiveHundredOneCentimetros  |
+	
+	threeHundredOneCentimetros _ Centimetro initializeWith: 301.
+	fourHundredOneCentimetros _ Centimetro initializeWith: 401.
+	fiveHundredOneCentimetros _ Centimetro initializeWith: 501.
+	
+	self deny: fourHundredOneCentimetros < threeHundredOneCentimetros. 
+	self assert: fourHundredOneCentimetros < fiveHundredOneCentimetros .! !
+
+!DistanceTest methodsFor: 'tests' stamp: 'JI 5/28/2017 17:16:11'!
+test39_CentimetroLessMilimetroWorks
+	
+	
+	self assert: fourHundredOneCentimetros < fiveThousandMilimetros . 
+	self deny:  fiveHundredOneCentimetros < fourThousandMilimetros .! !
+
+!DistanceTest methodsFor: 'tests' stamp: 'JI 5/28/2017 17:17:04'!
+test40_MilimetroLessMetroWorks
+	
+	
+	self assert: fourThousandMilimetros <  fiveMetros . 
+	self deny:  fourThousandMilimetros < threeMetros .! !
+
+!DistanceTest methodsFor: 'tests' stamp: 'JI 5/28/2017 17:16:53'!
+test41_MilimetroLessCentimetroWorks
+	
+	
+	self assert: fourThousandMilimetros <  fiveHundredOneCentimetros . 
+	self deny:  fiveThousandMilimetros < threeHundredOneCentimetros .! !
+
+!DistanceTest methodsFor: 'tests' stamp: 'JI 5/28/2017 17:17:22'!
+test42_MilimetroLessMilimetroWorks
+	
+	
+	self assert: fourThousandMilimetros <  fiveThousandMilimetros . 
+	self deny:  fiveThousandMilimetros < fourThousandMilimetros .! !
+
+
+!DistanceTest methodsFor: 'Dependencies' stamp: 'JI 5/28/2017 17:13:05'!
 setUp
 	distanceFactory := DistanceFactory new.
 	unMetro := distanceFactory oneMeter.
 	unCentimetro := distanceFactory oneCentimeter.
 	oneMilimetro := distanceFactory oneMilimeter.
-	milMilimetros := Milimetros initializeWith: 1000.! !
+	milMilimetros := Milimetros initializeWith: 1000.
+	
+	
+	threeMetros _ Metro initializeWith: 3.
+	fourMetros _ Metro initializeWith: 4.
+	fiveMetros _ Metro initializeWith: 5.
+	
+	threeHundredOneCentimetros _ Centimetro initializeWith: 301.
+	fourHundredOneCentimetros _ Centimetro initializeWith: 401.
+	fiveHundredOneCentimetros _ Centimetro initializeWith: 501.
+	
+	threeThousandMilimetros _ Milimetros initializeWith: 3000.
+	fourThousandMilimetros _ Milimetros initializeWith: 4000.
+	fiveThousandMilimetros _ Milimetros initializeWith: 5000.! !
 
 
 !classDefinition: #DistanceFactory category: #'Distance-Solution'!
@@ -314,6 +517,19 @@ Object subclass: #DistanceUnits
 !DistanceUnits methodsFor: 'operating' stamp: 'JI 5/27/2017 15:01:56'!
 - aMetro 
 	^self subclassResponsibility ! !
+
+
+!DistanceUnits methodsFor: 'as yet unclassified' stamp: 'JI 5/28/2017 15:53:03'!
+* aSmallInteger 
+	^ self subclassResponsibility ! !
+
+!DistanceUnits methodsFor: 'as yet unclassified' stamp: 'JI 5/28/2017 15:45:06'!
+/ aSmallInteger 
+	^ self subclassResponsibility ! !
+
+!DistanceUnits methodsFor: 'as yet unclassified' stamp: 'JI 5/28/2017 16:19:58'!
+< someDistance 
+	^ self subclassResponsibility ! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -388,6 +604,31 @@ substractSomeMilimetros: someMilimetros
 !Centimetro methodsFor: 'comparing' stamp: 'JI 5/25/2017 03:32:01'!
 = anotherDistance
 	^ anotherDistance isEqualToCentimetros: quantity .! !
+
+
+!Centimetro methodsFor: 'as yet unclassified' stamp: 'JI 5/28/2017 15:54:26'!
+* aSmallInteger 
+	^ Centimetro initializeWith: quantity * aSmallInteger ! !
+
+!Centimetro methodsFor: 'as yet unclassified' stamp: 'JI 5/28/2017 15:45:56'!
+/ aSmallInteger 
+	^ Centimetro initializeWith: quantity / aSmallInteger ! !
+
+!Centimetro methodsFor: 'as yet unclassified' stamp: 'JI 5/28/2017 17:21:01'!
+< someDistance
+	^ someDistance isNotLessThanCentimetros: quantity ! !
+
+!Centimetro methodsFor: 'as yet unclassified' stamp: 'JI 5/28/2017 17:27:22'!
+isNotLessThanCentimetros: aSmallInteger 
+	^ (quantity  < aSmallInteger ) not! !
+
+!Centimetro methodsFor: 'as yet unclassified' stamp: 'JI 5/28/2017 17:19:16'!
+isNotLessThanMetros: someMetros
+	^ (quantity < (someMetros*100) ) not! !
+
+!Centimetro methodsFor: 'as yet unclassified' stamp: 'JI 5/28/2017 17:29:24'!
+isNotLessThanMilimetros: aSmallInteger 
+	^ ((quantity*10)  < aSmallInteger ) not! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -464,6 +705,31 @@ substractSomeMilimetros: someMilimetros
 = anotherDistance
 	^ anotherDistance isEqualToMetros: quantity .! !
 
+
+!Metro methodsFor: 'as yet unclassified' stamp: 'JI 5/28/2017 15:54:09'!
+* aSmallInteger 
+	^ Metro initializeWith: quantity * aSmallInteger ! !
+
+!Metro methodsFor: 'as yet unclassified' stamp: 'JI 5/28/2017 15:45:31'!
+/ aSmallInteger 
+	^ Metro initializeWith: quantity / aSmallInteger ! !
+
+!Metro methodsFor: 'as yet unclassified' stamp: 'JI 5/28/2017 16:20:41'!
+< someDistance
+	 ^ someDistance isNotLessThanMetros: quantity ! !
+
+!Metro methodsFor: 'as yet unclassified' stamp: 'JI 5/28/2017 17:23:23'!
+isNotLessThanCentimetros: aSmallInteger 
+	^ (quantity*100 < aSmallInteger ) not! !
+
+!Metro methodsFor: 'as yet unclassified' stamp: 'JI 5/28/2017 16:24:38'!
+isNotLessThanMetros: someMetros
+	^ (quantity < someMetros) not! !
+
+!Metro methodsFor: 'as yet unclassified' stamp: 'JI 5/28/2017 17:28:46'!
+isNotLessThanMilimetros: aSmallInteger 
+	^ (quantity*1000  < aSmallInteger ) not! !
+
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
 !classDefinition: 'Metro class' category: #'Distance-Solution'!
@@ -536,6 +802,31 @@ substractSomeMilimetros: someMilimetros
 !Milimetros methodsFor: 'comparing' stamp: 'JI 5/25/2017 03:44:08'!
 = anotherDistance 
 	^anotherDistance isEqualToMilimetros: quantity ! !
+
+
+!Milimetros methodsFor: 'as yet unclassified' stamp: 'JI 5/28/2017 15:54:42'!
+* aSmallInteger 
+	^ Milimetros initializeWith: quantity * aSmallInteger ! !
+
+!Milimetros methodsFor: 'as yet unclassified' stamp: 'JI 5/28/2017 15:46:08'!
+/ aSmallInteger 
+	^ Milimetros initializeWith: quantity / aSmallInteger ! !
+
+!Milimetros methodsFor: 'as yet unclassified' stamp: 'JI 5/28/2017 17:28:27'!
+< someDistance 
+	^ someDistance isNotLessThanMilimetros: quantity ! !
+
+!Milimetros methodsFor: 'as yet unclassified' stamp: 'JI 5/28/2017 17:27:56'!
+isNotLessThanCentimetros: aSmallInteger 
+	^ (quantity   < (aSmallInteger*10) ) not! !
+
+!Milimetros methodsFor: 'as yet unclassified' stamp: 'JI 5/28/2017 17:19:39'!
+isNotLessThanMetros: someMetros
+	^ (quantity < (someMetros*1000) ) not! !
+
+!Milimetros methodsFor: 'as yet unclassified' stamp: 'JI 5/28/2017 17:29:40'!
+isNotLessThanMilimetros: aSmallInteger 
+	^ (quantity  < aSmallInteger ) not! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
