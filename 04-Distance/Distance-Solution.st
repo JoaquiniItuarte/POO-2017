@@ -43,198 +43,113 @@ test05_ACentimetroIsEqualToAnotherCentimetro
 test06_AMilimetroIsEqualToAnotherMilimetro
 	self assert: oneMilimetro = distanceFactory oneMilimeter .! !
 
-!DistanceTest methodsFor: 'tests' stamp: 'JI 5/25/2017 18:52:27'!
-test07_SomeMetrosPlusSomeMetrosAddsRight
+!DistanceTest methodsFor: 'tests' stamp: 'jak 5/28/2017 18:03:50'!
+test07_SomeMetrosPlusSomeDistanceAddsRight
 	
-	| someMetros anotherSomeMetros tresMetros |
-	someMetros := Metro initializeWith: 1.
-	anotherSomeMetros := Metro initializeWith: 2.
-	tresMetros _ Metro initializeWith: 3.
+	| aMeterAndAHalf twoMeters threeAndAHalf twentyCentimeters aHundredAndSeventyCentimeters thousandMilimeters aHundredOne |
+	aMeterAndAHalf := Metro initializeWith: 1.5.
+	twoMeters := Metro initializeWith: 2.
+	threeAndAHalf _ Metro initializeWith: 3.5.
+	twentyCentimeters := Centimetro initializeWith: 20.
+	aHundredAndSeventyCentimeters _ Centimetro initializeWith: 170.
+	aHundredOne := Milimetros initializeWith: 101.
+	thousandMilimeters _ Milimetros initializeWith: 1601.
 	
-	self assert: someMetros + anotherSomeMetros = tresMetros .! !
+	self assert: aMeterAndAHalf + twoMeters = threeAndAHalf .
+	self assert: aMeterAndAHalf + twentyCentimeters = aHundredAndSeventyCentimeters .
+	self assert: aMeterAndAHalf + aHundredOne = thousandMilimeters ! !
 
-!DistanceTest methodsFor: 'tests' stamp: 'JI 5/25/2017 18:58:55'!
-test08_SomeMetrosPlusSomeCentimetrosAddsRight
+!DistanceTest methodsFor: 'tests' stamp: 'jak 5/28/2017 18:03:59'!
+test08_SomeCentimetrosPlusSomeDistanceAddsRight
 	
-	| someMetros someCentimetros cientoVeinteCentimetros |
-	someMetros := Metro initializeWith: 1.
-	someCentimetros := Centimetro initializeWith: 20.
-	cientoVeinteCentimetros _ Centimetro initializeWith: 120.
-	
-	self assert: someMetros + someCentimetros = cientoVeinteCentimetros .! !
-
-!DistanceTest methodsFor: 'tests' stamp: 'JI 5/25/2017 19:01:25'!
-test09_SomeMetrosPlusSomeMilimetrosAddsRight
-	
-	| someMetros someMilimetros milCientoUnMilimetros |
-	someMetros := Metro initializeWith: 1.
-	someMilimetros := Milimetros initializeWith: 101.
-	milCientoUnMilimetros _ Milimetros initializeWith: 1101.
-	
-	self assert: someMetros + someMilimetros = milCientoUnMilimetros ! !
-
-!DistanceTest methodsFor: 'tests' stamp: 'JI 5/25/2017 19:04:19'!
-test10_SomeCentimetrosPlusSomeMetrosAddsRight
-	
-	| someMetros someCentimetros fourHundredTwentyThreeCentimetros |
-	someMetros := Metro initializeWith: 4.
-	someCentimetros := Centimetro initializeWith: 23.
-	fourHundredTwentyThreeCentimetros _ Centimetro initializeWith: 423.
-	
-	self assert: someCentimetros + someMetros = fourHundredTwentyThreeCentimetros .! !
-
-!DistanceTest methodsFor: 'tests' stamp: 'JI 5/25/2017 19:09:02'!
-test11_SomeCentimetrosPlusSomeCentimetrosAddsRight
-	
-	|  someCentimetros anotherSomeCentimetros thirtyCentimetros |
-	anotherSomeCentimetros := Centimetro initializeWith: 7.
-	someCentimetros := Centimetro initializeWith: 23.
+	| fourMeters twentyThreeCentimeterAndHalf fourHundredTwentyThreeCentimetrosAndHalf thirtyCentimetros sixAndHalfCentimeter sixHundredSixtySixMilimetros fourHundredThirtyOneMilimeters |
+	fourMeters := Metro initializeWith: 4.
+	twentyThreeCentimeterAndHalf := Centimetro initializeWith: 23.5.
+	fourHundredTwentyThreeCentimetrosAndHalf _ Centimetro initializeWith: 423.5.
 	thirtyCentimetros _ Centimetro initializeWith: 30.
-	
-	self assert: someCentimetros + anotherSomeCentimetros = thirtyCentimetros .! !
-
-!DistanceTest methodsFor: 'tests' stamp: 'JI 5/25/2017 19:13:56'!
-test12_SomeCentimetrosPlusSomeMilimetrosAddsRight
-	
-	|  someCentimetros someMilimetros sixHundredSixtySixMilimetros |
-	someCentimetros := Centimetro initializeWith: 60.
-	someMilimetros := Milimetros initializeWith: 66.
+	sixAndHalfCentimeter _ Centimetro initializeWith: 6.5.
 	sixHundredSixtySixMilimetros _ Milimetros initializeWith: 666.
+	fourHundredThirtyOneMilimeters := Milimetros initializeWith: 431.
 	
-	self assert: someCentimetros + someMilimetros = sixHundredSixtySixMilimetros .! !
+	self assert: twentyThreeCentimeterAndHalf + fourMeters = fourHundredTwentyThreeCentimetrosAndHalf .
+	self assert: twentyThreeCentimeterAndHalf + sixAndHalfCentimeter = thirtyCentimetros .
+	self assert: twentyThreeCentimeterAndHalf + fourHundredThirtyOneMilimeters = sixHundredSixtySixMilimetros ! !
 
-!DistanceTest methodsFor: 'tests' stamp: 'JI 5/25/2017 19:16:35'!
-test13_SomeMilimetrosPlusSomeMetrosAddsRight
+!DistanceTest methodsFor: 'tests' stamp: 'jak 5/28/2017 18:04:07'!
+test09_SomeMilimetrosPlusSomeDistanceAddsRight
 	
-	|  someMilimetros someMetros fourThousandsTwentyMilimetros |
+	|  someMilimetros someMetros fourThousandsTwentyMilimetros a11122Milimetros anotherSomeMilimetros fourThousandsThirtyMilimetros someCentimetros |
 	someMilimetros := Milimetros initializeWith: 1020.
 	someMetros := Metro initializeWith: 3.
 	fourThousandsTwentyMilimetros _ Milimetros initializeWith: 4020.
 	
-	self assert: someMilimetros + someMetros = fourThousandsTwentyMilimetros .! !
-
-!DistanceTest methodsFor: 'tests' stamp: 'JI 5/25/2017 19:23:46'!
-test14_SomeMilimetrosPlusSomeCentimetrosAddsRight
-	
-	|  someMilimetros someCentimetros fourThousandsThirtyMilimetros |
-	someMilimetros := Milimetros initializeWith: 1020.
 	someCentimetros := Centimetro initializeWith: 301.
 	fourThousandsThirtyMilimetros _ Milimetros initializeWith: 4030.
 	
-	self assert: someMilimetros + someCentimetros = fourThousandsThirtyMilimetros .! !
-
-!DistanceTest methodsFor: 'tests' stamp: 'JI 5/25/2017 19:26:14'!
-test15_SomeMilimetrosPlusSomeMilimetrosAddsRight
-	
-	|  someMilimetros anotherSomeMilimetros a11122Milimetros |
-	someMilimetros := Milimetros initializeWith: 11111.
-	anotherSomeMilimetros := Milimetros initializeWith: 11.
+	anotherSomeMilimetros := Milimetros initializeWith: 10102.
 	a11122Milimetros _ Milimetros initializeWith: 11122.
 	
-	self assert: someMilimetros + anotherSomeMilimetros = a11122Milimetros .! !
+	self assert: someMilimetros + someMetros = fourThousandsTwentyMilimetros .
+	self assert: someMilimetros + someCentimetros = fourThousandsThirtyMilimetros .
+	self assert: someMilimetros + anotherSomeMilimetros = a11122Milimetros! !
 
-!DistanceTest methodsFor: 'tests' stamp: 'JI 5/27/2017 15:01:26'!
-test16_SomeMetrosMinusSomeMetrosSubstractRight
+!DistanceTest methodsFor: 'tests' stamp: 'jak 5/28/2017 18:04:15'!
+test10_SomeMetrosMinusSomeDistanceSubstractRight
 	
-	|  someMetros anotherSomeMetros theResult |
+	|  someMetros anotherSomeMetros zeroMeters anotherSomeCentimetros centimeters3985 anotherSomeMilimetros milimeters569 |
 	
 	someMetros := Metro initializeWith: 1.
 	anotherSomeMetros := Metro initializeWith: 1.
-	theResult _ Metro initializeWith: 0.
+	zeroMeters _ Metro initializeWith: 0.
 	
-	self assert: someMetros - anotherSomeMetros = theResult .! !
-
-!DistanceTest methodsFor: 'tests' stamp: 'JI 5/27/2017 15:08:49'!
-test17_SomeMetrosMinusSomeCentimetrosSubstractRight
-	
-	|  someMetros anotherSomeCentimetros theResult |
-	
-	someMetros := Metro initializeWith: 40.
 	anotherSomeCentimetros := Centimetro initializeWith: 15.
-	theResult _ Centimetro initializeWith: 3985.
+	centimeters3985 := Centimetro initializeWith: 85.
 	
-	self assert: someMetros - anotherSomeCentimetros = theResult .! !
-
-!DistanceTest methodsFor: 'tests' stamp: 'JI 5/27/2017 15:11:01'!
-test18_SomeMetrosMinusSomeMilimetrosSubstractRight
-	
-	|  someMetros anotherSomeMilimetros theResult |
-	
-	someMetros := Metro initializeWith: 23.
 	anotherSomeMilimetros := Milimetros initializeWith: 431.
-	theResult _ Milimetros initializeWith: 22569.
+	milimeters569 _ Milimetros initializeWith: 569.
 	
-	self assert: someMetros - anotherSomeMilimetros = theResult .! !
+	self assert: someMetros - anotherSomeMetros = zeroMeters .
+	self assert: someMetros - anotherSomeCentimetros = centimeters3985 .
+	self assert: someMetros - anotherSomeMilimetros = milimeters569! !
 
-!DistanceTest methodsFor: 'tests' stamp: 'JI 5/27/2017 15:19:59'!
-test19_SomeCentimetrosMinusSomeMetrosSubstractRight
+!DistanceTest methodsFor: 'tests' stamp: 'jak 5/28/2017 18:04:23'!
+test11_SomeCentimetrosMinusSomeDistanceSubstractRight
 	
-	|  someCentimetros someMetros theResult |
+	|  someCentimetros someMetros theResult anotherSomeCentimetros centimeter67 milimeters500 someMilimetros |
 	
-	someCentimetros := Centimetro initializeWith: 41.
-	someMetros := Metro initializeWith: 23.
-	theResult _ Centimetro initializeWith: -2259.
+	someCentimetros := Centimetro initializeWith: 90.
+	someMetros := Metro initializeWith: 0.5.
+	theResult _ Centimetro initializeWith: 40.
 	
-	self assert: someCentimetros - someMetros = theResult .! !
-
-!DistanceTest methodsFor: 'tests' stamp: 'JI 5/27/2017 15:21:00'!
-test20_SomeCentimetrosMinusSomeCentimetrosSubstractRight
-	
-	|  someCentimetros anotherSomeCentimetros theResult |
-	
-	someCentimetros := Centimetro initializeWith: 41.
 	anotherSomeCentimetros := Centimetro initializeWith: 23.
-	theResult _ Centimetro initializeWith: 18.
+	centimeter67 _ Centimetro initializeWith: 67.
 	
-	self assert: someCentimetros - anotherSomeCentimetros = theResult .! !
+	someMilimetros := Milimetros initializeWith: 400.
 
-!DistanceTest methodsFor: 'tests' stamp: 'JI 5/27/2017 15:21:32'!
-test21_SomeCentimetrosMinusSomeMilimetrosSubstractRight
+	milimeters500 _ Milimetros initializeWith: 500.
 	
-	|  someCentimetros someMilimetros theResult |
-	
-	someCentimetros := Centimetro initializeWith: 100000.
-		someMilimetros := Milimetros initializeWith: 4231.
+	self assert: someCentimetros - someMetros = theResult .
+	self assert: someCentimetros - anotherSomeCentimetros = centimeter67 .
+	self assert: someCentimetros - someMilimetros = milimeters500 ! !
 
-	theResult _ Milimetros initializeWith: 995769.
+!DistanceTest methodsFor: 'tests' stamp: 'jak 5/28/2017 18:04:32'!
+test12_SomeMilimetrosMinusSomeDistanceSubstractRight
 	
-	self assert: someCentimetros - someMilimetros = theResult .! !
-
-!DistanceTest methodsFor: 'tests' stamp: 'JI 5/27/2017 15:24:14'!
-test22_SomeMilimetrosMinusSomeMetrosSubstractRight
+	|  someMilimetros someMetros milimeters900 milimeters490 someCentimetros anotherSomeMilimetros milimeters949 |
 	
-	|  someMilimetros someMetros theResult |
+	someMilimetros := Milimetros initializeWith: 1000.
+	someMetros := Metro initializeWith: 0.1.
+	milimeters900 _ Milimetros initializeWith: 900.
 	
-	someMilimetros := Milimetros initializeWith: 100001.
-	someMetros := Metro initializeWith: 10.
-
-	theResult _ Milimetros initializeWith: 90001.
-	
-	self assert: someMilimetros - someMetros = theResult .! !
-
-!DistanceTest methodsFor: 'tests' stamp: 'JI 5/27/2017 15:26:11'!
-test23_SomeMilimetrosMinusSomeCentimetrosSubstractRight
-	
-	|  someMilimetros someCentimetros theResult |
-	
-	someMilimetros := Milimetros initializeWith: 10510.
 	someCentimetros := Centimetro initializeWith: 51.
-
-	theResult _ Milimetros initializeWith: 10000.
+	milimeters490 _ Milimetros initializeWith: 490.
 	
-	self assert: someMilimetros - someCentimetros = theResult .! !
-
-!DistanceTest methodsFor: 'tests' stamp: 'JI 5/27/2017 15:27:12'!
-test24_SomeMilimetrosMinusSomeMilimetrosSubstractRight
-	
-	|  someMilimetros anotherSomeMilimetros theResult |
-	
-	someMilimetros := Milimetros initializeWith: 10510.
 	anotherSomeMilimetros := Milimetros initializeWith: 51.
-
-	theResult _ Milimetros initializeWith: 10459.
+	milimeters949 _ Milimetros initializeWith: 949.
 	
-	self assert: someMilimetros - anotherSomeMilimetros = theResult .! !
+	self assert: someMilimetros - someMetros = milimeters900 .
+	self assert: someMilimetros - someCentimetros = milimeters490 .
+	self assert: someMilimetros - anotherSomeMilimetros = milimeters949! !
 
 !DistanceTest methodsFor: 'tests' stamp: 'JI 5/28/2017 15:43:26'!
 test25_SomeMetrosDividedByANumber
