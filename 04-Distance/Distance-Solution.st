@@ -379,6 +379,108 @@ setUp
 	fiveThousandMilimetros _ Milimetros initializeWith: 5000.
 	! !
 
+
+!DistanceTest methodsFor: 'as yet unclassified' stamp: 'JI 5/29/2017 15:40:36'!
+test01_AnIntervalWithOneMetroStepsWorksRightForAllDistances
+	
+	| initialDistanceMetro initialDistanceCentimetro initialDistanceMilimetro
+	  finalDistanceMetro finalDistanceCentimetro finalDistanceMilimetro
+	  intervaloParaMetro intervaloParaCentimetro intervaloParaMilimetro
+	|
+	
+	initialDistanceMetro _ Metro initializeWith: 1.
+	initialDistanceCentimetro _ Centimetro initializeWith: 10.
+	initialDistanceMilimetro _ Milimetros initializeWith: 1.
+	
+	finalDistanceMetro _ Metro initializeWith: 5.
+	finalDistanceCentimetro _ Metro initializeWith: 6.
+	finalDistanceMilimetro _ Metro initializeWith: 5.
+	
+	intervaloParaMetro _ { Metro initializeWith: 1 . 
+							Metro initializeWith: 2 . 
+							Metro initializeWith: 3. 
+							Metro initializeWith: 4. 
+							Metro initializeWith: 5} asOrderedCollection.
+							
+	intervaloParaCentimetro _ { Centimetro initializeWith: 10 .
+									Centimetro initializeWith: 110 .
+									Centimetro initializeWith: 210 .
+									Centimetro initializeWith: 310 .
+									Centimetro initializeWith: 410 .
+									Centimetro initializeWith: 510 } asOrderedCollection .
+									
+	intervaloParaMilimetro _ { Milimetros initializeWith: 1.
+								Milimetros initializeWith: 1001.
+								Milimetros initializeWith: 2001.
+								Milimetros initializeWith: 3001.
+								Milimetros initializeWith: 4001} asOrderedCollection.
+								
+	
+	self assert: ( (initialDistanceMetro to: finalDistanceMetro) = intervaloParaMetro ).
+	self assert: ( (initialDistanceCentimetro to: finalDistanceCentimetro) = intervaloParaCentimetro ).
+	self assert: ( (initialDistanceMilimetro  to: finalDistanceMilimetro) = intervaloParaMilimetro  ).
+	! !
+
+!DistanceTest methodsFor: 'as yet unclassified' stamp: 'JI 5/29/2017 16:08:12'!
+test02_AnIntervalWithArbitraryStepsWorksRightForAllDistances
+	
+	| initialDistanceMetro initialDistanceCentimetro initialDistanceMilimetro
+	  finalDistanceMetro finalDistanceCentimetro finalDistanceMilimetro
+	  stepsForMetro stepsForCentimetro stepsForMilimetro
+	  intervaloParaMetro intervaloParaCentimetro intervaloParaMilimetro
+	|
+	
+	initialDistanceMetro _ Metro initializeWith: 1.
+	stepsForMetro _ Milimetros initializeWith: 16.
+	finalDistanceMetro _ Centimetro initializeWith: 105.
+	
+	intervaloParaMetro _ { Milimetros initializeWith: 1000 . 
+							Milimetros initializeWith: 1016 . 
+							Milimetros initializeWith: 1032. 
+							Milimetros initializeWith: 1048. } asOrderedCollection.
+	self assert: ( (initialDistanceMetro to: finalDistanceMetro by: stepsForMetro ) = intervaloParaMetro ).
+	
+	
+	initialDistanceCentimetro _ Centimetro initializeWith: 10.
+	stepsForCentimetro _ Metro initializeWith: 2.
+	finalDistanceCentimetro _ Milimetros initializeWith: 9100.
+						
+	intervaloParaCentimetro _ { Centimetro initializeWith: 10 .
+									Centimetro initializeWith: 210 .
+									Centimetro initializeWith: 410 .
+									Centimetro initializeWith: 610 .
+									Centimetro initializeWith: 810 . } asOrderedCollection .
+	self assert: ( (initialDistanceCentimetro to: finalDistanceCentimetro by: stepsForCentimetro ) = intervaloParaCentimetro ).
+	
+	
+	initialDistanceMilimetro _ Milimetros initializeWith: 1.	
+	stepsForMilimetro _ Centimetro initializeWith: 500.
+	finalDistanceMilimetro _ Metro initializeWith: 21.
+	
+	intervaloParaMilimetro _ { Milimetros initializeWith: 1.
+								Milimetros initializeWith: 5001.
+								Milimetros initializeWith: 10001.
+								Milimetros initializeWith: 15001.
+								Milimetros initializeWith: 20001} asOrderedCollection.
+	self assert: ( (initialDistanceMilimetro  to: finalDistanceMilimetro by: stepsForMilimetro ) = intervaloParaMilimetro  ).
+	! !
+
+!DistanceTest methodsFor: 'as yet unclassified' stamp: 'JI 5/29/2017 16:40:22'!
+test03_ExecutingABlockForEachStepOfAnIntervalWorksRight
+	
+	| initialDistance finalDistance steps anExecutionBlock |
+	
+	initialDistance _ Milimetros initializeWith: 1.	
+	steps _ Centimetro initializeWith: 500.
+	finalDistance _ Metro initializeWith: 21.
+	
+	anExecutionBlock _ [ :aDistance | aDistance + unMetro ] .
+	
+	(Centimetro initializeWith: 1) to: finalDistance  by: steps  do: anExecutionBlock .
+	(Metro initializeWith: 1) to: finalDistance  by: steps  do: anExecutionBlock .
+	(initialDistance to: finalDistance by: steps do: anExecutionBlock ).
+! !
+
 
 !classDefinition: #DistanceFactory category: #'Distance-Solution'!
 Object subclass: #DistanceFactory
@@ -490,6 +592,19 @@ asMetros
 asMilimetros
 	self subclassResponsibility ! !
 
+
+!DistanceUnits methodsFor: 'as yet unclassified' stamp: 'JI 5/29/2017 15:07:56'!
+to: aDistance
+	^self subclassResponsibility ! !
+
+!DistanceUnits methodsFor: 'as yet unclassified' stamp: 'JI 5/29/2017 16:04:03'!
+to: aDistance by: stepDistance 
+	^self subclassResponsibility ! !
+
+!DistanceUnits methodsFor: 'as yet unclassified' stamp: 'JI 5/29/2017 16:41:02'!
+to: aDistance by: steps do: aBlockClosure 
+	^self subclassResponsibility ! !
+
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
 !classDefinition: 'DistanceUnits class' category: #'Distance-Solution'!
@@ -564,6 +679,31 @@ asMetros
 !Centimetro methodsFor: 'conversion' stamp: 'jak 5/28/2017 20:34:31'!
 asMilimetros
 	^quantity *10! !
+
+
+!Centimetro methodsFor: 'as yet unclassified' stamp: 'JI 5/29/2017 15:40:06'!
+to: aDistance
+	| anInterval currentDistance |
+	anInterval _ OrderedCollection new.
+	currentDistance _ self.
+	[currentDistance <= aDistance ] whileTrue: [ anInterval add: currentDistance.
+													currentDistance _ currentDistance + (Metro initializeWith: 1) ].
+												
+	^anInterval! !
+
+!Centimetro methodsFor: 'as yet unclassified' stamp: 'JI 5/29/2017 16:04:48'!
+to: aDistance by: stepDistance 
+	| anInterval currentDistance |
+	anInterval _ OrderedCollection new.
+	currentDistance _ self.
+	[currentDistance <= aDistance ] whileTrue: [ anInterval add: currentDistance.
+													currentDistance _ currentDistance + stepDistance ].
+												
+	^anInterval! !
+
+!Centimetro methodsFor: 'as yet unclassified' stamp: 'JI 5/29/2017 16:41:55'!
+to: aDistance by: steps do: aBlockClosure
+	(self to: aDistance by: steps) do: aBlockClosure ! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -640,6 +780,31 @@ asMetros
 asMilimetros
 	^quantity*1000! !
 
+
+!Metro methodsFor: 'as yet unclassified' stamp: 'JI 5/29/2017 15:38:11'!
+to: aDistance
+	| anInterval currentDistance |
+	anInterval _ OrderedCollection new.
+	currentDistance _ self.
+	[currentDistance <= aDistance ] whileTrue: [ anInterval add: currentDistance.
+													currentDistance _ currentDistance + (Metro initializeWith: 1) ].
+												
+	^anInterval! !
+
+!Metro methodsFor: 'as yet unclassified' stamp: 'JI 5/29/2017 16:04:39'!
+to: aDistance by: stepDistance 
+	| anInterval currentDistance |
+	anInterval _ OrderedCollection new.
+	currentDistance _ self.
+	[currentDistance <= aDistance ] whileTrue: [ anInterval add: currentDistance.
+													currentDistance _ currentDistance + stepDistance ].
+												
+	^anInterval! !
+
+!Metro methodsFor: 'as yet unclassified' stamp: 'JI 5/29/2017 16:42:02'!
+to: aDistance by: steps do: aBlockClosure
+	(self to: aDistance by: steps) do: aBlockClosure ! !
+
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
 !classDefinition: 'Metro class' category: #'Distance-Solution'!
@@ -712,6 +877,31 @@ asMetros
 !Milimetros methodsFor: 'conversion' stamp: 'jak 5/28/2017 20:36:44'!
 asMilimetros
 	^quantity! !
+
+
+!Milimetros methodsFor: 'as yet unclassified' stamp: 'JI 5/29/2017 15:40:57'!
+to: aDistance
+	| anInterval currentDistance |
+	anInterval _ OrderedCollection new.
+	currentDistance _ self.
+	[currentDistance <= aDistance ] whileTrue: [ anInterval add: currentDistance.
+													currentDistance _ currentDistance + (Metro initializeWith: 1) ].
+												
+	^anInterval! !
+
+!Milimetros methodsFor: 'as yet unclassified' stamp: 'JI 5/29/2017 16:08:55'!
+to: aDistance by: stepDistance 
+	| anInterval currentDistance |
+	anInterval _ OrderedCollection new.
+	currentDistance _ self.
+	[currentDistance <= aDistance ] whileTrue: [ anInterval add: currentDistance.
+													currentDistance _ currentDistance + stepDistance ].
+												
+	^anInterval! !
+
+!Milimetros methodsFor: 'as yet unclassified' stamp: 'JI 5/29/2017 16:42:09'!
+to: aDistance by: steps do: aBlockClosure
+	(self to: aDistance by: steps) do: aBlockClosure ! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
