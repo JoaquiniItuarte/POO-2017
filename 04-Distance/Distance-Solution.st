@@ -683,22 +683,22 @@ Object subclass: #DistanceUnits
 < someDistance 
 	^ self subclassResponsibility ! !
 
-!DistanceUnits methodsFor: 'comparing' stamp: 'JI 5/29/2017 00:42:16'!
+!DistanceUnits methodsFor: 'comparing' stamp: 'JAK 5/30/2017 13:57:35'!
 <= aDistance
-	^self subclassResponsibility ! !
+	^ self < aDistance or: [self = aDistance ]! !
 
 !DistanceUnits methodsFor: 'comparing' stamp: 'JI 5/25/2017 03:20:42'!
 = anotherDistance
 	^self subclassResponsibility.
 	! !
 
-!DistanceUnits methodsFor: 'comparing' stamp: 'JI 5/29/2017 00:50:21'!
+!DistanceUnits methodsFor: 'comparing' stamp: 'JAK 5/30/2017 13:56:09'!
 > aDistance
-	^self subclassResponsibility ! !
+	^ (self <= aDistance ) not! !
 
-!DistanceUnits methodsFor: 'comparing' stamp: 'JI 5/30/2017 13:33:04'!
->= aDistance 
-	^self subclassResponsibility ! !
+!DistanceUnits methodsFor: 'comparing' stamp: 'JAK 5/30/2017 13:56:16'!
+>= aDistance
+	^ self > aDistance or:[ self = aDistance]! !
 
 
 !DistanceUnits methodsFor: 'operating' stamp: 'JI 5/28/2017 15:53:03'!
@@ -805,22 +805,10 @@ initializeWith: aQuantity
 < someDistance
 	^ quantity < (someDistance asCentimetros )! !
 
-!Centimetro methodsFor: 'comparing' stamp: 'JI 5/29/2017 00:43:40'!
-<= aDistance 
-	^ self < aDistance or: [self = aDistance]! !
-
 !Centimetro methodsFor: 'comparing' stamp: 'jak 5/28/2017 21:02:19'!
 = anotherDistance
 
 	^ quantity closeTo: (anotherDistance asCentimetros )! !
-
-!Centimetro methodsFor: 'comparing' stamp: 'JI 5/29/2017 00:50:59'!
-> aDistance
-	^ (self <= aDistance) not! !
-
-!Centimetro methodsFor: 'comparing' stamp: 'JI 5/29/2017 01:07:04'!
->= aDistance
-	^ (self < aDistance ) not! !
 
 
 !Centimetro methodsFor: 'conversion' stamp: 'jak 5/28/2017 20:35:47'!
@@ -861,22 +849,10 @@ DistanceUnits subclass: #Kilometro
 < aDistance
 	^ quantity < (aDistance asKilometros )! !
 
-!Kilometro methodsFor: 'comparing' stamp: 'JI 5/30/2017 02:40:06'!
-<= aDistance
-	^ self < aDistance or: [self = aDistance]! !
-
 !Kilometro methodsFor: 'comparing' stamp: 'JI 5/30/2017 00:52:22'!
 = anotherDistance
 
 	^ quantity closeTo: (anotherDistance asKilometros)! !
-
-!Kilometro methodsFor: 'comparing' stamp: 'JI 5/30/2017 02:42:53'!
-> aDistance
-	^ (self <= aDistance ) not! !
-
-!Kilometro methodsFor: 'comparing' stamp: 'JI 5/30/2017 02:41:55'!
->= aDistance
-	^ self > aDistance or:[ self = aDistance]! !
 
 
 !Kilometro methodsFor: 'conversion' stamp: 'JI 5/30/2017 01:00:31'!
@@ -965,21 +941,9 @@ initializeWith: aQuantity
 < someDistance
 	^ quantity < (someDistance asMetros )! !
 
-!Metro methodsFor: 'comparing' stamp: 'JI 5/29/2017 00:42:53'!
-<= aDistance 
-	^ self < aDistance or: [self = aDistance]! !
-
 !Metro methodsFor: 'comparing' stamp: 'jak 5/28/2017 21:02:34'!
 = anotherDistance
 	^quantity closeTo:(anotherDistance asMetros ).! !
-
-!Metro methodsFor: 'comparing' stamp: 'JI 5/29/2017 00:50:53'!
-> aDistance
-	^ (self <= aDistance) not! !
-
-!Metro methodsFor: 'comparing' stamp: 'JI 5/29/2017 01:06:49'!
->= aMetro 
-	^ (self < aMetro ) not! !
 
 
 !Metro methodsFor: 'conversion' stamp: 'jak 5/28/2017 20:35:29'!
@@ -1042,21 +1006,9 @@ initializeWith: anInteger
 < someDistance 
 	^ quantity < (someDistance asMilimetros ) ! !
 
-!Milimetros methodsFor: 'comparing' stamp: 'JI 5/29/2017 00:45:42'!
-<= aDistance
-	^ self < aDistance or: [self = aDistance ]! !
-
 !Milimetros methodsFor: 'comparing' stamp: 'jak 5/28/2017 21:02:41'!
 = anotherDistance 
 	^ quantity closeTo: (anotherDistance asMilimetros )! !
-
-!Milimetros methodsFor: 'comparing' stamp: 'JI 5/29/2017 01:02:45'!
-> aDistance
-	^ (self <= aDistance) not! !
-
-!Milimetros methodsFor: 'comparing' stamp: 'JI 5/29/2017 01:07:12'!
->= aDistance
-	^ (self < aDistance ) not! !
 
 
 !Milimetros methodsFor: 'conversion' stamp: 'jak 5/28/2017 20:44:48'!
