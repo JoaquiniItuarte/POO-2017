@@ -1,6 +1,6 @@
 !classDefinition: #DistanceTest category: #'Distance-Solution'!
 TestCase subclass: #DistanceTest
-	instanceVariableNames: 'unMetro distanceFactory milMilimetros unCentimetro oneMilimetro threeMetros fourMetros fiveMetros threeHundredOneCentimetros fourHundredOneCentimetros fiveHundredOneCentimetros threeThousandMilimetros fourThousandMilimetros fiveThousandMilimetros threeHundredCentimetros twoThousandMilimetros cienCentimetros unKilometro'
+	instanceVariableNames: 'unMetro distanceFactory milMilimetros unCentimetro oneMilimetro threeMetros fourMetros fiveMetros threeHundredOneCentimetros fiveHundredOneCentimetros threeThousandMilimetros fourThousandMilimetros fiveThousandMilimetros threeHundredCentimetros twoThousandMilimetros cienCentimetros unKilometro fourHundredOneCentimetros'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Distance-Solution'!
@@ -12,7 +12,7 @@ test01_MeterIsEqualToAnotherDistance
 	self assert: unMetro = milMilimetros.
 	self assert: unMetro = (Kilometro initializeWith: 0.001)! !
 
-!DistanceTest methodsFor: 'equality between distances' stamp: 'JI 5/30/2017 00:59:46'!
+!DistanceTest methodsFor: 'equality between distances' stamp: 'JI 5/30/2017 13:26:54'!
 test02_MilimitersIsEquealToAnotherDistance
 	self assert: milMilimetros = (Milimetros initializeWith: 1000).
 	self assert: milMilimetros = cienCentimetros.
@@ -34,16 +34,11 @@ test04_KilometroIsEqualToAnotherDistance
 	self assert: unKilometro = (Milimetros initializeWith: 1000000).! !
 
 
-!DistanceTest methodsFor: 'comparing between distances' stamp: 'JI 5/30/2017 01:01:38'!
-test01_MetroLessThanDistance
+!DistanceTest methodsFor: 'comparing between distances' stamp: 'JI 5/30/2017 13:44:32'!
+test01_MetroLessThanDistanceWorksRight
 	
-	|  fourMetros fiveMetros fourThousandOneMilimetros |
+	|  fourThousandOneMilimetros  |
 	
-	fourMetros := Metro initializeWith: 4.
-
-	fiveMetros _ Metro initializeWith: 5.
-	
-	fourHundredOneCentimetros _ Centimetro initializeWith: 401.
 	fourThousandOneMilimetros _ Milimetros initializeWith: 4001.
 	
 	self assert: fourMetros < (Kilometro initializeWith: 1).
@@ -58,19 +53,10 @@ test01_MetroLessThanDistance
 	self assert: fourMetros < fourThousandOneMilimetros. 
 	self deny: fiveMetros < fourThousandOneMilimetros .! !
 
-!DistanceTest methodsFor: 'comparing between distances' stamp: 'JI 5/30/2017 01:02:06'!
-test02_CentimetroLessThanDistance
+!DistanceTest methodsFor: 'comparing between distances' stamp: 'JI 5/30/2017 13:44:14'!
+test02_CentimetroLessThanDistanceWorksRight
 	
-	|  fourMetros fourHundredOneCentimetros fiveMetros  |
-	
-	fourMetros := Metro initializeWith: 4.
-	fiveMetros _ Metro initializeWith: 5.
 
-	fourHundredOneCentimetros _ Centimetro initializeWith: 401.
-	threeHundredOneCentimetros _ Centimetro initializeWith: 301.
-	fiveHundredOneCentimetros _ Centimetro initializeWith: 501.
-	
-	
 	self assert: fourHundredOneCentimetros < (Kilometro initializeWith: 1).
 	self deny: fourHundredOneCentimetros < (Kilometro initializeWith: 0.001).
 	
@@ -645,9 +631,9 @@ Object subclass: #DistanceFactory
 	poolDictionaries: ''
 	category: 'Distance-Solution'!
 
-!DistanceFactory methodsFor: 'newInstances' stamp: 'jak 5/27/2017 17:56:28'!
-minusOneMeter: aDistance
-	^aDistance - self oneMeter
+!DistanceFactory methodsFor: 'newInstances' stamp: 'JI 5/30/2017 13:37:54'!
+minusOneMeter
+	^ Metro initializeWith: -1
 ! !
 
 !DistanceFactory methodsFor: 'newInstances' stamp: 'jak 5/27/2017 18:00:18'!
@@ -710,8 +696,8 @@ Object subclass: #DistanceUnits
 > aDistance
 	^self subclassResponsibility ! !
 
-!DistanceUnits methodsFor: 'comparing' stamp: 'JI 5/29/2017 01:05:51'!
->= aMetro 
+!DistanceUnits methodsFor: 'comparing' stamp: 'JI 5/30/2017 13:33:04'!
+>= aDistance 
 	^self subclassResponsibility ! !
 
 
@@ -719,12 +705,12 @@ Object subclass: #DistanceUnits
 * aSmallInteger 
 	^ self subclassResponsibility ! !
 
-!DistanceUnits methodsFor: 'operating' stamp: 'JI 5/25/2017 19:21:11'!
-+ anotherDistance
+!DistanceUnits methodsFor: 'operating' stamp: 'JI 5/30/2017 13:32:07'!
++ aDistance
 	^ self subclassResponsibility ! !
 
-!DistanceUnits methodsFor: 'operating' stamp: 'JI 5/27/2017 15:01:56'!
-- aMetro 
+!DistanceUnits methodsFor: 'operating' stamp: 'JI 5/30/2017 13:32:19'!
+- aDistance
 	^self subclassResponsibility ! !
 
 !DistanceUnits methodsFor: 'operating' stamp: 'JI 5/28/2017 15:45:06'!
@@ -738,6 +724,10 @@ adaptToNumber: aNumber andSend: selector
 
 !DistanceUnits methodsFor: 'conversion' stamp: 'jak 5/28/2017 20:23:31'!
 asCentimetros
+	self subclassResponsibility ! !
+
+!DistanceUnits methodsFor: 'conversion' stamp: 'JI 5/30/2017 13:30:19'!
+asKilometros
 	self subclassResponsibility ! !
 
 !DistanceUnits methodsFor: 'conversion' stamp: 'jak 5/28/2017 20:23:21'!
@@ -797,12 +787,12 @@ initializeWith: aQuantity
 * aSmallInteger 
 	^ self class initializeWith: quantity * aSmallInteger ! !
 
-!Centimetro methodsFor: 'operating' stamp: 'jak 5/28/2017 20:49:14'!
+!Centimetro methodsFor: 'operating' stamp: 'JI 5/30/2017 13:34:42'!
 + someDistance
 
-	^ self class initializeWith: (quantity + someDistance asCentimetros )! !
+	^ self class initializeWith: (quantity + someDistance asCentimetros)! !
 
-!Centimetro methodsFor: 'operating' stamp: 'jak 5/28/2017 20:28:02'!
+!Centimetro methodsFor: 'operating' stamp: 'JI 5/30/2017 13:34:38'!
 - someDistance
 	^ self class initializeWith: (quantity - someDistance asCentimetros )! !
 
@@ -837,6 +827,10 @@ initializeWith: aQuantity
 asCentimetros
 	^quantity! !
 
+!Centimetro methodsFor: 'conversion' stamp: 'JI 5/30/2017 00:57:56'!
+asKilometros
+	^quantity * 0.00001! !
+
 !Centimetro methodsFor: 'conversion' stamp: 'jak 5/28/2017 20:34:18'!
 asMetros
 	^quantity *0.01! !
@@ -844,11 +838,6 @@ asMetros
 !Centimetro methodsFor: 'conversion' stamp: 'jak 5/28/2017 20:34:31'!
 asMilimetros
 	^quantity *10! !
-
-
-!Centimetro methodsFor: 'as yet unclassified' stamp: 'JI 5/30/2017 00:57:56'!
-asKilometros
-	^quantity * 0.00001! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -868,64 +857,67 @@ DistanceUnits subclass: #Kilometro
 	poolDictionaries: ''
 	category: 'Distance-Solution'!
 
-!Kilometro methodsFor: 'as yet unclassified' stamp: 'JI 5/30/2017 02:54:34'!
-* aSmallInteger 
-	^ self class initializeWith: quantity * aSmallInteger ! !
-
-!Kilometro methodsFor: 'as yet unclassified' stamp: 'JI 5/30/2017 03:00:08'!
-+ someDistance
-
-	^ self class initializeWith: (quantity + someDistance asKilometros )! !
-
-!Kilometro methodsFor: 'as yet unclassified' stamp: 'JI 5/30/2017 03:01:13'!
-- someDistance
-
-	^ self class initializeWith: (quantity - someDistance asKilometros )! !
-
-!Kilometro methodsFor: 'as yet unclassified' stamp: 'JI 5/30/2017 02:54:15'!
-/ aSmallInteger 
-	^ self class initializeWith: quantity / aSmallInteger ! !
-
-!Kilometro methodsFor: 'as yet unclassified' stamp: 'JI 5/30/2017 02:40:45'!
+!Kilometro methodsFor: 'comparing' stamp: 'JI 5/30/2017 02:40:45'!
 < aDistance
 	^ quantity < (aDistance asKilometros )! !
 
-!Kilometro methodsFor: 'as yet unclassified' stamp: 'JI 5/30/2017 02:40:06'!
+!Kilometro methodsFor: 'comparing' stamp: 'JI 5/30/2017 02:40:06'!
 <= aDistance
 	^ self < aDistance or: [self = aDistance]! !
 
-!Kilometro methodsFor: 'as yet unclassified' stamp: 'JI 5/30/2017 00:52:22'!
+!Kilometro methodsFor: 'comparing' stamp: 'JI 5/30/2017 00:52:22'!
 = anotherDistance
 
 	^ quantity closeTo: (anotherDistance asKilometros)! !
 
-!Kilometro methodsFor: 'as yet unclassified' stamp: 'JI 5/30/2017 02:42:53'!
+!Kilometro methodsFor: 'comparing' stamp: 'JI 5/30/2017 02:42:53'!
 > aDistance
 	^ (self <= aDistance ) not! !
 
-!Kilometro methodsFor: 'as yet unclassified' stamp: 'JI 5/30/2017 02:41:55'!
+!Kilometro methodsFor: 'comparing' stamp: 'JI 5/30/2017 02:41:55'!
 >= aDistance
 	^ self > aDistance or:[ self = aDistance]! !
 
-!Kilometro methodsFor: 'as yet unclassified' stamp: 'JI 5/30/2017 01:00:31'!
+
+!Kilometro methodsFor: 'conversion' stamp: 'JI 5/30/2017 01:00:31'!
 asCentimetros
 	^ quantity * 100000! !
 
-!Kilometro methodsFor: 'as yet unclassified' stamp: 'JI 5/30/2017 00:56:41'!
+!Kilometro methodsFor: 'conversion' stamp: 'JI 5/30/2017 00:56:41'!
 asKilometros
 	^ quantity ! !
 
-!Kilometro methodsFor: 'as yet unclassified' stamp: 'JI 5/30/2017 01:00:04'!
+!Kilometro methodsFor: 'conversion' stamp: 'JI 5/30/2017 01:00:04'!
 asMetros
 	^ quantity * 1000! !
 
-!Kilometro methodsFor: 'as yet unclassified' stamp: 'JI 5/30/2017 01:00:20'!
+!Kilometro methodsFor: 'conversion' stamp: 'JI 5/30/2017 01:00:20'!
 asMilimetros
 	^ quantity * 1000000! !
 
-!Kilometro methodsFor: 'as yet unclassified' stamp: 'JI 5/30/2017 00:55:05'!
+
+!Kilometro methodsFor: 'initialization' stamp: 'JI 5/30/2017 00:55:05'!
 initializeWith: aQuantity
 	quantity _ aQuantity ! !
+
+
+!Kilometro methodsFor: 'operating' stamp: 'JI 5/30/2017 02:54:34'!
+* aSmallInteger 
+	^ self class initializeWith: quantity * aSmallInteger ! !
+
+!Kilometro methodsFor: 'operating' stamp: 'JI 5/30/2017 03:00:08'!
++ someDistance
+
+	^ self class initializeWith: (quantity + someDistance asKilometros )! !
+
+!Kilometro methodsFor: 'operating' stamp: 'JI 5/30/2017 03:01:13'!
+- someDistance
+
+	^ self class initializeWith: (quantity - someDistance asKilometros )! !
+
+!Kilometro methodsFor: 'operating' stamp: 'JI 5/30/2017 02:54:15'!
+/ aSmallInteger 
+	^ self class initializeWith: quantity / aSmallInteger ! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -994,6 +986,10 @@ initializeWith: aQuantity
 asCentimetros
 	^quantity * 100! !
 
+!Metro methodsFor: 'conversion' stamp: 'JI 5/30/2017 00:57:08'!
+asKilometros
+	^quantity * 0.001! !
+
 !Metro methodsFor: 'conversion' stamp: 'jak 5/28/2017 20:35:39'!
 asMetros
 	^quantity! !
@@ -1001,11 +997,6 @@ asMetros
 !Metro methodsFor: 'conversion' stamp: 'jak 5/28/2017 20:36:00'!
 asMilimetros
 	^quantity*1000! !
-
-
-!Metro methodsFor: 'as yet unclassified' stamp: 'JI 5/30/2017 00:57:08'!
-asKilometros
-	^quantity * 0.001! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -1072,6 +1063,10 @@ initializeWith: anInteger
 asCentimetros
 	^(quantity * 0.1)! !
 
+!Milimetros methodsFor: 'conversion' stamp: 'JI 5/30/2017 00:58:16'!
+asKilometros
+	^ quantity *0.000001! !
+
 !Milimetros methodsFor: 'conversion' stamp: 'jak 5/28/2017 20:36:35'!
 asMetros
 	^quantity * 0.001! !
@@ -1079,11 +1074,6 @@ asMetros
 !Milimetros methodsFor: 'conversion' stamp: 'jak 5/28/2017 20:36:44'!
 asMilimetros
 	^quantity! !
-
-
-!Milimetros methodsFor: 'as yet unclassified' stamp: 'JI 5/30/2017 00:58:16'!
-asKilometros
-	^ quantity *0.000001! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
