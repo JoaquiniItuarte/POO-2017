@@ -626,7 +626,7 @@ test03_ExecutingSumIntoBlock
 
 !classDefinition: #UnitTest category: #'Distance-Solution'!
 TestCase subclass: #UnitTest
-	instanceVariableNames: 'centimetros100 centimetros200 metros1 metros2 metrosOtro1 milimetros1000 milimetros2000 centimetrosOtro100 milimetrosOtro1000 kilometros1Over1000 kilometrosOtro1Over1000 kilometros2Over1000 metros3 metros4 kilometros3Over1000 centimetros300 milimetros3000 kilometros1 kilometrosOtro1 kilometros2 kilometros3 metrosMinus1 metros0 metros30'
+	instanceVariableNames: 'centimetros100 centimetros200 metros1 metros2 metrosOtro1 milimetros1000 milimetros2000 centimetrosOtro100 milimetrosOtro1000 kilometros1Over1000 kilometrosOtro1Over1000 kilometros2Over1000 metros3 metros4 kilometros3Over1000 centimetros300 milimetros3000 kilometros1 kilometrosOtro1 kilometros2 kilometros3 metrosMinus1 metros0 metros30 intervaloVacio'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Distance-Solution'!
@@ -1059,6 +1059,12 @@ setUp
 	self centimetrosSetUp .
 	self milimetrosSetUp .! !
 
+
+!UnitTest methodsFor: 'Interval' stamp: 'Ji 6/1/2017 19:19:51'!
+test001_IntervaloVacio
+	
+	intervaloVacio _ Interval ! !
+
 
 !classDefinition: #DistanceFactory category: #'Distance-Solution'!
 Object subclass: #DistanceFactory
@@ -1067,45 +1073,39 @@ Object subclass: #DistanceFactory
 	poolDictionaries: ''
 	category: 'Distance-Solution'!
 
-!DistanceFactory methodsFor: 'newInstances' stamp: 'JI 5/30/2017 13:37:54'!
+!DistanceFactory methodsFor: 'newInstances' stamp: 'Ji 6/1/2017 19:31:31'!
 minusOneMeter
-	^ Metro initializeWith: -1
+	^ DistanceUnits initializeWith: -1 asUnit: Metro initialize
 ! !
 
-!DistanceFactory methodsFor: 'newInstances' stamp: 'jak 5/27/2017 18:00:18'!
+!DistanceFactory methodsFor: 'newInstances' stamp: 'Ji 6/1/2017 19:31:42'!
 oneCentimeter
-	^Centimetro initializeWith: 1
-! !
+	^ DistanceUnits initializeWith: 1 asUnit: Centimetro initialize! !
 
-!DistanceFactory methodsFor: 'newInstances' stamp: 'jak 5/27/2017 18:01:02'!
+!DistanceFactory methodsFor: 'newInstances' stamp: 'Ji 6/1/2017 19:31:52'!
 oneHundredCentimeters
-	^Centimetro initializeWith: 100
-! !
+	^ DistanceUnits initializeWith: 100 asUnit: Centimetro initialize! !
 
-!DistanceFactory methodsFor: 'newInstances' stamp: 'jak 5/27/2017 17:59:43'!
+!DistanceFactory methodsFor: 'newInstances' stamp: 'Ji 6/1/2017 19:32:02'!
 oneMeter
-	^Metro initializeWith: 1
-! !
+	^ DistanceUnits initializeWith: 1 asUnit: Metro initialize! !
 
-!DistanceFactory methodsFor: 'newInstances' stamp: 'jak 5/27/2017 19:46:40'!
+!DistanceFactory methodsFor: 'newInstances' stamp: 'Ji 6/1/2017 19:32:10'!
 oneMilimeter
-	^Milimetros initializeWith: 1
-! !
+	^ DistanceUnits initializeWith: 1 asUnit: Milimetro initialize! !
 
-!DistanceFactory methodsFor: 'newInstances' stamp: 'jak 5/27/2017 18:01:15'!
+!DistanceFactory methodsFor: 'newInstances' stamp: 'Ji 6/1/2017 19:32:18'!
 twoHundredCentimeters
-	^Centimetro initializeWith: 200
-! !
+	^ DistanceUnits initializeWith: 200 asUnit: Centimetro initialize! !
 
-!DistanceFactory methodsFor: 'newInstances' stamp: 'jak 5/27/2017 18:01:30'!
+!DistanceFactory methodsFor: 'newInstances' stamp: 'Ji 6/1/2017 19:32:33'!
 twoMeters
-	^Metro initializeWith: 2
+	^ DistanceUnits initializeWith: 2 asUnit: Metro initialize
 ! !
 
-!DistanceFactory methodsFor: 'newInstances' stamp: 'jak 5/27/2017 18:01:40'!
+!DistanceFactory methodsFor: 'newInstances' stamp: 'Ji 6/1/2017 19:32:41'!
 zeroMeters
-	^Metro initializeWith: 0
-! !
+	^ DistanceUnits initializeWith: 0 asUnit: Metro initialize! !
 
 
 !classDefinition: #DistanceUnits category: #'Distance-Solution'!
@@ -1186,6 +1186,10 @@ initializeWith: aQuantity
 	quantity := aQuantity ! !
 
 
+!DistanceUnits methodsFor: 'as yet unclassified' stamp: 'Ji 6/1/2017 19:27:48'!
+amount
+	^ quantity ! !
+
 !DistanceUnits methodsFor: 'as yet unclassified' stamp: 'Ji 5/30/2017 21:37:50'!
 factorValue
 	^ quantity * (unitType convertionFactor)! !
@@ -1194,6 +1198,15 @@ factorValue
 initializeWith: aSmallInteger asUnit: anUnitType 
 	unitType _ anUnitType.
 	quantity _ aSmallInteger .! !
+
+!DistanceUnits methodsFor: 'as yet unclassified' stamp: 'Ji 6/1/2017 19:29:55'!
+unit
+	^ unitType class! !
+
+
+!DistanceUnits methodsFor: 'printing' stamp: 'Ji 6/1/2017 19:26:54'!
+printString
+	^ quantity printString, ' ' , unitType printString! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -1212,8 +1225,8 @@ initializeWith: aSmallInteger asUnit: anUnitType
 	^self new initializeWith: aSmallInteger asUnit: anUnitType .! !
 
 
-!classDefinition: #IntervalClass category: #'Distance-Solution'!
-DistanceUnits subclass: #IntervalClass
+!classDefinition: #IntervalOfDistances category: #'Distance-Solution'!
+DistanceUnits subclass: #IntervalOfDistances
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
@@ -1230,6 +1243,10 @@ Object subclass: #Unit
 !Unit methodsFor: 'as yet unclassified' stamp: 'Ji 5/30/2017 21:40:30'!
 convertionFactor
 	^ conversionFactor! !
+
+!Unit methodsFor: 'as yet unclassified' stamp: 'Ji 6/1/2017 19:22:46'!
+printString
+	^ self subclassResponsibility ! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -1253,6 +1270,58 @@ Unit subclass: #Centimetro
 initialize
 	conversionFactor _ 1/100! !
 
+!Centimetro methodsFor: 'as yet unclassified' stamp: 'Ji 6/1/2017 19:23:38'!
+printString
+	^ 'centimeter'! !
+
+
+!classDefinition: #Decametro category: #'Distance-Solution'!
+Unit subclass: #Decametro
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Distance-Solution'!
+
+!Decametro methodsFor: 'as yet unclassified' stamp: 'Ji 6/1/2017 19:25:11'!
+initialize
+	conversionFactor  _ 10! !
+
+!Decametro methodsFor: 'as yet unclassified' stamp: 'Ji 6/1/2017 19:25:17'!
+printString
+	^ 'decameter'! !
+
+
+!classDefinition: #Decimetro category: #'Distance-Solution'!
+Unit subclass: #Decimetro
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Distance-Solution'!
+
+!Decimetro methodsFor: 'as yet unclassified' stamp: 'Ji 6/1/2017 19:24:32'!
+initialize
+	conversionFactor _ 1/10! !
+
+!Decimetro methodsFor: 'as yet unclassified' stamp: 'Ji 6/1/2017 19:24:44'!
+printString
+	^ 'decimeter'! !
+
+
+!classDefinition: #Hectometro category: #'Distance-Solution'!
+Unit subclass: #Hectometro
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Distance-Solution'!
+
+!Hectometro methodsFor: 'as yet unclassified' stamp: 'Ji 6/1/2017 19:25:39'!
+initialize
+	conversionFactor  _ 100! !
+
+!Hectometro methodsFor: 'as yet unclassified' stamp: 'Ji 6/1/2017 19:25:35'!
+printString
+	^ 'hectometer'! !
+
 
 !classDefinition: #Kilometro category: #'Distance-Solution'!
 Unit subclass: #Kilometro
@@ -1264,6 +1333,10 @@ Unit subclass: #Kilometro
 !Kilometro methodsFor: 'as yet unclassified' stamp: 'Ji 5/30/2017 21:47:39'!
 initialize
 	conversionFactor _ 1000! !
+
+!Kilometro methodsFor: 'as yet unclassified' stamp: 'Ji 6/1/2017 19:23:30'!
+printString
+	^ 'kilometer'! !
 
 
 !classDefinition: #Metro category: #'Distance-Solution'!
@@ -1277,6 +1350,10 @@ Unit subclass: #Metro
 initialize
 	conversionFactor  _ 1! !
 
+!Metro methodsFor: 'as yet unclassified' stamp: 'Ji 6/1/2017 19:23:21'!
+printString
+	^ 'meter'! !
+
 
 !classDefinition: #Milimetro category: #'Distance-Solution'!
 Unit subclass: #Milimetro
@@ -1288,5 +1365,9 @@ Unit subclass: #Milimetro
 !Milimetro methodsFor: 'as yet unclassified' stamp: 'Ji 5/30/2017 21:46:20'!
 initialize
 	conversionFactor _ 1/1000! !
+
+!Milimetro methodsFor: 'as yet unclassified' stamp: 'Ji 6/1/2017 19:23:14'!
+printString
+	^ 'milimeter'! !
 
 Unit initialize!
