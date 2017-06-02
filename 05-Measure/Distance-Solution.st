@@ -117,15 +117,56 @@ initializeWith: aSmallInteger asUnit: anUnitType
 
 !classDefinition: #IntervalOfDistances category: #'Distance-Solution'!
 DistanceUnits subclass: #IntervalOfDistances
-	instanceVariableNames: ''
+	instanceVariableNames: 'intervalo'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Distance-Solution'!
 
+!IntervalOfDistances methodsFor: 'initialization' stamp: 'JI 6/2/2017 02:29:35'!
+from: aDistanceUnits to: aDistanceUnits2 by: aDistanceUnits3 
+	intervalo _ Interval from: (aDistanceUnits factorValue ) to: (aDistanceUnits2 factorValue ) by: (aDistanceUnits3 factorValue )! !
+
+!IntervalOfDistances methodsFor: 'initialization' stamp: 'Ji 6/1/2017 19:58:39'!
+intervaloVacio
+	intervalo _ nil
+	! !
+
+!IntervalOfDistances methodsFor: 'initialization' stamp: 'Ji 6/1/2017 19:59:12'!
+size
+	intervalo = nil ifTrue: [^0] ifFalse: [^ intervalo size] ! !
+
+
+!IntervalOfDistances methodsFor: 'as yet unclassified' stamp: 'JI 6/2/2017 02:29:17'!
+do: aBlockClosure 
+	intervalo do: aBlockClosure ! !
+
+!IntervalOfDistances methodsFor: 'as yet unclassified' stamp: 'Ji 6/1/2017 20:17:23'!
+from: aDistanceUnits to: aDistanceUnits2 
+	intervalo _ Interval from: (aDistanceUnits factorValue ) to: (aDistanceUnits2 factorValue )! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'IntervalOfDistances class' category: #'Distance-Solution'!
+IntervalOfDistances class
+	instanceVariableNames: ''!
+
+!IntervalOfDistances class methodsFor: 'initialization' stamp: 'Ji 6/1/2017 19:56:59'!
+from: aDistanceUnits to: aDistanceUnits2 
+	^ self new from: aDistanceUnits to: aDistanceUnits2 ! !
+
+!IntervalOfDistances class methodsFor: 'initialization' stamp: 'Ji 6/1/2017 19:49:07'!
+intervaloVacio
+	^ self new intervaloVacio! !
+
+
+!IntervalOfDistances class methodsFor: 'as yet unclassified' stamp: 'Ji 6/1/2017 20:52:06'!
+from: aDistanceUnits to: aDistanceUnits2 by: aDistanceUnits3 
+	^self new from: aDistanceUnits to: aDistanceUnits2  by: aDistanceUnits3 ! !
+
 
 !classDefinition: #UnitTest category: #'Distance-Solution'!
 TestCase subclass: #UnitTest
-	instanceVariableNames: 'centimetros100 centimetros200 metros1 metros2 metrosOtro1 milimetros1000 milimetros2000 centimetrosOtro100 milimetrosOtro1000 kilometros1Over1000 kilometrosOtro1Over1000 kilometros2Over1000 metros3 metros4 kilometros3Over1000 centimetros300 milimetros3000 kilometros1 kilometrosOtro1 kilometros2 kilometros3 metrosMinus1 metros0 metros30 intervaloVacio'
+	instanceVariableNames: 'centimetros100 centimetros200 metros1 metros2 metrosOtro1 milimetros1000 milimetros2000 centimetrosOtro100 milimetrosOtro1000 kilometros1Over1000 kilometrosOtro1Over1000 kilometros2Over1000 metros3 metros4 kilometros3Over1000 centimetros300 milimetros3000 kilometros1 kilometrosOtro1 kilometros2 kilometros3 metrosMinus1 metros0 metros30 intervaloVacio intervaloDeKilometros1To2 intervaloDeKilometros2To1 intervaloDeKilometros1To2By100Metros metros100 intervaloDeKilometros2To1By100Metros intervaloDeMetros1To30 intervaloDeMetros30To1 intervaloDeMetros1To30By200Centimetros intervaloDeMetros30To1By200Centimetros intervaloDeCentimetros100To1000 centimetros1000 intervaloDeCentimetros1000To100 intervaloDeCentimetros100To1000By500Milimetros milimetros500 intervaloDeCentimetros1000To100By500Milimetros intervaloDeMilimetros1000To10000 milimetros10000 intervaloDeMilimetros10000To1000 intervaloDeMilimetros1000To10000By1Over1000Kilometro intervaloDeMilimetros10000To1000By1Over1000Kilometro'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Distance-Solution'!
@@ -508,13 +549,45 @@ test004_DistanceGreaterOrEqualThanDistance
 	self assert: kilometros1Over1000 >= metros0.! !
 
 
-!UnitTest methodsFor: 'SetUp' stamp: 'JI 5/31/2017 19:53:33'!
+!UnitTest methodsFor: 'SetUp' stamp: 'JI 6/2/2017 02:34:49'!
 centimetrosSetUp
 
 	centimetros100 _ DistanceUnits initializeWith: 100 asUnit: (Centimetro initialize) .	
 	centimetrosOtro100 _ DistanceUnits initializeWith: 100 asUnit: (Centimetro initialize) .	
 	centimetros200 _ DistanceUnits initializeWith: 200 asUnit: (Centimetro initialize) .
-	centimetros300 _ DistanceUnits initializeWith: 300 asUnit: (Centimetro initialize)  ! !
+	centimetros300 _ DistanceUnits initializeWith: 300 asUnit: (Centimetro initialize)  .
+	centimetros1000 _ DistanceUnits initializeWith: 1000 asUnit: (Centimetro initialize) .	! !
+
+!UnitTest methodsFor: 'SetUp' stamp: 'JI 6/2/2017 02:30:10'!
+intervalosSetUp
+	
+	intervaloVacio _ IntervalOfDistances intervaloVacio.
+	
+	intervaloDeKilometros1To2 _ IntervalOfDistances from: kilometros1 to: kilometros2 .
+	intervaloDeKilometros2To1 _ IntervalOfDistances from: kilometros2 to: kilometros1 .
+	intervaloDeKilometros1To2By100Metros _ IntervalOfDistances from: kilometros1 to: kilometros2 by: metros100.
+	intervaloDeKilometros2To1By100Metros _ IntervalOfDistances from: kilometros2 to: kilometros1 by: metros100 .
+	
+	intervaloDeMetros1To30 _ IntervalOfDistances from: metros1  to: metros30  .
+	intervaloDeMetros30To1 _ IntervalOfDistances from: metros30 to:  metros1 .
+	intervaloDeMetros1To30By200Centimetros _ IntervalOfDistances from: metros1  to: metros30 by: centimetros200 .
+	intervaloDeMetros30To1By200Centimetros _ IntervalOfDistances from: metros30  to: metros1 by: centimetros200 .
+
+	
+	intervaloDeCentimetros100To1000 _ IntervalOfDistances from: centimetros100  to: centimetros1000  .
+	intervaloDeCentimetros1000To100 _ IntervalOfDistances from: centimetros1000 to: centimetros100 .
+	intervaloDeCentimetros100To1000By500Milimetros _ IntervalOfDistances from: centimetros100 to: centimetros1000 by: milimetros500.
+	intervaloDeCentimetros1000To100By500Milimetros _ IntervalOfDistances from: centimetros1000 to: centimetros100 by: milimetros500.
+	
+	
+	intervaloDeMilimetros1000To10000 _ IntervalOfDistances from: milimetros1000  to: milimetros10000.
+	intervaloDeMilimetros10000To1000 _ IntervalOfDistances from: milimetros10000 to: milimetros1000 .
+	intervaloDeMilimetros1000To10000By1Over1000Kilometro  _ IntervalOfDistances from: milimetros1000 to: milimetros10000 by: kilometros1Over1000 .
+	intervaloDeMilimetros10000To1000By1Over1000Kilometro  _ IntervalOfDistances from: milimetros10000 to: milimetros1000 by: kilometros1Over1000 .
+
+
+	
+	! !
 
 !UnitTest methodsFor: 'SetUp' stamp: 'JI 5/31/2017 20:06:36'!
 kilometrosSetUp
@@ -530,7 +603,7 @@ kilometrosSetUp
 	kilometros3 _ DistanceUnits initializeWith: 3 asUnit: (Kilometro initialize ).
 	! !
 
-!UnitTest methodsFor: 'SetUp' stamp: 'JI 6/1/2017 16:46:41'!
+!UnitTest methodsFor: 'SetUp' stamp: 'JI 6/2/2017 02:34:06'!
 metrosSetUp
 	
 	metrosMinus1 _ DistanceUnits initializeWith: -1 asUnit: (Metro initialize ).
@@ -540,29 +613,178 @@ metrosSetUp
 	metros2 _ DistanceUnits initializeWith: 2 asUnit: (Metro initialize )  .
 	metros3 _ DistanceUnits initializeWith: 3 asUnit: (Metro initialize )  .
 	metros4 _ DistanceUnits initializeWith: 4 asUnit: (Metro initialize )  .
-	metros30 _ DistanceUnits initializeWith: 30 asUnit: (Metro initialize )  .! !
+	metros30 _ DistanceUnits initializeWith: 30 asUnit: (Metro initialize )  .
+	metros100 _ DistanceUnits initializeWith: 100 asUnit: (Metro initialize )! !
 
-!UnitTest methodsFor: 'SetUp' stamp: 'JI 5/31/2017 19:54:36'!
+!UnitTest methodsFor: 'SetUp' stamp: 'JI 6/2/2017 02:35:43'!
 milimetrosSetUp
-
+	
+	milimetros500 _ DistanceUnits initializeWith: 500 asUnit: (Milimetro initialize) .	
 	milimetros1000 _ DistanceUnits initializeWith: 1000 asUnit: (Milimetro initialize) .	
 	milimetrosOtro1000 _ DistanceUnits initializeWith: 1000 asUnit: (Milimetro initialize) .	
 	milimetros2000 _  DistanceUnits initializeWith: 2000 asUnit: (Milimetro initialize) . 
 	milimetros3000 _  DistanceUnits initializeWith: 3000 asUnit: (Milimetro initialize) . 
+	milimetros10000 _  DistanceUnits initializeWith: 10000 asUnit: (Milimetro initialize) . 
 	! !
 
-!UnitTest methodsFor: 'SetUp' stamp: 'JI 5/31/2017 19:10:34'!
+!UnitTest methodsFor: 'SetUp' stamp: 'JI 6/2/2017 02:31:29'!
 setUp
 	self kilometrosSetUp .
 	self metrosSetUp.
 	self centimetrosSetUp .
-	self milimetrosSetUp .! !
+	self milimetrosSetUp .
+	self intervalosSetUp .! !
 
+
+!UnitTest methodsFor: 'Interval' stamp: 'Ji 6/1/2017 20:33:40'!
+hacerQueElIntervaloDevuelvaDistanciasYNoNumeros
+	
+	| i |
+	
+	i _ 1.
+	intervaloDeKilometros1To2 do: [ :aDistance | 
+		self assert: aDistance = i.
+		i _ i+1.].
+	self assert: intervaloDeKilometros1To2 size =1001.
+	
+	i _ 1.
+	intervaloDeMetros1To30 do: [ :aDistanceAmount | 
+		self assert: aDistanceAmount = i.
+		i _ i+1.].
+	self assert: intervaloDeMetros1To30 size =30.
+	
+	i _ 1.
+	intervaloDeCentimetros100To1000 do: [ :aDistanceAmount | 
+		self assert: aDistanceAmount = i.
+		i _ i+1.].
+	self assert: intervaloDeCentimetros100To1000 size =10.
+	
+	i _ 1.
+	intervaloDeMilimetros1000To10000 do: [ :aDistanceAmount | 
+		self assert: aDistanceAmount = i.
+		i _ i+1.].
+	self assert: intervaloDeMilimetros1000To10000 size =10.! !
 
 !UnitTest methodsFor: 'Interval' stamp: 'Ji 6/1/2017 19:19:51'!
 test001_IntervaloVacio
 	
 	intervaloVacio _ Interval ! !
+
+!UnitTest methodsFor: 'Interval' stamp: 'Ji 6/1/2017 20:31:11'!
+test002_IntervaloFromToDeDistanciasPositivas
+	
+	| i |
+	
+	i _ 1.
+	intervaloDeKilometros1To2 do: [ :aDistance | 
+		self assert: aDistance = i.
+		i _ i+1.].
+	self assert: intervaloDeKilometros1To2 size =1001.
+	
+	i _ 1.
+	intervaloDeMetros1To30 do: [ :aDistanceAmount | 
+		self assert: aDistanceAmount = i.
+		i _ i+1.].
+	self assert: intervaloDeMetros1To30 size =30.
+	
+	i _ 1.
+	intervaloDeCentimetros100To1000 do: [ :aDistanceAmount | 
+		self assert: aDistanceAmount = i.
+		i _ i+1.].
+	self assert: intervaloDeCentimetros100To1000 size =10.
+	
+	i _ 1.
+	intervaloDeMilimetros1000To10000 do: [ :aDistanceAmount | 
+		self assert: aDistanceAmount = i.
+		i _ i+1.].
+	self assert: intervaloDeMilimetros1000To10000 size =10.! !
+
+!UnitTest methodsFor: 'Interval' stamp: 'Ji 6/1/2017 20:26:54'!
+test003_IntervaloFromToDeDistanciasNegativas
+	
+	| i |
+	
+	i _ 2000.
+	intervaloDeKilometros2To1 do: [ :aDistanceAmount | 
+		self assert: aDistanceAmount = i.
+		i _ i-1.].
+	self assert: intervaloDeKilometros2To1 size =1001.
+	
+	i _ 30.
+	intervaloDeMetros30To1 do: [ :aDistanceAmount | 
+		self assert: aDistanceAmount = i.
+		i _ i-1.].
+	self assert: intervaloDeMetros30To1 size =30.
+	
+	i _ 10.
+	intervaloDeCentimetros1000To100 do: [ :aDistanceAmount | 
+		self assert: aDistanceAmount = i.
+		i _ i-1.].
+	self assert: intervaloDeCentimetros1000To100 size =10.
+	
+	i _ 10.
+	intervaloDeMilimetros10000To1000 do: [ :aDistanceAmount | 
+		self assert: aDistanceAmount = i.
+		i _ i-1.].
+	self assert: intervaloDeMilimetros10000To1000 size =10.! !
+
+!UnitTest methodsFor: 'Interval' stamp: 'Ji 6/1/2017 20:56:45'!
+test004_IntervaloFromToByDeDistanciasPositivas
+	
+	| i |
+	
+	i _ 1000.
+	intervaloDeKilometros1To2By100Metros do: [ :aDistance | 
+		self assert: aDistance = i.
+		i _ i+100.].
+	self assert: intervaloDeKilometros1To2By100Metros size =11.
+	
+	i _ 1.
+	intervaloDeMetros1To30By200Centimetros do: [ :aDistanceAmount | 
+		self assert: aDistanceAmount = i.
+		i _ i+2.].
+	self assert: intervaloDeMetros1To30By200Centimetros size =15.
+	
+	i _ 1.
+	intervaloDeCentimetros100To1000By500Milimetros do: [ :aDistanceAmount | 
+		self assert: aDistanceAmount = i.
+		i _ i+(1/2).].
+	self assert: intervaloDeCentimetros100To1000By500Milimetros size =19.
+	
+	i _ 1.
+	intervaloDeMilimetros1000To10000By1Over1000Kilometro do: [ :aDistanceAmount | 
+		self assert: aDistanceAmount = i.
+		i _ i+1.].
+	self assert: intervaloDeMilimetros1000To10000By1Over1000Kilometro size =10.! !
+
+!UnitTest methodsFor: 'Interval' stamp: 'Ji 6/1/2017 21:00:19'!
+test005_IntervaloFromToByDeDistanciasNegativas
+	
+	| i |
+	
+	i _ 1000.
+	intervaloDeKilometros2To1By100Metros do: [ :aDistance | 
+		self assert: aDistance = i.
+		i _ i-100.].
+	self assert: intervaloDeKilometros2To1By100Metros size =11.
+	
+	i _ 1.
+	intervaloDeMetros30To1By200Centimetros do: [ :aDistanceAmount | 
+		self assert: aDistanceAmount = i.
+		i _ i-2.].
+	self assert: intervaloDeMetros30To1By200Centimetros size =15.
+	
+	i _ 1.
+	intervaloDeCentimetros1000To100By500Milimetros do: [ :aDistanceAmount | 
+		self assert: aDistanceAmount = i.
+		i _ i-(1/2).].
+	self assert: intervaloDeCentimetros1000To100By500Milimetros size =19.
+	
+	i _ 1.
+	intervaloDeMilimetros10000To1000By1Over1000Kilometro do: [ :aDistanceAmount | 
+		self assert: aDistanceAmount = i.
+		i _ i-1.].
+	self assert: intervaloDeMilimetros10000To1000By1Over1000Kilometro size =10.! !
 
 
 !classDefinition: #DistanceFactory category: #'Distance-Solution'!
