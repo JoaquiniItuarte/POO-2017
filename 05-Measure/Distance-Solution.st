@@ -45,26 +45,20 @@ negated
 	^ self class initializeWith: ((0 - self factorValue)) asUnit: (Metro initialize )! !
 
 
-!DistanceUnits methodsFor: 'interval' stamp: 'jak 5/29/2017 20:30:22'!
+!DistanceUnits methodsFor: 'interval' stamp: 'JI 6/2/2017 03:46:41'!
 to: aDistance
 	
-	^ (self to:aDistance by: (self class initializeWith: 1)).! !
+	^ IntervalOfDistances from: self to: aDistance ! !
 
-!DistanceUnits methodsFor: 'interval' stamp: 'jak 5/29/2017 20:30:36'!
+!DistanceUnits methodsFor: 'interval' stamp: 'JI 6/2/2017 03:47:01'!
 to: aDistance by: stepDistance 
 	
-	| anInterval currentDistance |
-	anInterval _ OrderedCollection new.
-	currentDistance _ self.
-	[currentDistance <= aDistance ] whileTrue: [ anInterval add: currentDistance.
-													currentDistance _ currentDistance + stepDistance ].
-												
-	^anInterval! !
+	^ IntervalOfDistances from: self to: aDistance  by: stepDistance ! !
 
-!DistanceUnits methodsFor: 'interval' stamp: 'jak 5/29/2017 20:30:47'!
+!DistanceUnits methodsFor: 'interval' stamp: 'JI 6/2/2017 03:47:21'!
 to: aDistance by: steps do: aBlockClosure
 	
-	^ (self to: aDistance by: steps) do: aBlockClosure ! !
+		^ IntervalOfDistances from: self to: aDistance  by: steps do: aBlockClosure ! !
 
 
 !DistanceUnits methodsFor: 'initialization' stamp: 'Ji 5/30/2017 21:30:19'!
@@ -715,6 +709,33 @@ test005_IntervaloFromToByDeDistanciasNegativas
 		i _ i-kilometros1Over1000 .].
 	self assert: intervaloDeMilimetros10000To1000By1Over1000Kilometro size =10.! !
 
+!UnitTest methodsFor: 'Interval' stamp: 'JI 6/2/2017 03:39:07'!
+test006_IntervaloFromToByDoDeDistancias
+	
+	| i |
+	
+	i _ kilometros1 .
+	IntervalOfDistances from: kilometros1  to:  kilometros2 by: metros100 do: [ :aDistance | 
+		self assert: aDistance = i.
+		i _ i+metros100 .].
+	
+	i _ metros1 .
+	IntervalOfDistances from: metros1  to: metros30 by: centimetros200 do: [ :aDistance | 
+		self assert: aDistance = i.
+		i _ i+centimetros200 .].
+	
+	i _ centimetros100 .
+	IntervalOfDistances from: centimetros100  to: centimetros1000 by: milimetros500 do: [ :aDistance | 
+		self assert: aDistance = i.
+		i _ i+milimetros500 .].
+	
+	i _ milimetros1000 .
+	IntervalOfDistances from: milimetros1000  to: milimetros10000 by: kilometros1Over1000 do: [ :aDistance | 
+		self assert: aDistance = i.
+		i _ i+kilometros1Over1000 .].
+	
+! !
+
 
 !classDefinition: #DistanceFactory category: #'Distance-Solution'!
 Object subclass: #DistanceFactory
@@ -760,19 +781,19 @@ zeroMeters
 
 !classDefinition: #IntervalOfDistances category: #'Distance-Solution'!
 Object subclass: #IntervalOfDistances
-	instanceVariableNames: 'intervalo unitType'
+	instanceVariableNames: 'intervalo unitType fromDistance toDistance byDistance'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Distance-Solution'!
 
-!IntervalOfDistances methodsFor: 'initialization' stamp: 'JI 6/2/2017 03:19:20'!
+!IntervalOfDistances methodsFor: 'initialization' stamp: 'JI 6/2/2017 04:00:35'!
 from: aDistanceUnits to: aDistanceUnits2 by: aDistanceUnits3 
-	| aDistanceUnit3Sign |
 	
-	aDistanceUnits  > aDistanceUnits2 ifTrue: [aDistanceUnit3Sign _ aDistanceUnits3 negated] ifFalse: [aDistanceUnit3Sign _ aDistanceUnits3].
-	
-	intervalo _ Interval from: (aDistanceUnits factorValue ) to: (aDistanceUnits2 factorValue ) by: (aDistanceUnit3Sign factorValue ).
-	unitType _ Metro initialize .! !
+	intervalo _ Interval from: (aDistanceUnits factorValue ) to: (aDistanceUnits2 factorValue ) by: (aDistanceUnits3 factorValue ).
+	unitType _ Metro initialize .
+	fromDistance _ aDistanceUnits .
+	toDistance _ aDistanceUnits2 .
+	byDistance _ aDistanceUnits3 ! !
 
 !IntervalOfDistances methodsFor: 'initialization' stamp: 'Ji 6/1/2017 19:58:39'!
 intervaloVacio
@@ -784,14 +805,32 @@ size
 	intervalo = nil ifTrue: [^0] ifFalse: [^ intervalo size] ! !
 
 
+!IntervalOfDistances methodsFor: 'as yet unclassified' stamp: 'JI 6/2/2017 03:52:46'!
+by
+
+	^  byDistance ! !
+
 !IntervalOfDistances methodsFor: 'as yet unclassified' stamp: 'JI 6/2/2017 02:49:21'!
 do: aBlockClosure 
 	intervalo do: [ :aNumber | aBlockClosure value: (DistanceUnits initializeWith: aNumber asUnit: unitType) ]! !
 
-!IntervalOfDistances methodsFor: 'as yet unclassified' stamp: 'JI 6/2/2017 02:45:59'!
+!IntervalOfDistances methodsFor: 'as yet unclassified' stamp: 'JI 6/2/2017 03:52:30'!
+from
+
+	^  fromDistance ! !
+
+!IntervalOfDistances methodsFor: 'as yet unclassified' stamp: 'JI 6/2/2017 03:58:46'!
 from: aDistanceUnits to: aDistanceUnits2 
 	intervalo _ Interval from: (aDistanceUnits factorValue ) to: (aDistanceUnits2 factorValue ).
-	unitType _ Metro initialize .! !
+	unitType _ Metro initialize .
+	fromDistance _ aDistanceUnits .
+	toDistance _ aDistanceUnits2 .
+	byDistance _ DistanceUnits initializeWith: 1 asUnit: (Metro initialize ).! !
+
+!IntervalOfDistances methodsFor: 'as yet unclassified' stamp: 'JI 6/2/2017 03:52:41'!
+to
+
+	^  toDistance ! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -811,6 +850,10 @@ intervaloVacio
 !IntervalOfDistances class methodsFor: 'as yet unclassified' stamp: 'Ji 6/1/2017 20:52:06'!
 from: aDistanceUnits to: aDistanceUnits2 by: aDistanceUnits3 
 	^self new from: aDistanceUnits to: aDistanceUnits2  by: aDistanceUnits3 ! !
+
+!IntervalOfDistances class methodsFor: 'as yet unclassified' stamp: 'JI 6/2/2017 03:40:18'!
+from: aDistanceUnits to: aDistanceUnits2 by: aDistanceUnits3 do: aBlockClosure 
+	(self from: aDistanceUnits to: aDistanceUnits2 by: aDistanceUnits3) do: aBlockClosure ! !
 
 
 !classDefinition: #Unit category: #'Distance-Solution'!
