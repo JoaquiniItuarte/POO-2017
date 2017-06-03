@@ -85,7 +85,7 @@ test07cDifferentDistanceUnitsShouldBeDifferent
 	self assert: units size equals: unitsSet size.
 	self assert: (unitsSet includesAllOf: units).! !
 
-!CatedraDistanceTest methodsFor: '2 - Converting/accesing/printing' stamp: 'HernanWilkinson 4/19/2011 10:27'!
+!CatedraDistanceTest methodsFor: '2 - Converting/accesing/printing' stamp: 'JI 6/3/2017 14:45:28'!
 test07dDistancesCanBeConvertedToDifferentUnits
 
 	"A partir de los test de igualdad, se deben haber dado cuenta que debemos poder
@@ -481,20 +481,20 @@ test32DistanceIntervalCanBeEnumeratedWithSpecificStep
 ! !
 
 
-!CatedraDistanceTest methodsFor: 'distance units' stamp: 'jak 6/1/2017 19:39:30'!
+!CatedraDistanceTest methodsFor: 'distance units' stamp: 'JI 6/3/2017 14:46:07'!
 centimeter
 
-	^Centimetro initialize ! !
+	^ Centimetro initialize ! !
 
-!CatedraDistanceTest methodsFor: 'distance units' stamp: 'jak 6/1/2017 19:39:55'!
+!CatedraDistanceTest methodsFor: 'distance units' stamp: 'JI 6/3/2017 14:46:35'!
 decameter
 	
-	^Decametro initialize .! !
+	^ Decametro initialize .! !
 
-!CatedraDistanceTest methodsFor: 'distance units' stamp: 'jak 6/1/2017 19:41:18'!
+!CatedraDistanceTest methodsFor: 'distance units' stamp: 'JI 6/3/2017 14:45:53'!
 decimeter
 	
-	^Decimetro initialize ! !
+	^ Decimetro initialize ! !
 
 !CatedraDistanceTest methodsFor: 'distance units' stamp: 'HAW 5/31/2017 12:37:50'!
 distanceUnits 
@@ -511,25 +511,25 @@ distanceUnits
 	
 ! !
 
-!CatedraDistanceTest methodsFor: 'distance units' stamp: 'jak 6/1/2017 19:40:07'!
+!CatedraDistanceTest methodsFor: 'distance units' stamp: 'JI 6/3/2017 14:46:51'!
 hectometer
 	
-	^Hectometro initialize ! !
+	^ Hectometro initialize ! !
 
-!CatedraDistanceTest methodsFor: 'distance units' stamp: 'jak 6/1/2017 19:40:17'!
+!CatedraDistanceTest methodsFor: 'distance units' stamp: 'JI 6/3/2017 14:47:00'!
 kilometer
 	
-	^Kilometro initialize ! !
+	^ Kilometro initialize ! !
 
-!CatedraDistanceTest methodsFor: 'distance units' stamp: 'jak 6/1/2017 19:38:38'!
+!CatedraDistanceTest methodsFor: 'distance units' stamp: 'JI 6/3/2017 14:41:26'!
 meter
 
-	^Metro initialize .! !
+	^Metro initialize.! !
 
-!CatedraDistanceTest methodsFor: 'distance units' stamp: 'jak 6/1/2017 19:40:25'!
+!CatedraDistanceTest methodsFor: 'distance units' stamp: 'JI 6/3/2017 14:46:24'!
 millimeter
 	
-	^Milimetro initialize ! !
+	^ Milimetro initialize ! !
 
 
 !CatedraDistanceTest methodsFor: 'distance measures' stamp: 'HAW 5/31/2017 11:20:12'!
@@ -601,37 +601,37 @@ CatedraDistanceTest subclass: #TestWhenClassPerUnit
 	poolDictionaries: ''
 	category: 'Distance-Exercise'!
 
-!TestWhenClassPerUnit methodsFor: 'distance units' stamp: 'HAW 5/31/2017 11:25:39'!
+!TestWhenClassPerUnit methodsFor: 'distance units' stamp: 'JI 6/3/2017 14:43:53'!
 centimeter
 	
-	^Centimeter ! !
+	^Centimetro initialize! !
 
-!TestWhenClassPerUnit methodsFor: 'distance units' stamp: 'HAW 5/31/2017 11:25:39'!
+!TestWhenClassPerUnit methodsFor: 'distance units' stamp: 'JI 6/3/2017 14:43:57'!
 decameter
 	
-	^Decameter ! !
+	^Decametro initialize! !
 
-!TestWhenClassPerUnit methodsFor: 'distance units' stamp: 'HAW 5/31/2017 11:25:39'!
+!TestWhenClassPerUnit methodsFor: 'distance units' stamp: 'JI 6/3/2017 14:44:18'!
 decimeter
 	
-	^Decimeter ! !
+	^Decimetro initialize! !
 
-!TestWhenClassPerUnit methodsFor: 'distance units' stamp: 'HAW 5/31/2017 11:25:39'!
+!TestWhenClassPerUnit methodsFor: 'distance units' stamp: 'JI 6/3/2017 14:44:15'!
 hectometer
 	
-	^Hectometer ! !
+	^Hectometro initialize! !
 
-!TestWhenClassPerUnit methodsFor: 'distance units' stamp: 'HAW 5/31/2017 11:25:39'!
+!TestWhenClassPerUnit methodsFor: 'distance units' stamp: 'JI 6/3/2017 14:43:50'!
 kilometer
 	
-	^Kilometer ! !
+	^Kilometro initialize ! !
 
-!TestWhenClassPerUnit methodsFor: 'distance units' stamp: 'HAW 5/31/2017 11:25:39'!
+!TestWhenClassPerUnit methodsFor: 'distance units' stamp: 'JI 6/3/2017 14:39:02'!
 meter
 
-	^Meter ! !
+	^Metro initialize ! !
 
-!TestWhenClassPerUnit methodsFor: 'distance units' stamp: 'HAW 5/31/2017 11:25:39'!
+!TestWhenClassPerUnit methodsFor: 'distance units' stamp: 'JI 6/3/2017 14:44:09'!
 millimeter
 	
-	^Milimeter ! !
+	^Milimetro initialize! !
