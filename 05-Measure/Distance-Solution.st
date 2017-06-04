@@ -111,7 +111,7 @@ initializeWith: aSmallInteger asUnit: anUnitType
 
 !classDefinition: #UnitTest category: #'Distance-Solution'!
 TestCase subclass: #UnitTest
-	instanceVariableNames: 'centimetros100 centimetros200 metros1 metros2 metrosOtro1 milimetros1000 milimetros2000 centimetrosOtro100 milimetrosOtro1000 kilometros1Over1000 kilometrosOtro1Over1000 kilometros2Over1000 metros3 metros4 kilometros3Over1000 centimetros300 milimetros3000 kilometros1 kilometrosOtro1 kilometros2 kilometros3 metrosMinus1 metros0 metros30 intervaloVacio intervaloDeKilometros1To2 intervaloDeKilometros2To1 intervaloDeKilometros1To2By100Metros metros100 intervaloDeKilometros2To1By100Metros intervaloDeMetros1To30 intervaloDeMetros30To1 intervaloDeMetros1To30By200Centimetros intervaloDeMetros30To1By200Centimetros intervaloDeCentimetros100To1000 centimetros1000 intervaloDeCentimetros1000To100 intervaloDeCentimetros100To1000By500Milimetros milimetros500 intervaloDeCentimetros1000To100By500Milimetros intervaloDeMilimetros1000To10000 milimetros10000 intervaloDeMilimetros10000To1000 intervaloDeMilimetros1000To10000By1Over1000Kilometro intervaloDeMilimetros10000To1000By1Over1000Kilometro centimetros1 milimetros1'
+	instanceVariableNames: 'centimetros100 centimetros200 metros1 metros2 metrosOtro1 milimetros1000 milimetros2000 centimetrosOtro100 milimetrosOtro1000 kilometros1Over1000 kilometrosOtro1Over1000 kilometros2Over1000 metros3 metros4 kilometros3Over1000 centimetros300 milimetros3000 kilometros1 kilometrosOtro1 kilometros2 kilometros3 metrosMinus1 metros0 metros30 intervaloVacio intervaloDeKilometros1To2 intervaloDeKilometros2To1 intervaloDeKilometros1To2By100Metros metros100 intervaloDeKilometros2To1By100Metros intervaloDeMetros1To30 intervaloDeMetros30To1 intervaloDeMetros1To30By200Centimetros intervaloDeMetros30To1By200Centimetros intervaloDeCentimetros100To1000 centimetros1000 intervaloDeCentimetros1000To100 intervaloDeCentimetros100To1000By500Milimetros milimetros500 intervaloDeCentimetros1000To100By500Milimetros intervaloDeMilimetros1000To10000 milimetros10000 intervaloDeMilimetros10000To1000 intervaloDeMilimetros1000To10000By1Over1000Kilometro intervaloDeMilimetros10000To1000By1Over1000Kilometro centimetros1 milimetros1 celsius1 celsiusOtro1 celsius2 kekelvin274con15 celsius0 kelvin273con15 celsiusMinus273con15 kelvin0 kelvin274con15'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Distance-Solution'!
@@ -494,95 +494,6 @@ test004_DistanceGreaterOrEqualThanDistance
 	self assert: kilometros1Over1000 >= metros0.! !
 
 
-!UnitTest methodsFor: 'SetUp' stamp: 'JI 6/3/2017 14:22:03'!
-centimetrosSetUp
-
-	centimetros1 _ DistanceUnits initializeWith: 1 asUnit: (Centimetro initialize) .	
-	centimetros100 _ DistanceUnits initializeWith: 100 asUnit: (Centimetro initialize) .	
-	centimetrosOtro100 _ DistanceUnits initializeWith: 100 asUnit: (Centimetro initialize) .	
-	centimetros200 _ DistanceUnits initializeWith: 200 asUnit: (Centimetro initialize) .
-	centimetros300 _ DistanceUnits initializeWith: 300 asUnit: (Centimetro initialize)  .
-	centimetros1000 _ DistanceUnits initializeWith: 1000 asUnit: (Centimetro initialize) .	! !
-
-!UnitTest methodsFor: 'SetUp' stamp: 'JI 6/3/2017 14:27:57'!
-intervalosSetUp
-	
-	intervaloVacio _ IntervalOfDistances intervaloVacio.
-	
-	intervaloDeKilometros1To2 _ IntervalOfDistances from: kilometros1 to: kilometros2 .
-	intervaloDeKilometros2To1 _ IntervalOfDistances from: kilometros2 to: kilometros1 .
-	intervaloDeKilometros1To2By100Metros _ IntervalOfDistances from: kilometros1 to: kilometros2 by: metros100.
-	intervaloDeKilometros2To1By100Metros _ IntervalOfDistances from: kilometros2 to: kilometros1 by: metros100 negated .
-	
-	intervaloDeMetros1To30 _ IntervalOfDistances from: metros1  to: metros30  .
-	intervaloDeMetros30To1 _ IntervalOfDistances from: metros30 to:  metros1 .
-	intervaloDeMetros1To30By200Centimetros _ IntervalOfDistances from: metros1  to: metros30 by: centimetros200 .
-	intervaloDeMetros30To1By200Centimetros _ IntervalOfDistances from: metros30  to: metros1 by: centimetros200  negated.
-
-	
-	intervaloDeCentimetros100To1000 _ IntervalOfDistances from: centimetros100  to: centimetros1000  .
-	intervaloDeCentimetros1000To100 _ IntervalOfDistances from: centimetros1000 to: centimetros100 .
-	intervaloDeCentimetros100To1000By500Milimetros _ IntervalOfDistances from: centimetros100 to: centimetros1000 by: milimetros500.
-	intervaloDeCentimetros1000To100By500Milimetros _ IntervalOfDistances from: centimetros1000 to: centimetros100 by: milimetros500  negated.
-	
-	
-	intervaloDeMilimetros1000To10000 _ IntervalOfDistances from: milimetros1000  to: milimetros10000.
-	intervaloDeMilimetros10000To1000 _ IntervalOfDistances from: milimetros10000 to: milimetros1000 .
-	intervaloDeMilimetros1000To10000By1Over1000Kilometro  _ IntervalOfDistances from: milimetros1000 to: milimetros10000 by: kilometros1Over1000 .
-	intervaloDeMilimetros10000To1000By1Over1000Kilometro  _ IntervalOfDistances from: milimetros10000 to: milimetros1000 by: kilometros1Over1000  negated.
-
-
-	
-	! !
-
-!UnitTest methodsFor: 'SetUp' stamp: 'JI 5/31/2017 20:06:36'!
-kilometrosSetUp
-
-	kilometros1Over1000 _ DistanceUnits initializeWith: 1/1000 asUnit: (Kilometro initialize) .	
-	kilometrosOtro1Over1000 _ DistanceUnits initializeWith: 1/1000 asUnit: (Kilometro initialize) .	
-	kilometros2Over1000 _  DistanceUnits initializeWith: 2/1000 asUnit: (Kilometro initialize) . 
-	kilometros3Over1000 _  DistanceUnits initializeWith: 3/1000 asUnit: (Kilometro initialize) . 
-	
-	kilometros1 _ DistanceUnits initializeWith: 1 asUnit: (Kilometro initialize ).
-	kilometrosOtro1 _ DistanceUnits initializeWith: 1 asUnit: (Kilometro initialize ).
-	kilometros2 _ DistanceUnits initializeWith: 2 asUnit: (Kilometro initialize ).
-	kilometros3 _ DistanceUnits initializeWith: 3 asUnit: (Kilometro initialize ).
-	! !
-
-!UnitTest methodsFor: 'SetUp' stamp: 'JI 6/2/2017 02:34:06'!
-metrosSetUp
-	
-	metrosMinus1 _ DistanceUnits initializeWith: -1 asUnit: (Metro initialize ).
-	metros0 _ DistanceUnits initializeWith: 0 asUnit: (Metro initialize ).
-	metros1 _ DistanceUnits initializeWith: 1 asUnit: (Metro initialize) .
-	metrosOtro1 _ DistanceUnits initializeWith: 1 asUnit: (Metro initialize) .	
-	metros2 _ DistanceUnits initializeWith: 2 asUnit: (Metro initialize )  .
-	metros3 _ DistanceUnits initializeWith: 3 asUnit: (Metro initialize )  .
-	metros4 _ DistanceUnits initializeWith: 4 asUnit: (Metro initialize )  .
-	metros30 _ DistanceUnits initializeWith: 30 asUnit: (Metro initialize )  .
-	metros100 _ DistanceUnits initializeWith: 100 asUnit: (Metro initialize )! !
-
-!UnitTest methodsFor: 'SetUp' stamp: 'JI 6/3/2017 14:22:16'!
-milimetrosSetUp
-	
-	milimetros1 _ DistanceUnits initializeWith: 1 asUnit: (Milimetro initialize) .	
-	milimetros500 _ DistanceUnits initializeWith: 500 asUnit: (Milimetro initialize) .	
-	milimetros1000 _ DistanceUnits initializeWith: 1000 asUnit: (Milimetro initialize) .	
-	milimetrosOtro1000 _ DistanceUnits initializeWith: 1000 asUnit: (Milimetro initialize) .	
-	milimetros2000 _  DistanceUnits initializeWith: 2000 asUnit: (Milimetro initialize) . 
-	milimetros3000 _  DistanceUnits initializeWith: 3000 asUnit: (Milimetro initialize) . 
-	milimetros10000 _  DistanceUnits initializeWith: 10000 asUnit: (Milimetro initialize) . 
-	! !
-
-!UnitTest methodsFor: 'SetUp' stamp: 'JI 6/2/2017 02:31:29'!
-setUp
-	self kilometrosSetUp .
-	self metrosSetUp.
-	self centimetrosSetUp .
-	self milimetrosSetUp .
-	self intervalosSetUp .! !
-
-
 !UnitTest methodsFor: 'Interval' stamp: 'JI 6/2/2017 02:41:05'!
 hacerQueElIntervaloDevuelvaDistanciasYNoNumeros
 	
@@ -738,6 +649,140 @@ test006_IntervaloFromToByDoDeDistancias
 	
 ! !
 
+
+!UnitTest methodsFor: 'SetUp' stamp: 'JI 6/4/2017 02:58:41'!
+celsiusSetUp
+	
+	celsiusMinus273con15 _ Temperatura initializeWith: 273+(15/100) asUnit: Celsius initialize .
+	celsius0  _ Temperatura initializeWith: 0  asUnit: (Celsius initialize).
+	celsius1  _ Temperatura initializeWith: 1  asUnit: (Celsius initialize).
+	celsiusOtro1  _ Temperatura initializeWith: 1  asUnit: (Celsius initialize).
+	celsius2  _ Temperatura initializeWith: 2  asUnit: (Celsius initialize).
+	! !
+
+!UnitTest methodsFor: 'SetUp' stamp: 'JI 6/3/2017 14:22:03'!
+centimetrosSetUp
+
+	centimetros1 _ DistanceUnits initializeWith: 1 asUnit: (Centimetro initialize) .	
+	centimetros100 _ DistanceUnits initializeWith: 100 asUnit: (Centimetro initialize) .	
+	centimetrosOtro100 _ DistanceUnits initializeWith: 100 asUnit: (Centimetro initialize) .	
+	centimetros200 _ DistanceUnits initializeWith: 200 asUnit: (Centimetro initialize) .
+	centimetros300 _ DistanceUnits initializeWith: 300 asUnit: (Centimetro initialize)  .
+	centimetros1000 _ DistanceUnits initializeWith: 1000 asUnit: (Centimetro initialize) .	! !
+
+!UnitTest methodsFor: 'SetUp' stamp: 'JI 6/3/2017 14:27:57'!
+intervalosSetUp
+	
+	intervaloVacio _ IntervalOfDistances intervaloVacio.
+	
+	intervaloDeKilometros1To2 _ IntervalOfDistances from: kilometros1 to: kilometros2 .
+	intervaloDeKilometros2To1 _ IntervalOfDistances from: kilometros2 to: kilometros1 .
+	intervaloDeKilometros1To2By100Metros _ IntervalOfDistances from: kilometros1 to: kilometros2 by: metros100.
+	intervaloDeKilometros2To1By100Metros _ IntervalOfDistances from: kilometros2 to: kilometros1 by: metros100 negated .
+	
+	intervaloDeMetros1To30 _ IntervalOfDistances from: metros1  to: metros30  .
+	intervaloDeMetros30To1 _ IntervalOfDistances from: metros30 to:  metros1 .
+	intervaloDeMetros1To30By200Centimetros _ IntervalOfDistances from: metros1  to: metros30 by: centimetros200 .
+	intervaloDeMetros30To1By200Centimetros _ IntervalOfDistances from: metros30  to: metros1 by: centimetros200  negated.
+
+	
+	intervaloDeCentimetros100To1000 _ IntervalOfDistances from: centimetros100  to: centimetros1000  .
+	intervaloDeCentimetros1000To100 _ IntervalOfDistances from: centimetros1000 to: centimetros100 .
+	intervaloDeCentimetros100To1000By500Milimetros _ IntervalOfDistances from: centimetros100 to: centimetros1000 by: milimetros500.
+	intervaloDeCentimetros1000To100By500Milimetros _ IntervalOfDistances from: centimetros1000 to: centimetros100 by: milimetros500  negated.
+	
+	
+	intervaloDeMilimetros1000To10000 _ IntervalOfDistances from: milimetros1000  to: milimetros10000.
+	intervaloDeMilimetros10000To1000 _ IntervalOfDistances from: milimetros10000 to: milimetros1000 .
+	intervaloDeMilimetros1000To10000By1Over1000Kilometro  _ IntervalOfDistances from: milimetros1000 to: milimetros10000 by: kilometros1Over1000 .
+	intervaloDeMilimetros10000To1000By1Over1000Kilometro  _ IntervalOfDistances from: milimetros10000 to: milimetros1000 by: kilometros1Over1000  negated.
+
+
+	
+	! !
+
+!UnitTest methodsFor: 'SetUp' stamp: 'JI 6/4/2017 02:59:56'!
+kelvinSetUp
+	
+	kelvin0 _ Temperatura initializeWith: 0 asUnit: Kelvin initialize .
+	kelvin273con15  _ Temperatura initializeWith: (273+(15/100)) asUnit: Kelvin initialize .
+	kelvin274con15  _ Temperatura initializeWith: (274+(15/100)) asUnit: Kelvin initialize .! !
+
+!UnitTest methodsFor: 'SetUp' stamp: 'JI 5/31/2017 20:06:36'!
+kilometrosSetUp
+
+	kilometros1Over1000 _ DistanceUnits initializeWith: 1/1000 asUnit: (Kilometro initialize) .	
+	kilometrosOtro1Over1000 _ DistanceUnits initializeWith: 1/1000 asUnit: (Kilometro initialize) .	
+	kilometros2Over1000 _  DistanceUnits initializeWith: 2/1000 asUnit: (Kilometro initialize) . 
+	kilometros3Over1000 _  DistanceUnits initializeWith: 3/1000 asUnit: (Kilometro initialize) . 
+	
+	kilometros1 _ DistanceUnits initializeWith: 1 asUnit: (Kilometro initialize ).
+	kilometrosOtro1 _ DistanceUnits initializeWith: 1 asUnit: (Kilometro initialize ).
+	kilometros2 _ DistanceUnits initializeWith: 2 asUnit: (Kilometro initialize ).
+	kilometros3 _ DistanceUnits initializeWith: 3 asUnit: (Kilometro initialize ).
+	! !
+
+!UnitTest methodsFor: 'SetUp' stamp: 'JI 6/2/2017 02:34:06'!
+metrosSetUp
+	
+	metrosMinus1 _ DistanceUnits initializeWith: -1 asUnit: (Metro initialize ).
+	metros0 _ DistanceUnits initializeWith: 0 asUnit: (Metro initialize ).
+	metros1 _ DistanceUnits initializeWith: 1 asUnit: (Metro initialize) .
+	metrosOtro1 _ DistanceUnits initializeWith: 1 asUnit: (Metro initialize) .	
+	metros2 _ DistanceUnits initializeWith: 2 asUnit: (Metro initialize )  .
+	metros3 _ DistanceUnits initializeWith: 3 asUnit: (Metro initialize )  .
+	metros4 _ DistanceUnits initializeWith: 4 asUnit: (Metro initialize )  .
+	metros30 _ DistanceUnits initializeWith: 30 asUnit: (Metro initialize )  .
+	metros100 _ DistanceUnits initializeWith: 100 asUnit: (Metro initialize )! !
+
+!UnitTest methodsFor: 'SetUp' stamp: 'JI 6/3/2017 14:22:16'!
+milimetrosSetUp
+	
+	milimetros1 _ DistanceUnits initializeWith: 1 asUnit: (Milimetro initialize) .	
+	milimetros500 _ DistanceUnits initializeWith: 500 asUnit: (Milimetro initialize) .	
+	milimetros1000 _ DistanceUnits initializeWith: 1000 asUnit: (Milimetro initialize) .	
+	milimetrosOtro1000 _ DistanceUnits initializeWith: 1000 asUnit: (Milimetro initialize) .	
+	milimetros2000 _  DistanceUnits initializeWith: 2000 asUnit: (Milimetro initialize) . 
+	milimetros3000 _  DistanceUnits initializeWith: 3000 asUnit: (Milimetro initialize) . 
+	milimetros10000 _  DistanceUnits initializeWith: 10000 asUnit: (Milimetro initialize) . 
+	! !
+
+!UnitTest methodsFor: 'SetUp' stamp: 'JI 6/4/2017 02:33:22'!
+setUp
+	self kilometrosSetUp .
+	self metrosSetUp.
+	self centimetrosSetUp .
+	self milimetrosSetUp .
+	self intervalosSetUp .
+	
+	self celsiusSetUp.! !
+
+
+!UnitTest methodsFor: 'Temperature =' stamp: 'JI 6/4/2017 02:32:57'!
+test001_unGradoCelsiusIgualaOtroGradoCelsius
+
+	self assert: celsius1 = celsiusOtro1.! !
+
+!UnitTest methodsFor: 'Temperature =' stamp: 'JI 6/4/2017 02:41:08'!
+test002_unGradoCelsiusNoEsIgualaDosGradosCelsius
+
+	self deny: celsius1 = celsius2.! !
+
+!UnitTest methodsFor: 'Temperature =' stamp: 'JI 6/4/2017 02:42:31'!
+test003_CelsiusIgualACelsius
+
+	self assert: celsius1 = celsius1.
+	self deny: celsius1 = celsius2.! !
+
+!UnitTest methodsFor: 'Temperature =' stamp: 'JI 6/4/2017 02:56:39'!
+test004_CelsiusIgualAKelvin
+
+	self assert: celsius1 = kelvin274con15.
+	self assert: celsius0 = kelvin273con15.
+	self deny: celsiusMinus273con15 = kelvin0
+	
+	! !
+
 
 !classDefinition: #DistanceFactory category: #'Distance-Solution'!
 Object subclass: #DistanceFactory
@@ -858,6 +903,41 @@ from: aDistanceUnits to: aDistanceUnits2 by: aDistanceUnits3 do: aBlockClosure
 	(self from: aDistanceUnits to: aDistanceUnits2 by: aDistanceUnits3) do: aBlockClosure ! !
 
 
+!classDefinition: #Temperatura category: #'Distance-Solution'!
+Object subclass: #Temperatura
+	instanceVariableNames: 'grados unidad'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Distance-Solution'!
+
+!Temperatura methodsFor: 'as yet unclassified' stamp: 'JI 6/4/2017 02:40:11'!
+= aCelsius
+	^aCelsius grados = self grados and: [ unidad = aCelsius unidad]! !
+
+!Temperatura methodsFor: 'as yet unclassified' stamp: 'JI 6/4/2017 02:39:30'!
+grados
+	^ grados! !
+
+!Temperatura methodsFor: 'as yet unclassified' stamp: 'JI 6/4/2017 02:36:47'!
+initializeWith: aSmallInteger asUnit: aCelsius 
+	grados _ aSmallInteger .
+	unidad _ aCelsius .! !
+
+!Temperatura methodsFor: 'as yet unclassified' stamp: 'JI 6/4/2017 02:39:44'!
+unidad
+	^ unidad! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'Temperatura class' category: #'Distance-Solution'!
+Temperatura class
+	instanceVariableNames: ''!
+
+!Temperatura class methodsFor: 'as yet unclassified' stamp: 'JI 6/4/2017 02:36:21'!
+initializeWith: aSmallInteger asUnit: aCelsius 
+	^ self new initializeWith: aSmallInteger asUnit: aCelsius ! !
+
+
 !classDefinition: #Unit category: #'Distance-Solution'!
 Object subclass: #Unit
 	instanceVariableNames: 'conversionFactor'
@@ -892,6 +972,14 @@ Unit class
 !Unit class methodsFor: 'as yet unclassified' stamp: 'Ji 5/30/2017 21:43:04'!
 initialize
 	^ self new initialize .! !
+
+
+!classDefinition: #Celsius category: #'Distance-Solution'!
+Unit subclass: #Celsius
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Distance-Solution'!
 
 
 !classDefinition: #Centimetro category: #'Distance-Solution'!
@@ -960,6 +1048,14 @@ initialize
 !Hectometro methodsFor: 'printing' stamp: 'Ji 6/1/2017 19:25:35'!
 printString
 	^ 'hectometer'! !
+
+
+!classDefinition: #Kelvin category: #'Distance-Solution'!
+Unit subclass: #Kelvin
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Distance-Solution'!
 
 
 !classDefinition: #Kilometro category: #'Distance-Solution'!
