@@ -1,91 +1,91 @@
-!classDefinition: #DistanceUnits category: #'Distance-Solution'!
-Magnitude subclass: #DistanceUnits
+!classDefinition: #DistanceMeasure category: #'Distance-Solution'!
+Magnitude subclass: #DistanceMeasure
 	instanceVariableNames: 'quantity unitType'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Distance-Solution'!
 
-!DistanceUnits methodsFor: 'comparing' stamp: 'JI 6/1/2017 17:05:51'!
+!DistanceMeasure methodsFor: 'comparing' stamp: 'JI 6/1/2017 17:05:51'!
 < someDistance
 	^ self factorValue < (someDistance factorValue )! !
 
-!DistanceUnits methodsFor: 'comparing' stamp: 'jak 6/1/2017 20:46:35'!
+!DistanceMeasure methodsFor: 'comparing' stamp: 'jak 6/1/2017 20:46:35'!
 = anotherDistance
 
 	^ self class = anotherDistance class and: [self factorValue = anotherDistance factorValue].! !
 
-!DistanceUnits methodsFor: 'comparing' stamp: 'jak 6/1/2017 20:50:36'!
+!DistanceMeasure methodsFor: 'comparing' stamp: 'jak 6/1/2017 20:50:36'!
 hash
 	^ self factorValue  ! !
 
 
-!DistanceUnits methodsFor: 'operating' stamp: 'JI 6/1/2017 16:47:50'!
+!DistanceMeasure methodsFor: 'operating' stamp: 'JI 6/4/2017 15:52:37'!
 * aSmallInteger 
-	^ self class initializeWith: ( self factorValue * aSmallInteger ) asUnit: (Metro initialize )! !
+	^ self class initializeWith: ( self factorValue * aSmallInteger ) asUnit: DistanceUnit initializeMetro ! !
 
-!DistanceUnits methodsFor: 'operating' stamp: 'JI 5/31/2017 19:58:47'!
+!DistanceMeasure methodsFor: 'operating' stamp: 'JI 6/4/2017 15:52:50'!
 + someDistance
 
-	^ self class initializeWith: (( self factorValue + someDistance factorValue )) asUnit: (Metro initialize )! !
+	^ self class initializeWith: (( self factorValue + someDistance factorValue )) asUnit: DistanceUnit initializeMetro ! !
 
-!DistanceUnits methodsFor: 'operating' stamp: 'JI 6/1/2017 16:40:39'!
+!DistanceMeasure methodsFor: 'operating' stamp: 'JI 6/4/2017 15:51:05'!
 - someDistance
-	^ self class initializeWith: (( self factorValue - someDistance factorValue )) asUnit: (Metro initialize )! !
+	^ self class initializeWith: (( self factorValue - someDistance factorValue )) asUnit: DistanceUnit initializeMetro ! !
 
-!DistanceUnits methodsFor: 'operating' stamp: 'JI 6/1/2017 16:52:18'!
+!DistanceMeasure methodsFor: 'operating' stamp: 'JI 6/4/2017 15:52:55'!
 / aSmallInteger 
-	^ self class initializeWith: ( self factorValue / aSmallInteger ) asUnit: (Metro initialize )! !
+	^ self class initializeWith: ( self factorValue / aSmallInteger ) asUnit: DistanceUnit initializeMetro ! !
 
-!DistanceUnits methodsFor: 'operating' stamp: 'jak 5/28/2017 19:29:51'!
+!DistanceMeasure methodsFor: 'operating' stamp: 'jak 5/28/2017 19:29:51'!
 adaptToNumber: aNumber andSend: selector 
 	^self perform: selector with: aNumber.! !
 
-!DistanceUnits methodsFor: 'operating' stamp: 'jak 6/1/2017 20:53:49'!
+!DistanceMeasure methodsFor: 'operating' stamp: 'JI 6/4/2017 15:52:59'!
 negated
-	^ self class initializeWith: ((0 - self factorValue)) asUnit: (Metro initialize )! !
+	^ self class initializeWith: ((0 - self factorValue)) asUnit: DistanceUnit initializeMetro ! !
 
 
-!DistanceUnits methodsFor: 'interval' stamp: 'JI 6/2/2017 03:46:41'!
+!DistanceMeasure methodsFor: 'interval' stamp: 'JI 6/2/2017 03:46:41'!
 to: aDistance
 	
 	^ IntervalOfDistances from: self to: aDistance ! !
 
-!DistanceUnits methodsFor: 'interval' stamp: 'JI 6/2/2017 03:47:01'!
+!DistanceMeasure methodsFor: 'interval' stamp: 'JI 6/2/2017 03:47:01'!
 to: aDistance by: stepDistance 
 	
 	^ IntervalOfDistances from: self to: aDistance  by: stepDistance ! !
 
-!DistanceUnits methodsFor: 'interval' stamp: 'JI 6/2/2017 03:47:21'!
+!DistanceMeasure methodsFor: 'interval' stamp: 'JI 6/2/2017 03:47:21'!
 to: aDistance by: steps do: aBlockClosure
 	
 		^ IntervalOfDistances from: self to: aDistance  by: steps do: aBlockClosure ! !
 
 
-!DistanceUnits methodsFor: 'initialization' stamp: 'Ji 5/30/2017 21:30:19'!
+!DistanceMeasure methodsFor: 'initialization' stamp: 'Ji 5/30/2017 21:30:19'!
 initializeWith: aSmallInteger asUnit: anUnitType 
 	unitType _ anUnitType.
 	quantity _ aSmallInteger .! !
 
 
-!DistanceUnits methodsFor: 'inspecting' stamp: 'Ji 6/1/2017 19:27:48'!
+!DistanceMeasure methodsFor: 'inspecting' stamp: 'Ji 6/1/2017 19:27:48'!
 amount
 	^ quantity ! !
 
-!DistanceUnits methodsFor: 'inspecting' stamp: 'Ji 5/30/2017 21:37:50'!
+!DistanceMeasure methodsFor: 'inspecting' stamp: 'Ji 5/30/2017 21:37:50'!
 factorValue
 	^ quantity * (unitType convertionFactor)! !
 
-!DistanceUnits methodsFor: 'inspecting' stamp: 'jak 6/1/2017 19:46:38'!
+!DistanceMeasure methodsFor: 'inspecting' stamp: 'jak 6/1/2017 19:46:38'!
 unit
 	^ unitType! !
 
 
-!DistanceUnits methodsFor: 'conversion' stamp: 'jak 6/1/2017 20:36:18'!
+!DistanceMeasure methodsFor: 'conversion' stamp: 'JI 6/4/2017 15:53:24'!
 convertTo: aUnit
-	^DistanceUnits initializeWith: (self unit convert: quantity to: aUnit ) asUnit: (aUnit class initialize) .! !
+	^DistanceMeasure initializeWith: (self unit convert: quantity to: aUnit ) asUnit: aUnit! !
 
 
-!DistanceUnits methodsFor: 'printing' stamp: 'jak 6/1/2017 19:57:38'!
+!DistanceMeasure methodsFor: 'printing' stamp: 'jak 6/1/2017 19:57:38'!
 printString
 	|extraS|
 	extraS := String new.
@@ -94,43 +94,38 @@ printString
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'DistanceUnits class' category: #'Distance-Solution'!
-DistanceUnits class
+!classDefinition: 'DistanceMeasure class' category: #'Distance-Solution'!
+DistanceMeasure class
 	instanceVariableNames: 'quantity'!
 
-!DistanceUnits class methodsFor: 'class initialization' stamp: 'JI 5/30/2017 00:54:35'!
-initializeWith: aQuantity 
-	^self subclassResponsibility ! !
-
-
-!DistanceUnits class methodsFor: 'as yet unclassified' stamp: 'Ji 5/30/2017 21:30:07'!
+!DistanceMeasure class methodsFor: 'class initialization' stamp: 'Ji 5/30/2017 21:30:07'!
 initializeWith: aSmallInteger asUnit: anUnitType
 	
 	^self new initializeWith: aSmallInteger asUnit: anUnitType .! !
 
 
-!classDefinition: #UnitTest category: #'Distance-Solution'!
-TestCase subclass: #UnitTest
-	instanceVariableNames: 'centimetros100 centimetros200 metros1 metros2 metrosOtro1 milimetros1000 milimetros2000 centimetrosOtro100 milimetrosOtro1000 kilometros1Over1000 kilometrosOtro1Over1000 kilometros2Over1000 metros3 metros4 kilometros3Over1000 centimetros300 milimetros3000 kilometros1 kilometrosOtro1 kilometros2 kilometros3 metrosMinus1 metros0 metros30 intervaloVacio intervaloDeKilometros1To2 intervaloDeKilometros2To1 intervaloDeKilometros1To2By100Metros metros100 intervaloDeKilometros2To1By100Metros intervaloDeMetros1To30 intervaloDeMetros30To1 intervaloDeMetros1To30By200Centimetros intervaloDeMetros30To1By200Centimetros intervaloDeCentimetros100To1000 centimetros1000 intervaloDeCentimetros1000To100 intervaloDeCentimetros100To1000By500Milimetros milimetros500 intervaloDeCentimetros1000To100By500Milimetros intervaloDeMilimetros1000To10000 milimetros10000 intervaloDeMilimetros10000To1000 intervaloDeMilimetros1000To10000By1Over1000Kilometro intervaloDeMilimetros10000To1000By1Over1000Kilometro centimetros1 milimetros1 celsius1 celsiusOtro1 celsius2 kekelvin274con15 celsius0 kelvin273con15 celsiusMinus273con15 kelvin0 kelvin274con15'
+!classDefinition: #DistanceTests category: #'Distance-Solution'!
+TestCase subclass: #DistanceTests
+	instanceVariableNames: 'centimetros100 centimetros200 metros1 metros2 metrosOtro1 milimetros1000 milimetros2000 centimetrosOtro100 milimetrosOtro1000 kilometros1Over1000 kilometrosOtro1Over1000 kilometros2Over1000 metros3 metros4 kilometros3Over1000 centimetros300 milimetros3000 kilometros1 kilometrosOtro1 kilometros2 kilometros3 metrosMinus1 metros0 metros30 intervaloVacio intervaloDeKilometros1To2 intervaloDeKilometros2To1 intervaloDeKilometros1To2By100Metros metros100 intervaloDeKilometros2To1By100Metros intervaloDeMetros1To30 intervaloDeMetros30To1 intervaloDeMetros1To30By200Centimetros intervaloDeMetros30To1By200Centimetros intervaloDeCentimetros100To1000 centimetros1000 intervaloDeCentimetros1000To100 intervaloDeCentimetros100To1000By500Milimetros milimetros500 intervaloDeCentimetros1000To100By500Milimetros intervaloDeMilimetros1000To10000 milimetros10000 intervaloDeMilimetros10000To1000 intervaloDeMilimetros1000To10000By1Over1000Kilometro intervaloDeMilimetros10000To1000By1Over1000Kilometro centimetros1 milimetros1 celsius1 celsiusOtro1 celsius2 kekelvin274con15 celsius0 kelvin273con15 celsiusMinus273con15 kelvin0 kelvin274con15 fahrenheit33With8 fahrenheit32 fahrenheitMinus459With67'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Distance-Solution'!
 
-!UnitTest methodsFor: 'DistanceUnits * y /' stamp: 'JI 6/1/2017 16:46:07'!
+!DistanceTests methodsFor: 'DistanceUnits * y /' stamp: 'JI 6/1/2017 16:46:07'!
 test001_DistanceMultipliedByANumber
 	
 	self assert: metros1 * 1 = metrosOtro1 .
 	self assert: metros3 * 0 = metros0.
 	self assert: centimetros300 * 10 = metros30.! !
 
-!UnitTest methodsFor: 'DistanceUnits * y /' stamp: 'JI 6/1/2017 16:49:14'!
+!DistanceTests methodsFor: 'DistanceUnits * y /' stamp: 'JI 6/1/2017 16:49:14'!
 test002_ANumberMultipliedByADistance
 	
 	self assert: 1 * metros1 = metrosOtro1 .
 	self assert: 0 *metros3 = metros0.
 	self assert: 10 * centimetros300  = metros30.! !
 
-!UnitTest methodsFor: 'DistanceUnits * y /' stamp: 'JI 6/1/2017 17:01:23'!
+!DistanceTests methodsFor: 'DistanceUnits * y /' stamp: 'JI 6/1/2017 17:01:23'!
 test003_DistanceDividedByANumber
 	
 	self assert: metros1 / 1 = metrosOtro1 .
@@ -142,112 +137,112 @@ test003_DistanceDividedByANumber
 	! !
 
 
-!UnitTest methodsFor: 'DistanceUnits +' stamp: 'JI 5/31/2017 19:56:11'!
+!DistanceTests methodsFor: 'DistanceUnits +' stamp: 'JI 5/31/2017 19:56:11'!
 test001_MetroMasKilometro
 
 	self assert: metros1 + kilometros2Over1000 = metros3 . 
 	self deny: metros1 + kilometros2Over1000 = metros1 . 
 	! !
 
-!UnitTest methodsFor: 'DistanceUnits +' stamp: 'JI 5/31/2017 19:50:12'!
+!DistanceTests methodsFor: 'DistanceUnits +' stamp: 'JI 5/31/2017 19:50:12'!
 test002_MetroMasMetro
 
 	self assert: metros1 + metros2 = metros3. 
 	self deny: metros1 + metros2 = metros4. 
 	! !
 
-!UnitTest methodsFor: 'DistanceUnits +' stamp: 'JI 5/31/2017 19:56:34'!
+!DistanceTests methodsFor: 'DistanceUnits +' stamp: 'JI 5/31/2017 19:56:34'!
 test003_MetroMasCentimetro
 
 	self assert: metros1 + centimetros200 = centimetros300 . 
 	self deny: metros1 + centimetros200 = centimetros200 . 
 	! !
 
-!UnitTest methodsFor: 'DistanceUnits +' stamp: 'JI 5/31/2017 19:56:48'!
+!DistanceTests methodsFor: 'DistanceUnits +' stamp: 'JI 5/31/2017 19:56:48'!
 test004_MetroMasMilimetro
 
 	self assert: metros1 + milimetros2000 = milimetros3000 . 
 	self deny: metros1 + milimetros2000 = milimetros2000 . 
 	! !
 
-!UnitTest methodsFor: 'DistanceUnits +' stamp: 'JI 5/31/2017 19:57:10'!
+!DistanceTests methodsFor: 'DistanceUnits +' stamp: 'JI 5/31/2017 19:57:10'!
 test005_CentimetroMasKilometro
 
 	self assert: centimetros100 + kilometros1Over1000 = metros2 . 
 	self deny: centimetros200 + kilometros3Over1000 = metros2 . 
 	! !
 
-!UnitTest methodsFor: 'DistanceUnits +' stamp: 'JI 5/31/2017 19:59:20'!
+!DistanceTests methodsFor: 'DistanceUnits +' stamp: 'JI 5/31/2017 19:59:20'!
 test006_CentimetroMasMetro
 
 	self assert: centimetros100 + metros1 = metros2 . 
 	self deny: centimetros200 + metros3 = metros2 . 
 	! !
 
-!UnitTest methodsFor: 'DistanceUnits +' stamp: 'JI 5/31/2017 19:59:39'!
+!DistanceTests methodsFor: 'DistanceUnits +' stamp: 'JI 5/31/2017 19:59:39'!
 test007_CentimetroMasCentimetro
 
 	self assert: centimetros100 + centimetrosOtro100 = metros2 . 
 	self deny: centimetros200 + centimetros300 = metros2 . 
 	! !
 
-!UnitTest methodsFor: 'DistanceUnits +' stamp: 'JI 5/31/2017 19:59:56'!
+!DistanceTests methodsFor: 'DistanceUnits +' stamp: 'JI 5/31/2017 19:59:56'!
 test008_CentimetroMasMilimetro
 
 	self assert: centimetros100 + milimetros1000 = metros2 . 
 	self deny: centimetros200 + milimetros2000 = metros2 . 
 	! !
 
-!UnitTest methodsFor: 'DistanceUnits +' stamp: 'JI 5/31/2017 20:03:38'!
+!DistanceTests methodsFor: 'DistanceUnits +' stamp: 'JI 5/31/2017 20:03:38'!
 test009_MilimetroMasKilometro
 
 	self assert: milimetros1000 + kilometros1Over1000 = metros2 . 
 	self deny: milimetros2000 + kilometros3Over1000 = metros2 . 
 	! !
 
-!UnitTest methodsFor: 'DistanceUnits +' stamp: 'JI 5/31/2017 20:04:02'!
+!DistanceTests methodsFor: 'DistanceUnits +' stamp: 'JI 5/31/2017 20:04:02'!
 test010_MilimetroMasMetro
 
 	self assert: milimetros1000 + metros1 = metros2 . 
 	self deny: milimetros2000 + metros3 = metros2 . 
 	! !
 
-!UnitTest methodsFor: 'DistanceUnits +' stamp: 'JI 5/31/2017 20:04:16'!
+!DistanceTests methodsFor: 'DistanceUnits +' stamp: 'JI 5/31/2017 20:04:16'!
 test011_MilimetroMasCentimetro
 
 	self assert: milimetros1000 + centimetros100 = metros2 . 
 	self deny: milimetros2000 + centimetros300 = metros2 . 
 	! !
 
-!UnitTest methodsFor: 'DistanceUnits +' stamp: 'JI 5/31/2017 20:04:46'!
+!DistanceTests methodsFor: 'DistanceUnits +' stamp: 'JI 5/31/2017 20:04:46'!
 test012_MilimetroMasMilimetro
 
 	self assert: milimetros1000 + milimetrosOtro1000 = metros2 . 
 	self deny: milimetros2000 + milimetros3000 = metros2 . 
 	! !
 
-!UnitTest methodsFor: 'DistanceUnits +' stamp: 'JI 5/31/2017 20:06:45'!
+!DistanceTests methodsFor: 'DistanceUnits +' stamp: 'JI 5/31/2017 20:06:45'!
 test013_KilometroMasKilometro
 
 	self assert: kilometros1 + kilometrosOtro1 = kilometros2 . 
 	self deny: kilometros1 + kilometros3 = kilometrosOtro1Over1000 . 
 	! !
 
-!UnitTest methodsFor: 'DistanceUnits +' stamp: 'JI 5/31/2017 20:08:47'!
+!DistanceTests methodsFor: 'DistanceUnits +' stamp: 'JI 5/31/2017 20:08:47'!
 test014_KilometroMasMetro
 
 	self assert: kilometros1Over1000 + metros2 = metros3. 
 	self deny: kilometros1Over1000 + metros2 = metros1 . 
 	! !
 
-!UnitTest methodsFor: 'DistanceUnits +' stamp: 'JI 5/31/2017 20:09:10'!
+!DistanceTests methodsFor: 'DistanceUnits +' stamp: 'JI 5/31/2017 20:09:10'!
 test015_KilometroMasCentimetro
 
 	self assert: kilometros1Over1000 + centimetros200 = metros3. 
 	self deny: kilometros1Over1000 + centimetros200 = metros1 . 
 	! !
 
-!UnitTest methodsFor: 'DistanceUnits +' stamp: 'JI 5/31/2017 20:09:26'!
+!DistanceTests methodsFor: 'DistanceUnits +' stamp: 'JI 5/31/2017 20:09:26'!
 test016_KilometroMasMilimetro
 
 	self assert: kilometros1Over1000 + milimetros2000 = metros3. 
@@ -255,112 +250,112 @@ test016_KilometroMasMilimetro
 	! !
 
 
-!UnitTest methodsFor: 'DistanceUnits -' stamp: 'JI 6/1/2017 16:32:21'!
+!DistanceTests methodsFor: 'DistanceUnits -' stamp: 'JI 6/1/2017 16:32:21'!
 test001_MetroMenosKilometro
 
 	self assert: metros1 - kilometros2Over1000 = metrosMinus1 . 
 	self deny: metros1 - kilometros2Over1000 = metros0 . 
 	! !
 
-!UnitTest methodsFor: 'DistanceUnits -' stamp: 'JI 6/1/2017 16:34:11'!
+!DistanceTests methodsFor: 'DistanceUnits -' stamp: 'JI 6/1/2017 16:34:11'!
 test002_MetroMenosMetro
 
 	self assert: metros1 - metrosOtro1 = metros0 . 
 	self deny: metros3 - metros1 = metros3. 
 	! !
 
-!UnitTest methodsFor: 'DistanceUnits -' stamp: 'JI 6/1/2017 16:34:31'!
+!DistanceTests methodsFor: 'DistanceUnits -' stamp: 'JI 6/1/2017 16:34:31'!
 test003_MetroMenosCentimetro
 
 	self assert: metros1 - centimetros100 = metros0 . 
 	self deny: metros3 - centimetros100 = metros3. 
 	! !
 
-!UnitTest methodsFor: 'DistanceUnits -' stamp: 'JI 6/1/2017 16:34:48'!
+!DistanceTests methodsFor: 'DistanceUnits -' stamp: 'JI 6/1/2017 16:34:48'!
 test004_MetroMenosMilimetro
 
 	self assert: metros1 - milimetros1000 = metros0 . 
 	self deny: metros3 - milimetros1000 = metros3. 
 	! !
 
-!UnitTest methodsFor: 'DistanceUnits -' stamp: 'JI 6/1/2017 16:35:29'!
+!DistanceTests methodsFor: 'DistanceUnits -' stamp: 'JI 6/1/2017 16:35:29'!
 test005_CentimetroMenosKilometro
 
 	self assert: centimetros100 - kilometros1Over1000 = metros0 . 
 	self deny: centimetros300 - kilometros1Over1000 = milimetros3000 . 
 	! !
 
-!UnitTest methodsFor: 'DistanceUnits -' stamp: 'JI 6/1/2017 16:35:45'!
+!DistanceTests methodsFor: 'DistanceUnits -' stamp: 'JI 6/1/2017 16:35:45'!
 test006_CentimetroMenosMetro
 
 	self assert: centimetros100 - metros1 = metros0 . 
 	self deny: centimetros300 - metros1 = milimetros3000 . 
 	! !
 
-!UnitTest methodsFor: 'DistanceUnits -' stamp: 'JI 6/1/2017 16:35:58'!
+!DistanceTests methodsFor: 'DistanceUnits -' stamp: 'JI 6/1/2017 16:35:58'!
 test007_CentimetroMenosCentimetro
 
 	self assert: centimetros100 - centimetros100 = metros0 . 
 	self deny: centimetros300 - centimetros100 = milimetros3000 . 
 	! !
 
-!UnitTest methodsFor: 'DistanceUnits -' stamp: 'JI 6/1/2017 16:36:17'!
+!DistanceTests methodsFor: 'DistanceUnits -' stamp: 'JI 6/1/2017 16:36:17'!
 test008_CentimetroMenosMilimetro
 
 	self assert: centimetros100 - milimetros1000 = metros0 . 
 	self deny: centimetros300 - milimetros1000 = milimetros3000 . 
 	! !
 
-!UnitTest methodsFor: 'DistanceUnits -' stamp: 'JI 6/1/2017 16:36:40'!
+!DistanceTests methodsFor: 'DistanceUnits -' stamp: 'JI 6/1/2017 16:36:40'!
 test009_MilimetroMenosKilometro
 
 	self assert: milimetros1000 - kilometros1Over1000 = metros0 . 
 	self deny: milimetros3000 - kilometros1Over1000 = milimetros3000 . 
 	! !
 
-!UnitTest methodsFor: 'DistanceUnits -' stamp: 'JI 6/1/2017 16:36:55'!
+!DistanceTests methodsFor: 'DistanceUnits -' stamp: 'JI 6/1/2017 16:36:55'!
 test010_MilimetroMenosMetro
 
 	self assert: milimetros1000 - metros1 = metros0 . 
 	self deny: milimetros3000 - metros1 = milimetros3000 . 
 	! !
 
-!UnitTest methodsFor: 'DistanceUnits -' stamp: 'JI 6/1/2017 16:38:02'!
+!DistanceTests methodsFor: 'DistanceUnits -' stamp: 'JI 6/1/2017 16:38:02'!
 test011_MilimetroMenosCentimetro
 
 	self assert: milimetros1000 - centimetros100 = metros0 . 
 	self deny: milimetros3000 - centimetros100 = milimetros3000 . 
 	! !
 
-!UnitTest methodsFor: 'DistanceUnits -' stamp: 'JI 6/1/2017 16:38:14'!
+!DistanceTests methodsFor: 'DistanceUnits -' stamp: 'JI 6/1/2017 16:38:14'!
 test012_MilimetroMenosMilimetro
 
 	self assert: milimetros1000 - milimetrosOtro1000 = metros0 . 
 	self deny: milimetros3000 - milimetrosOtro1000 = milimetros3000 . 
 	! !
 
-!UnitTest methodsFor: 'DistanceUnits -' stamp: 'JI 6/1/2017 16:38:41'!
+!DistanceTests methodsFor: 'DistanceUnits -' stamp: 'JI 6/1/2017 16:38:41'!
 test013_KilometroMenosKilometro
 
 	self assert: kilometros1Over1000 - kilometrosOtro1Over1000 = metros0 . 
 	self deny: kilometros3Over1000 - kilometros1Over1000 = milimetros3000 . 
 	! !
 
-!UnitTest methodsFor: 'DistanceUnits -' stamp: 'JI 6/1/2017 16:38:55'!
+!DistanceTests methodsFor: 'DistanceUnits -' stamp: 'JI 6/1/2017 16:38:55'!
 test014_KilometroMenosMetro
 
 	self assert: kilometros1Over1000 - metros1 = metros0 . 
 	self deny: kilometros3Over1000 - metros1 = milimetros3000 . 
 	! !
 
-!UnitTest methodsFor: 'DistanceUnits -' stamp: 'JI 6/1/2017 16:39:21'!
+!DistanceTests methodsFor: 'DistanceUnits -' stamp: 'JI 6/1/2017 16:39:21'!
 test015_KilometroMenosCentimetro
 
 	self assert: kilometros1Over1000 - centimetros100 = metros0 . 
 	self deny: kilometros3Over1000 - centimetros100 = milimetros3000 . 
 	! !
 
-!UnitTest methodsFor: 'DistanceUnits -' stamp: 'JI 6/1/2017 16:39:33'!
+!DistanceTests methodsFor: 'DistanceUnits -' stamp: 'JI 6/1/2017 16:39:33'!
 test016_KilometroMenosMilimetro
 
 	self assert: kilometros1Over1000 - milimetros1000 = metros0 . 
@@ -368,125 +363,125 @@ test016_KilometroMenosMilimetro
 	! !
 
 
-!UnitTest methodsFor: 'DistanceUnits =' stamp: 'JI 5/31/2017 19:06:21'!
+!DistanceTests methodsFor: 'DistanceUnits =' stamp: 'JI 5/31/2017 19:06:21'!
 test001_MetroIgualAMetro
 	
 	self assert: metros1 = metrosOtro1 .
 	self deny: metros1 = metros2.! !
 
-!UnitTest methodsFor: 'DistanceUnits =' stamp: 'JI 5/31/2017 19:06:46'!
+!DistanceTests methodsFor: 'DistanceUnits =' stamp: 'JI 5/31/2017 19:06:46'!
 test002_MetroIgualACentimetro
 	
 	self assert: metros1 = centimetros100 .
 	self deny: metros1 = centimetros200 .! !
 
-!UnitTest methodsFor: 'DistanceUnits =' stamp: 'JI 5/31/2017 19:11:02'!
+!DistanceTests methodsFor: 'DistanceUnits =' stamp: 'JI 5/31/2017 19:11:02'!
 test003_MetroIgualAMilimetro
 	
 	self assert: metros1 = milimetros1000 .
 	self deny: metros1 = milimetros2000 .! !
 
-!UnitTest methodsFor: 'DistanceUnits =' stamp: 'JI 5/31/2017 19:31:44'!
+!DistanceTests methodsFor: 'DistanceUnits =' stamp: 'JI 5/31/2017 19:31:44'!
 test004_MetroIgualAKilometro
 	
 	self assert: metros1 = kilometros1Over1000 .
 	self deny: metros1 = kilometros2Over1000 .! !
 
-!UnitTest methodsFor: 'DistanceUnits =' stamp: 'JI 5/31/2017 19:15:04'!
+!DistanceTests methodsFor: 'DistanceUnits =' stamp: 'JI 5/31/2017 19:15:04'!
 test005_CentimetroIgualAMetro
 	
 	self assert: centimetros100 = metros1 .
 	self deny: centimetros100 = metros2.! !
 
-!UnitTest methodsFor: 'DistanceUnits =' stamp: 'JI 5/31/2017 19:16:44'!
+!DistanceTests methodsFor: 'DistanceUnits =' stamp: 'JI 5/31/2017 19:16:44'!
 test006_CentimetroIgualACentimetro
 	
 	self assert: centimetros100 = centimetrosOtro100 .
 	self deny: centimetros100 = centimetros200.! !
 
-!UnitTest methodsFor: 'DistanceUnits =' stamp: 'JI 5/31/2017 19:17:44'!
+!DistanceTests methodsFor: 'DistanceUnits =' stamp: 'JI 5/31/2017 19:17:44'!
 test007_CentimetroIgualAMilimetro
 	
 	self assert: centimetros100 = milimetros1000 .
 	self deny: centimetros100 = milimetros2000 .! !
 
-!UnitTest methodsFor: 'DistanceUnits =' stamp: 'JI 5/31/2017 19:32:07'!
+!DistanceTests methodsFor: 'DistanceUnits =' stamp: 'JI 5/31/2017 19:32:07'!
 test008_CentimetroIgualAKilometro
 	
 	self assert: centimetros100 = kilometros1Over1000 .
 	self deny: centimetros100 = kilometros2Over1000 .! !
 
-!UnitTest methodsFor: 'DistanceUnits =' stamp: 'JI 5/31/2017 19:34:28'!
+!DistanceTests methodsFor: 'DistanceUnits =' stamp: 'JI 5/31/2017 19:34:28'!
 test009_MilimetroIgualAKilometro
 	
 	self assert: milimetros1000 = kilometros1Over1000 .
 	self deny: milimetros2000 = kilometros1Over1000 .! !
 
-!UnitTest methodsFor: 'DistanceUnits =' stamp: 'JI 5/31/2017 19:20:51'!
+!DistanceTests methodsFor: 'DistanceUnits =' stamp: 'JI 5/31/2017 19:20:51'!
 test010_MilimetroIgualAMetro
 	
 	self assert: milimetros1000 = metros1 .
 	self deny: milimetros1000 = metros2 .! !
 
-!UnitTest methodsFor: 'DistanceUnits =' stamp: 'JI 5/31/2017 19:20:56'!
+!DistanceTests methodsFor: 'DistanceUnits =' stamp: 'JI 5/31/2017 19:20:56'!
 test011_MilimetroIgualACentimetro
 	
 	self assert: milimetros1000 = centimetros100 .
 	self deny: milimetros1000 = centimetros200 .! !
 
-!UnitTest methodsFor: 'DistanceUnits =' stamp: 'JI 5/31/2017 19:21:10'!
+!DistanceTests methodsFor: 'DistanceUnits =' stamp: 'JI 5/31/2017 19:21:10'!
 test012_MilimetroIgualAMilimetro
 	
 	self assert: milimetros1000 = milimetrosOtro1000 .
 	self deny: milimetros1000 = milimetros2000 .! !
 
-!UnitTest methodsFor: 'DistanceUnits =' stamp: 'JI 5/31/2017 19:28:04'!
+!DistanceTests methodsFor: 'DistanceUnits =' stamp: 'JI 5/31/2017 19:28:04'!
 test013_KilometroIgualAKilometro
 	
 	self assert: kilometros1Over1000 = kilometrosOtro1Over1000 .
 	self deny: kilometros1Over1000 = kilometros2Over1000 .! !
 
-!UnitTest methodsFor: 'DistanceUnits =' stamp: 'JI 5/31/2017 19:32:42'!
+!DistanceTests methodsFor: 'DistanceUnits =' stamp: 'JI 5/31/2017 19:32:42'!
 test014_KilometroIgualAMetro
 	
 	self assert: kilometros1Over1000 = metros1 .
 	self deny: kilometros1Over1000 = metros2 .! !
 
-!UnitTest methodsFor: 'DistanceUnits =' stamp: 'JI 5/31/2017 19:29:47'!
+!DistanceTests methodsFor: 'DistanceUnits =' stamp: 'JI 5/31/2017 19:29:47'!
 test015_KilometroIgualACentimetro
 	
 	self assert: kilometros1Over1000 = centimetros100 .
 	self deny: kilometros1Over1000 = centimetros200 .! !
 
-!UnitTest methodsFor: 'DistanceUnits =' stamp: 'JI 5/31/2017 19:30:01'!
+!DistanceTests methodsFor: 'DistanceUnits =' stamp: 'JI 5/31/2017 19:30:01'!
 test016_KilometroIgualAMilimetro
 	
 	self assert: kilometros1Over1000 = milimetros1000 .
 	self deny: kilometros1Over1000 = milimetros2000 .! !
 
 
-!UnitTest methodsFor: 'DistanceUnits Comparison' stamp: 'JI 6/1/2017 17:05:19'!
+!DistanceTests methodsFor: 'DistanceUnits Comparison' stamp: 'JI 6/1/2017 17:05:19'!
 test001_DistanceLessDistance
 	
 	self deny: metros1 < centimetros100 .
 	self assert: milimetros1000 < kilometros2Over1000 .
 	self deny: kilometros1Over1000 < metros0.! !
 
-!UnitTest methodsFor: 'DistanceUnits Comparison' stamp: 'JI 6/1/2017 17:06:17'!
+!DistanceTests methodsFor: 'DistanceUnits Comparison' stamp: 'JI 6/1/2017 17:06:17'!
 test002_DistanceLessOrEqualDistance
 	
 	self assert: metros1 <= centimetros100 .
 	self assert: milimetros1000 <= kilometros2Over1000 .
 	self deny: kilometros1Over1000 <= metros0.! !
 
-!UnitTest methodsFor: 'DistanceUnits Comparison' stamp: 'JI 6/1/2017 17:08:39'!
+!DistanceTests methodsFor: 'DistanceUnits Comparison' stamp: 'JI 6/1/2017 17:08:39'!
 test003_DistanceGreaterThanDistance
 	
 	self deny: metros1 > centimetros100 .
 	self deny: milimetros1000 > kilometros2Over1000 .
 	self assert: kilometros1Over1000 > metros0.! !
 
-!UnitTest methodsFor: 'DistanceUnits Comparison' stamp: 'JI 6/1/2017 17:08:32'!
+!DistanceTests methodsFor: 'DistanceUnits Comparison' stamp: 'JI 6/1/2017 17:08:32'!
 test004_DistanceGreaterOrEqualThanDistance
 	
 	self assert: metros1 >= centimetros100 .
@@ -494,18 +489,18 @@ test004_DistanceGreaterOrEqualThanDistance
 	self assert: kilometros1Over1000 >= metros0.! !
 
 
-!UnitTest methodsFor: 'Interval' stamp: 'JI 6/2/2017 02:41:05'!
+!DistanceTests methodsFor: 'Interval' stamp: 'JI 6/2/2017 02:41:05'!
 hacerQueElIntervaloDevuelvaDistanciasYNoNumeros
 	
 	! !
 
-!UnitTest methodsFor: 'Interval' stamp: 'JI 6/2/2017 03:03:52'!
+!DistanceTests methodsFor: 'Interval' stamp: 'JI 6/2/2017 03:03:52'!
 test001_IntervaloVacio
 	
 	intervaloVacio _ IntervalOfDistances intervaloVacio .
 	self assert: intervaloVacio size = 0.! !
 
-!UnitTest methodsFor: 'Interval' stamp: 'JI 6/3/2017 14:21:45'!
+!DistanceTests methodsFor: 'Interval' stamp: 'JI 6/3/2017 14:21:45'!
 test002_IntervaloFromToDeDistanciasPositivas
 	
 	| i |
@@ -535,7 +530,7 @@ test002_IntervaloFromToDeDistanciasPositivas
 	self assert: intervaloDeMilimetros1000To10000 size =9001.
 	! !
 
-!UnitTest methodsFor: 'Interval' stamp: 'JI 6/3/2017 14:23:00'!
+!DistanceTests methodsFor: 'Interval' stamp: 'JI 6/3/2017 14:23:00'!
 test003_IntervaloFromToDeDistanciasNegativas
 	
 	| i |
@@ -564,7 +559,7 @@ test003_IntervaloFromToDeDistanciasNegativas
 		i _ i-milimetros1 .].
 	self assert: intervaloDeMilimetros10000To1000 size =9001.! !
 
-!UnitTest methodsFor: 'Interval' stamp: 'JI 6/2/2017 02:57:44'!
+!DistanceTests methodsFor: 'Interval' stamp: 'JI 6/2/2017 02:57:44'!
 test004_IntervaloFromToByDeDistanciasPositivas
 	
 	| i |
@@ -593,7 +588,7 @@ test004_IntervaloFromToByDeDistanciasPositivas
 		i _ i+kilometros1Over1000 .].
 	self assert: intervaloDeMilimetros1000To10000By1Over1000Kilometro size =10.! !
 
-!UnitTest methodsFor: 'Interval' stamp: 'JI 6/2/2017 03:04:06'!
+!DistanceTests methodsFor: 'Interval' stamp: 'JI 6/2/2017 03:04:06'!
 test005_IntervaloFromToByDeDistanciasNegativas
 	
 	| i |
@@ -622,7 +617,7 @@ test005_IntervaloFromToByDeDistanciasNegativas
 		i _ i-kilometros1Over1000 .].
 	self assert: intervaloDeMilimetros10000To1000By1Over1000Kilometro size =10.! !
 
-!UnitTest methodsFor: 'Interval' stamp: 'JI 6/2/2017 03:39:07'!
+!DistanceTests methodsFor: 'Interval' stamp: 'JI 6/2/2017 03:39:07'!
 test006_IntervaloFromToByDoDeDistancias
 	
 	| i |
@@ -650,27 +645,17 @@ test006_IntervaloFromToByDoDeDistancias
 ! !
 
 
-!UnitTest methodsFor: 'SetUp' stamp: 'JI 6/4/2017 02:58:41'!
-celsiusSetUp
-	
-	celsiusMinus273con15 _ Temperatura initializeWith: 273+(15/100) asUnit: Celsius initialize .
-	celsius0  _ Temperatura initializeWith: 0  asUnit: (Celsius initialize).
-	celsius1  _ Temperatura initializeWith: 1  asUnit: (Celsius initialize).
-	celsiusOtro1  _ Temperatura initializeWith: 1  asUnit: (Celsius initialize).
-	celsius2  _ Temperatura initializeWith: 2  asUnit: (Celsius initialize).
-	! !
-
-!UnitTest methodsFor: 'SetUp' stamp: 'JI 6/3/2017 14:22:03'!
+!DistanceTests methodsFor: 'SetUp' stamp: 'JI 6/4/2017 15:38:12'!
 centimetrosSetUp
 
-	centimetros1 _ DistanceUnits initializeWith: 1 asUnit: (Centimetro initialize) .	
-	centimetros100 _ DistanceUnits initializeWith: 100 asUnit: (Centimetro initialize) .	
-	centimetrosOtro100 _ DistanceUnits initializeWith: 100 asUnit: (Centimetro initialize) .	
-	centimetros200 _ DistanceUnits initializeWith: 200 asUnit: (Centimetro initialize) .
-	centimetros300 _ DistanceUnits initializeWith: 300 asUnit: (Centimetro initialize)  .
-	centimetros1000 _ DistanceUnits initializeWith: 1000 asUnit: (Centimetro initialize) .	! !
+	centimetros1 _ DistanceMeasure initializeWith: 1 asUnit: DistanceUnit initializeCentimetro  .	
+	centimetros100 _ DistanceMeasure initializeWith: 100 asUnit: DistanceUnit initializeCentimetro .	
+	centimetrosOtro100 _ DistanceMeasure initializeWith: 100 asUnit: DistanceUnit initializeCentimetro .	
+	centimetros200 _ DistanceMeasure initializeWith: 200 asUnit:  DistanceUnit initializeCentimetro .	
+	centimetros300 _ DistanceMeasure initializeWith: 300 asUnit: DistanceUnit initializeCentimetro .	
+	centimetros1000 _ DistanceMeasure initializeWith: 1000 asUnit:  DistanceUnit initializeCentimetro .		! !
 
-!UnitTest methodsFor: 'SetUp' stamp: 'JI 6/3/2017 14:27:57'!
+!DistanceTests methodsFor: 'SetUp' stamp: 'JI 6/3/2017 14:27:57'!
 intervalosSetUp
 	
 	intervaloVacio _ IntervalOfDistances intervaloVacio.
@@ -701,80 +686,78 @@ intervalosSetUp
 	
 	! !
 
-!UnitTest methodsFor: 'SetUp' stamp: 'JI 6/4/2017 02:59:56'!
-kelvinSetUp
-	
-	kelvin0 _ Temperatura initializeWith: 0 asUnit: Kelvin initialize .
-	kelvin273con15  _ Temperatura initializeWith: (273+(15/100)) asUnit: Kelvin initialize .
-	kelvin274con15  _ Temperatura initializeWith: (274+(15/100)) asUnit: Kelvin initialize .! !
-
-!UnitTest methodsFor: 'SetUp' stamp: 'JI 5/31/2017 20:06:36'!
+!DistanceTests methodsFor: 'SetUp' stamp: 'JI 6/4/2017 15:40:57'!
 kilometrosSetUp
 
-	kilometros1Over1000 _ DistanceUnits initializeWith: 1/1000 asUnit: (Kilometro initialize) .	
-	kilometrosOtro1Over1000 _ DistanceUnits initializeWith: 1/1000 asUnit: (Kilometro initialize) .	
-	kilometros2Over1000 _  DistanceUnits initializeWith: 2/1000 asUnit: (Kilometro initialize) . 
-	kilometros3Over1000 _  DistanceUnits initializeWith: 3/1000 asUnit: (Kilometro initialize) . 
-	
-	kilometros1 _ DistanceUnits initializeWith: 1 asUnit: (Kilometro initialize ).
-	kilometrosOtro1 _ DistanceUnits initializeWith: 1 asUnit: (Kilometro initialize ).
-	kilometros2 _ DistanceUnits initializeWith: 2 asUnit: (Kilometro initialize ).
-	kilometros3 _ DistanceUnits initializeWith: 3 asUnit: (Kilometro initialize ).
+	kilometros1Over1000 _ DistanceMeasure initializeWith: 1/1000 asUnit: DistanceUnit initializeKilometro .
+	kilometrosOtro1Over1000 _ DistanceMeasure initializeWith: 1/1000 asUnit: DistanceUnit initializeKilometro .
+	kilometros2Over1000 _  DistanceMeasure initializeWith: 2/1000 asUnit: DistanceUnit initializeKilometro .
+	kilometros3Over1000 _  DistanceMeasure initializeWith: 3/1000 asUnit: DistanceUnit initializeKilometro .
+	kilometros1 _ DistanceMeasure initializeWith: 1 asUnit: DistanceUnit initializeKilometro .
+	kilometrosOtro1 _ DistanceMeasure initializeWith: 1 asUnit: DistanceUnit initializeKilometro .
+	kilometros2 _ DistanceMeasure initializeWith: 2 asUnit: DistanceUnit initializeKilometro .
+	kilometros3 _ DistanceMeasure initializeWith: 3 asUnit: DistanceUnit initializeKilometro .
 	! !
 
-!UnitTest methodsFor: 'SetUp' stamp: 'JI 6/2/2017 02:34:06'!
+!DistanceTests methodsFor: 'SetUp' stamp: 'JI 6/4/2017 15:40:13'!
 metrosSetUp
 	
-	metrosMinus1 _ DistanceUnits initializeWith: -1 asUnit: (Metro initialize ).
-	metros0 _ DistanceUnits initializeWith: 0 asUnit: (Metro initialize ).
-	metros1 _ DistanceUnits initializeWith: 1 asUnit: (Metro initialize) .
-	metrosOtro1 _ DistanceUnits initializeWith: 1 asUnit: (Metro initialize) .	
-	metros2 _ DistanceUnits initializeWith: 2 asUnit: (Metro initialize )  .
-	metros3 _ DistanceUnits initializeWith: 3 asUnit: (Metro initialize )  .
-	metros4 _ DistanceUnits initializeWith: 4 asUnit: (Metro initialize )  .
-	metros30 _ DistanceUnits initializeWith: 30 asUnit: (Metro initialize )  .
-	metros100 _ DistanceUnits initializeWith: 100 asUnit: (Metro initialize )! !
+	metrosMinus1 _ DistanceMeasure initializeWith: -1 asUnit: DistanceUnit initializeMetro .
+	metros0 _ DistanceMeasure initializeWith: 0 asUnit: DistanceUnit initializeMetro .
+	metros1 _ DistanceMeasure initializeWith: 1 asUnit:  DistanceUnit initializeMetro .
+	metrosOtro1 _ DistanceMeasure initializeWith: 1 asUnit:  DistanceUnit initializeMetro .
+	metros2 _ DistanceMeasure initializeWith: 2 asUnit: DistanceUnit initializeMetro .
+	metros3 _ DistanceMeasure initializeWith: 3 asUnit: DistanceUnit initializeMetro .
+	metros4 _ DistanceMeasure initializeWith: 4 asUnit:  DistanceUnit initializeMetro .
+	metros30 _ DistanceMeasure initializeWith: 30 asUnit: DistanceUnit initializeMetro .
+	metros100 _ DistanceMeasure initializeWith: 100 asUnit: DistanceUnit initializeMetro .! !
 
-!UnitTest methodsFor: 'SetUp' stamp: 'JI 6/3/2017 14:22:16'!
+!DistanceTests methodsFor: 'SetUp' stamp: 'JI 6/4/2017 15:41:40'!
 milimetrosSetUp
 	
-	milimetros1 _ DistanceUnits initializeWith: 1 asUnit: (Milimetro initialize) .	
-	milimetros500 _ DistanceUnits initializeWith: 500 asUnit: (Milimetro initialize) .	
-	milimetros1000 _ DistanceUnits initializeWith: 1000 asUnit: (Milimetro initialize) .	
-	milimetrosOtro1000 _ DistanceUnits initializeWith: 1000 asUnit: (Milimetro initialize) .	
-	milimetros2000 _  DistanceUnits initializeWith: 2000 asUnit: (Milimetro initialize) . 
-	milimetros3000 _  DistanceUnits initializeWith: 3000 asUnit: (Milimetro initialize) . 
-	milimetros10000 _  DistanceUnits initializeWith: 10000 asUnit: (Milimetro initialize) . 
+	milimetros1 _ DistanceMeasure initializeWith: 1 asUnit: DistanceUnit initializeMilimetro .
+	milimetros500 _ DistanceMeasure initializeWith: 500 asUnit: DistanceUnit initializeMilimetro .	
+	milimetros1000 _ DistanceMeasure initializeWith: 1000 asUnit: DistanceUnit initializeMilimetro .
+	milimetrosOtro1000 _ DistanceMeasure initializeWith: 1000 asUnit: DistanceUnit initializeMilimetro .
+	milimetros2000 _  DistanceMeasure initializeWith: 2000 asUnit:  DistanceUnit initializeMilimetro .
+	milimetros3000 _  DistanceMeasure initializeWith: 3000 asUnit:  DistanceUnit initializeMilimetro .
+	milimetros10000 _  DistanceMeasure initializeWith: 10000 asUnit:  DistanceUnit initializeMilimetro .
 	! !
 
-!UnitTest methodsFor: 'SetUp' stamp: 'JI 6/4/2017 02:33:22'!
+!DistanceTests methodsFor: 'SetUp' stamp: 'JI 6/4/2017 16:10:37'!
 setUp
 	self kilometrosSetUp .
 	self metrosSetUp.
 	self centimetrosSetUp .
 	self milimetrosSetUp .
 	self intervalosSetUp .
-	
-	self celsiusSetUp.! !
+	! !
 
+
+!classDefinition: #TemperatureTests category: #'Distance-Solution'!
+TestCase subclass: #TemperatureTests
+	instanceVariableNames: 'grados unidad celsiusMinus273con15 celsius0 celsius1 celsiusOtro1 celsius2 fahrenheitMinus459With67 fahrenheit32 fahrenheit33With8 kelvin0 kelvin273con15 kelvin274con15'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Distance-Solution'!
 
-!UnitTest methodsFor: 'Temperature =' stamp: 'JI 6/4/2017 02:32:57'!
+!TemperatureTests methodsFor: 'Tests =' stamp: 'JI 6/4/2017 16:11:19'!
 test001_unGradoCelsiusIgualaOtroGradoCelsius
 
 	self assert: celsius1 = celsiusOtro1.! !
 
-!UnitTest methodsFor: 'Temperature =' stamp: 'JI 6/4/2017 02:41:08'!
+!TemperatureTests methodsFor: 'Tests =' stamp: 'JI 6/4/2017 16:11:32'!
 test002_unGradoCelsiusNoEsIgualaDosGradosCelsius
 
 	self deny: celsius1 = celsius2.! !
 
-!UnitTest methodsFor: 'Temperature =' stamp: 'JI 6/4/2017 02:42:31'!
+!TemperatureTests methodsFor: 'Tests =' stamp: 'JI 6/4/2017 16:11:46'!
 test003_CelsiusIgualACelsius
 
 	self assert: celsius1 = celsius1.
 	self deny: celsius1 = celsius2.! !
 
-!UnitTest methodsFor: 'Temperature =' stamp: 'JI 6/4/2017 02:56:39'!
+!TemperatureTests methodsFor: 'Tests =' stamp: 'JI 6/4/2017 16:11:57'!
 test004_CelsiusIgualAKelvin
 
 	self assert: celsius1 = kelvin274con15.
@@ -782,6 +765,46 @@ test004_CelsiusIgualAKelvin
 	self deny: celsiusMinus273con15 = kelvin0
 	
 	! !
+
+!TemperatureTests methodsFor: 'Tests =' stamp: 'JI 6/4/2017 16:12:09'!
+test005_CelsiusIgualAFahrenheit
+
+	self assert: celsius1 = fahrenheit33With8.
+	self assert: celsius0 = fahrenheit32.
+	self deny: celsiusMinus273con15 = fahrenheitMinus459With67.
+	
+	! !
+
+
+!TemperatureTests methodsFor: 'setUp' stamp: 'JI 6/4/2017 16:07:29'!
+celsiusSetUp
+	
+	celsiusMinus273con15 _ TemperatureMeasure initializeWith: 273+(15/100) asUnit: TemperatureUnits initializeCelsius .
+	celsius0  _ TemperatureMeasure initializeWith: 0  asUnit: TemperatureUnits initializeCelsius .
+	celsius1  _ TemperatureMeasure initializeWith: 1  asUnit:  TemperatureUnits initializeCelsius .
+	celsiusOtro1  _ TemperatureMeasure initializeWith: 1  asUnit:  TemperatureUnits initializeCelsius .
+	celsius2  _ TemperatureMeasure initializeWith: 2  asUnit:  TemperatureUnits initializeCelsius .
+	! !
+
+!TemperatureTests methodsFor: 'setUp' stamp: 'JI 6/4/2017 16:08:32'!
+fahrenheitSetUp
+	
+	fahrenheitMinus459With67 _ TemperatureMeasure initializeWith: -459-(67/100) asUnit: TemperatureUnits initializeFahrenheit .
+	fahrenheit32  _ TemperatureMeasure initializeWith: 32 asUnit:TemperatureUnits initializeFahrenheit .
+	fahrenheit33With8  _ TemperatureMeasure initializeWith: 33+(8/100) asUnit:TemperatureUnits initializeFahrenheit  .! !
+
+!TemperatureTests methodsFor: 'setUp' stamp: 'JI 6/4/2017 16:09:19'!
+kelvinSetUp
+	
+	kelvin0 _ TemperatureMeasure initializeWith: 0 asUnit: TemperatureUnits initializeKelvin .
+	kelvin273con15  _ TemperatureMeasure initializeWith: (273+(15/100)) asUnit: TemperatureUnits initializeKelvin .
+	kelvin274con15  _ TemperatureMeasure initializeWith: (274+(15/100)) asUnit: TemperatureUnits initializeKelvin .! !
+
+!TemperatureTests methodsFor: 'setUp' stamp: 'JI 6/4/2017 16:13:27'!
+setUp
+	self celsiusSetUp .
+	self fahrenheitSetUp .
+	self kelvinSetUp .! !
 
 
 !classDefinition: #DistanceFactory category: #'Distance-Solution'!
@@ -791,39 +814,135 @@ Object subclass: #DistanceFactory
 	poolDictionaries: ''
 	category: 'Distance-Solution'!
 
-!DistanceFactory methodsFor: 'newInstances' stamp: 'Ji 6/1/2017 19:31:31'!
+!DistanceFactory methodsFor: 'newInstances' stamp: 'JI 6/4/2017 15:43:38'!
 minusOneMeter
-	^ DistanceUnits initializeWith: -1 asUnit: Metro initialize
+	^ DistanceMeasure initializeWith: -1 asUnit: DistanceUnit initializeMetro 
 ! !
 
-!DistanceFactory methodsFor: 'newInstances' stamp: 'Ji 6/1/2017 19:31:42'!
+!DistanceFactory methodsFor: 'newInstances' stamp: 'JI 6/4/2017 15:44:12'!
 oneCentimeter
-	^ DistanceUnits initializeWith: 1 asUnit: Centimetro initialize! !
+	^ DistanceMeasure initializeWith: 1 asUnit: DistanceUnit initializeCentimetro ! !
 
-!DistanceFactory methodsFor: 'newInstances' stamp: 'Ji 6/1/2017 19:31:52'!
+!DistanceFactory methodsFor: 'newInstances' stamp: 'JI 6/4/2017 15:44:00'!
 oneHundredCentimeters
-	^ DistanceUnits initializeWith: 100 asUnit: Centimetro initialize! !
+	^ DistanceMeasure initializeWith: 100 asUnit: DistanceUnit initializeCentimetro ! !
 
-!DistanceFactory methodsFor: 'newInstances' stamp: 'Ji 6/1/2017 19:32:02'!
+!DistanceFactory methodsFor: 'newInstances' stamp: 'JI 6/4/2017 15:44:23'!
 oneMeter
-	^ DistanceUnits initializeWith: 1 asUnit: Metro initialize! !
+	^ DistanceMeasure initializeWith: 1 asUnit: DistanceUnit initializeMetro ! !
 
-!DistanceFactory methodsFor: 'newInstances' stamp: 'Ji 6/1/2017 19:32:10'!
+!DistanceFactory methodsFor: 'newInstances' stamp: 'JI 6/4/2017 15:44:50'!
 oneMilimeter
-	^ DistanceUnits initializeWith: 1 asUnit: Milimetro initialize! !
+	^ DistanceMeasure initializeWith: 1 asUnit: DistanceUnit initializeMilimetro ! !
 
-!DistanceFactory methodsFor: 'newInstances' stamp: 'Ji 6/1/2017 19:32:18'!
+!DistanceFactory methodsFor: 'newInstances' stamp: 'JI 6/4/2017 15:43:20'!
 twoHundredCentimeters
-	^ DistanceUnits initializeWith: 200 asUnit: Centimetro initialize! !
+	^ DistanceMeasure initializeWith: 200 asUnit: DistanceUnit initializeCentimetro ! !
 
-!DistanceFactory methodsFor: 'newInstances' stamp: 'Ji 6/1/2017 19:32:33'!
+!DistanceFactory methodsFor: 'newInstances' stamp: 'JI 6/4/2017 15:44:35'!
 twoMeters
-	^ DistanceUnits initializeWith: 2 asUnit: Metro initialize
+	^ DistanceMeasure initializeWith: 2 asUnit: DistanceUnit initializeMetro 
 ! !
 
-!DistanceFactory methodsFor: 'newInstances' stamp: 'Ji 6/1/2017 19:32:41'!
+!DistanceFactory methodsFor: 'newInstances' stamp: 'JI 6/4/2017 15:43:08'!
 zeroMeters
-	^ DistanceUnits initializeWith: 0 asUnit: Metro initialize! !
+	^ DistanceMeasure initializeWith: 0 asUnit: DistanceUnit initializeMetro .! !
+
+
+!classDefinition: #DistanceUnit category: #'Distance-Solution'!
+Object subclass: #DistanceUnit
+	instanceVariableNames: 'conversionFactor unitType'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Distance-Solution'!
+
+!DistanceUnit methodsFor: 'printing' stamp: 'JI 6/4/2017 15:25:35'!
+printString
+	^ unitType! !
+
+
+!DistanceUnit methodsFor: 'comparing' stamp: 'jak 6/1/2017 19:52:32'!
+= anotherUnit
+	^(self class = anotherUnit class) and: [self convertionFactor = anotherUnit convertionFactor]! !
+
+
+!DistanceUnit methodsFor: 'conversion' stamp: 'JI 6/3/2017 14:35:06'!
+convert: quantity to: aUnit
+	^quantity * conversionFactor * (1 / aUnit convertionFactor)! !
+
+!DistanceUnit methodsFor: 'conversion' stamp: 'Ji 5/30/2017 21:40:30'!
+convertionFactor
+	^ conversionFactor! !
+
+
+!DistanceUnit methodsFor: 'initialization' stamp: 'JI 6/4/2017 15:32:28'!
+initializeCentimetro
+	unitType _ 'centimeter'.
+	conversionFactor _ 1/100.! !
+
+!DistanceUnit methodsFor: 'initialization' stamp: 'JI 6/4/2017 15:31:48'!
+initializeDecametro
+	unitType _ 'decameter'.
+	conversionFactor _ 10.! !
+
+!DistanceUnit methodsFor: 'initialization' stamp: 'JI 6/4/2017 15:31:38'!
+initializeDecimetro
+	unitType _ 'decimeter'.
+	conversionFactor _ 1/10.! !
+
+!DistanceUnit methodsFor: 'initialization' stamp: 'JI 6/4/2017 15:30:07'!
+initializeHectometro
+	unitType _ 'hectometer'.
+	conversionFactor _ 100.! !
+
+!DistanceUnit methodsFor: 'initialization' stamp: 'JI 6/4/2017 15:29:16'!
+initializeKilometro
+	unitType _ 'kilometer'.
+	conversionFactor _ 1000.! !
+
+!DistanceUnit methodsFor: 'initialization' stamp: 'JI 6/4/2017 15:28:13'!
+initializeMetro
+	unitType _ 'meter'.
+	conversionFactor _ 1.! !
+
+!DistanceUnit methodsFor: 'initialization' stamp: 'JI 6/4/2017 15:26:50'!
+initializeMilimetro
+	unitType _ 'milimeter'.
+	conversionFactor _ 1/1000.! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'DistanceUnit class' category: #'Distance-Solution'!
+DistanceUnit class
+	instanceVariableNames: ''!
+
+!DistanceUnit class methodsFor: 'as yet unclassified' stamp: 'JI 6/4/2017 15:33:03'!
+initializeCentimetro
+	^ self new initializeCentimetro .! !
+
+!DistanceUnit class methodsFor: 'as yet unclassified' stamp: 'JI 6/4/2017 15:33:14'!
+initializeDecametro
+	^ self new initializeDecametro .! !
+
+!DistanceUnit class methodsFor: 'as yet unclassified' stamp: 'JI 6/4/2017 15:33:45'!
+initializeDecimetro
+	^ self new initializeDecimetro .! !
+
+!DistanceUnit class methodsFor: 'as yet unclassified' stamp: 'JI 6/4/2017 15:32:53'!
+initializeHectometro
+	^ self new initializeHectometro .! !
+
+!DistanceUnit class methodsFor: 'as yet unclassified' stamp: 'JI 6/4/2017 15:29:00'!
+initializeKilometro
+	^ self new initializeKilometro .! !
+
+!DistanceUnit class methodsFor: 'as yet unclassified' stamp: 'JI 6/4/2017 15:28:26'!
+initializeMetro
+	^ self new initializeMetro .! !
+
+!DistanceUnit class methodsFor: 'as yet unclassified' stamp: 'JI 6/4/2017 15:25:50'!
+initializeMilimetro
+	^ self new initializeMilimetro .! !
 
 
 !classDefinition: #IntervalOfDistances category: #'Distance-Solution'!
@@ -833,11 +952,11 @@ Object subclass: #IntervalOfDistances
 	poolDictionaries: ''
 	category: 'Distance-Solution'!
 
-!IntervalOfDistances methodsFor: 'initialization' stamp: 'JI 6/2/2017 04:00:35'!
+!IntervalOfDistances methodsFor: 'initialization' stamp: 'JI 6/4/2017 15:51:19'!
 from: aDistanceUnits to: aDistanceUnits2 by: aDistanceUnits3 
 	
 	intervalo _ Interval from: (aDistanceUnits factorValue ) to: (aDistanceUnits2 factorValue ) by: (aDistanceUnits3 factorValue ).
-	unitType _ Metro initialize .
+	unitType _ DistanceUnit initializeMetro .
 	fromDistance _ aDistanceUnits .
 	toDistance _ aDistanceUnits2 .
 	byDistance _ aDistanceUnits3 ! !
@@ -857,19 +976,19 @@ by
 
 	^  byDistance ! !
 
-!IntervalOfDistances methodsFor: 'as yet unclassified' stamp: 'JI 6/2/2017 02:49:21'!
+!IntervalOfDistances methodsFor: 'as yet unclassified' stamp: 'JI 6/4/2017 15:45:22'!
 do: aBlockClosure 
-	intervalo do: [ :aNumber | aBlockClosure value: (DistanceUnits initializeWith: aNumber asUnit: unitType) ]! !
+	intervalo do: [ :aNumber | aBlockClosure value: (DistanceMeasure initializeWith: aNumber asUnit: unitType) ]! !
 
 !IntervalOfDistances methodsFor: 'as yet unclassified' stamp: 'JI 6/2/2017 03:52:30'!
 from
 
 	^  fromDistance ! !
 
-!IntervalOfDistances methodsFor: 'as yet unclassified' stamp: 'JI 6/3/2017 14:30:22'!
+!IntervalOfDistances methodsFor: 'as yet unclassified' stamp: 'JI 6/4/2017 15:45:14'!
 from: aDistanceUnits to: aDistanceUnits2 
 	| unidad |
-	unidad _ DistanceUnits  initializeWith: 1 asUnit: aDistanceUnits unit.
+	unidad _ DistanceMeasure  initializeWith: 1 asUnit: aDistanceUnits unit.
 	(aDistanceUnits - aDistanceUnits2) factorValue > 0 ifTrue: [unidad _ unidad negated].
 	^ IntervalOfDistances from: aDistanceUnits  to: aDistanceUnits2  by: unidad.
 	! !
@@ -903,209 +1022,84 @@ from: aDistanceUnits to: aDistanceUnits2 by: aDistanceUnits3 do: aBlockClosure
 	(self from: aDistanceUnits to: aDistanceUnits2 by: aDistanceUnits3) do: aBlockClosure ! !
 
 
-!classDefinition: #Temperatura category: #'Distance-Solution'!
-Object subclass: #Temperatura
-	instanceVariableNames: 'grados unidad'
+!classDefinition: #TemperatureMeasure category: #'Distance-Solution'!
+Object subclass: #TemperatureMeasure
+	instanceVariableNames: 'quantity unitType'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Distance-Solution'!
 
-!Temperatura methodsFor: 'as yet unclassified' stamp: 'JI 6/4/2017 02:40:11'!
-= aCelsius
-	^aCelsius grados = self grados and: [ unidad = aCelsius unidad]! !
+!TemperatureMeasure methodsFor: 'initialization' stamp: 'JI 6/4/2017 16:14:57'!
+initializeWith: aNumber asUnit: aTemperatureUnits 
+	quantity _ aNumber .
+	unitType _ aTemperatureUnits .! !
 
-!Temperatura methodsFor: 'as yet unclassified' stamp: 'JI 6/4/2017 02:39:30'!
-grados
-	^ grados! !
 
-!Temperatura methodsFor: 'as yet unclassified' stamp: 'JI 6/4/2017 02:36:47'!
-initializeWith: aSmallInteger asUnit: aCelsius 
-	grados _ aSmallInteger .
-	unidad _ aCelsius .! !
+!TemperatureMeasure methodsFor: 'as yet unclassified' stamp: 'JI 6/4/2017 16:17:11'!
+= anotherTemperatureMeasure
+	^ self obtenerGradosEnCelsius = anotherTemperatureMeasure obtenerGradosEnCelsius! !
 
-!Temperatura methodsFor: 'as yet unclassified' stamp: 'JI 6/4/2017 02:39:44'!
-unidad
-	^ unidad! !
+
+!TemperatureMeasure methodsFor: 'comparing' stamp: 'JI 6/4/2017 16:18:06'!
+obtenerGradosEnCelsius
+	^ unitType convertirACelsiusLaCantidad: quantity ! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'Temperatura class' category: #'Distance-Solution'!
-Temperatura class
+!classDefinition: 'TemperatureMeasure class' category: #'Distance-Solution'!
+TemperatureMeasure class
 	instanceVariableNames: ''!
 
-!Temperatura class methodsFor: 'as yet unclassified' stamp: 'JI 6/4/2017 02:36:21'!
-initializeWith: aSmallInteger asUnit: aCelsius 
-	^ self new initializeWith: aSmallInteger asUnit: aCelsius ! !
+!TemperatureMeasure class methodsFor: 'initialization' stamp: 'JI 6/4/2017 16:14:22'!
+initializeWith: aNumber asUnit: aTemperatureUnits 
+	^self new initializeWith: aNumber asUnit: aTemperatureUnits .! !
 
 
-!classDefinition: #Unit category: #'Distance-Solution'!
-Object subclass: #Unit
-	instanceVariableNames: 'conversionFactor'
+!classDefinition: #TemperatureUnits category: #'Distance-Solution'!
+Object subclass: #TemperatureUnits
+	instanceVariableNames: 'grados unidad equivalenciaAKelvin equivalenciaACelsius equivalenciaAFahrenheit isFahrenheit'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Distance-Solution'!
 
-!Unit methodsFor: 'printing' stamp: 'Ji 6/1/2017 19:22:46'!
-printString
-	^ self subclassResponsibility ! !
+!TemperatureUnits methodsFor: 'initialization' stamp: 'JI 6/4/2017 16:02:20'!
+initializeCelsius
+	equivalenciaAKelvin _ 273 + (15/100).
+	equivalenciaACelsius _ 1.
+	equivalenciaAFahrenheit _ 0.! !
+
+!TemperatureUnits methodsFor: 'initialization' stamp: 'JI 6/4/2017 16:03:13'!
+initializeFahrenheit
+	equivalenciaAKelvin _ 0.
+	equivalenciaACelsius _ 0.
+	equivalenciaAFahrenheit _ 1.! !
+
+!TemperatureUnits methodsFor: 'initialization' stamp: 'JI 6/4/2017 16:02:59'!
+initializeKelvin
+	equivalenciaAKelvin _ 1.
+	equivalenciaACelsius _ -273 - (15/100).
+	equivalenciaAFahrenheit _ 0.! !
 
 
-!Unit methodsFor: 'comparing' stamp: 'jak 6/1/2017 19:52:32'!
-= anotherUnit
-	^(self class = anotherUnit class) and: [self convertionFactor = anotherUnit convertionFactor]! !
-
-
-!Unit methodsFor: 'conversion' stamp: 'JI 6/3/2017 14:35:06'!
-convert: quantity to: aUnit
-	^quantity * conversionFactor * (1 / aUnit convertionFactor)! !
-
-!Unit methodsFor: 'conversion' stamp: 'Ji 5/30/2017 21:40:30'!
-convertionFactor
-	^ conversionFactor! !
+!TemperatureUnits methodsFor: 'converting' stamp: 'JI 6/4/2017 16:25:07'!
+convertirACelsiusLaCantidad: aNumber
+	
+	isFahrenheit ifTrue: [^aNumber -32 / (5/9)]  ifFalse: []! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'Unit class' category: #'Distance-Solution'!
-Unit class
+!classDefinition: 'TemperatureUnits class' category: #'Distance-Solution'!
+TemperatureUnits class
 	instanceVariableNames: ''!
 
-!Unit class methodsFor: 'as yet unclassified' stamp: 'Ji 5/30/2017 21:43:04'!
-initialize
-	^ self new initialize .! !
+!TemperatureUnits class methodsFor: 'initialization' stamp: 'JI 6/4/2017 16:03:37'!
+initializeCelsius
+	^ self new initializeCelsius.! !
 
-
-!classDefinition: #Celsius category: #'Distance-Solution'!
-Unit subclass: #Celsius
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'Distance-Solution'!
+!TemperatureUnits class methodsFor: 'initialization' stamp: 'JI 6/4/2017 16:03:49'!
+initializeFahrenheit
+	^ self new initializeFahrenheit.! !
 
-
-!classDefinition: #Centimetro category: #'Distance-Solution'!
-Unit subclass: #Centimetro
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'Distance-Solution'!
-
-!Centimetro methodsFor: 'initialization' stamp: 'Ji 5/30/2017 21:42:05'!
-initialize
-	conversionFactor _ 1/100! !
-
-
-!Centimetro methodsFor: 'printing' stamp: 'Ji 6/1/2017 19:23:38'!
-printString
-	^ 'centimeter'! !
-
-
-!classDefinition: #Decametro category: #'Distance-Solution'!
-Unit subclass: #Decametro
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'Distance-Solution'!
-
-!Decametro methodsFor: 'initialization' stamp: 'Ji 6/1/2017 19:25:11'!
-initialize
-	conversionFactor  _ 10! !
-
-
-!Decametro methodsFor: 'printing' stamp: 'Ji 6/1/2017 19:25:17'!
-printString
-	^ 'decameter'! !
-
-
-!classDefinition: #Decimetro category: #'Distance-Solution'!
-Unit subclass: #Decimetro
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'Distance-Solution'!
-
-!Decimetro methodsFor: 'initialization' stamp: 'Ji 6/1/2017 19:24:32'!
-initialize
-	conversionFactor _ 1/10! !
-
-
-!Decimetro methodsFor: 'printing' stamp: 'Ji 6/1/2017 19:24:44'!
-printString
-	^ 'decimeter'! !
-
-
-!classDefinition: #Hectometro category: #'Distance-Solution'!
-Unit subclass: #Hectometro
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'Distance-Solution'!
-
-!Hectometro methodsFor: 'initialization' stamp: 'Ji 6/1/2017 19:25:39'!
-initialize
-	conversionFactor  _ 100! !
-
-
-!Hectometro methodsFor: 'printing' stamp: 'Ji 6/1/2017 19:25:35'!
-printString
-	^ 'hectometer'! !
-
-
-!classDefinition: #Kelvin category: #'Distance-Solution'!
-Unit subclass: #Kelvin
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'Distance-Solution'!
-
-
-!classDefinition: #Kilometro category: #'Distance-Solution'!
-Unit subclass: #Kilometro
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'Distance-Solution'!
-
-!Kilometro methodsFor: 'initialization' stamp: 'Ji 5/30/2017 21:47:39'!
-initialize
-	conversionFactor _ 1000! !
-
-
-!Kilometro methodsFor: 'printing' stamp: 'Ji 6/1/2017 19:23:30'!
-printString
-	^ 'kilometer'! !
-
-
-!classDefinition: #Metro category: #'Distance-Solution'!
-Unit subclass: #Metro
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'Distance-Solution'!
-
-!Metro methodsFor: 'initialization' stamp: 'Ji 5/30/2017 21:41:33'!
-initialize
-	conversionFactor  _ 1! !
-
-
-!Metro methodsFor: 'printing' stamp: 'Ji 6/1/2017 19:23:21'!
-printString
-	^ 'meter'! !
-
-
-!classDefinition: #Milimetro category: #'Distance-Solution'!
-Unit subclass: #Milimetro
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'Distance-Solution'!
-
-!Milimetro methodsFor: 'initialization' stamp: 'Ji 5/30/2017 21:46:20'!
-initialize
-	conversionFactor _ 1/1000! !
-
-
-!Milimetro methodsFor: 'printing' stamp: 'Ji 6/1/2017 19:23:14'!
-printString
-	^ 'milimeter'! !
-
-Unit initialize!
+!TemperatureUnits class methodsFor: 'initialization' stamp: 'JI 6/4/2017 16:03:57'!
+initializeKelvin
+	^ self new initializeKelvin.! !
