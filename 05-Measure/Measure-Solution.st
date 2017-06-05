@@ -1,9 +1,9 @@
-!classDefinition: #DistanceMeasure category: #'Distance-Solution'!
+!classDefinition: #DistanceMeasure category: #'Measure-Solution'!
 Magnitude subclass: #DistanceMeasure
 	instanceVariableNames: 'quantity unitType'
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'Distance-Solution'!
+	category: 'Measure-Solution'!
 
 !DistanceMeasure methodsFor: 'comparing' stamp: 'JI 6/1/2017 17:05:51'!
 < someDistance
@@ -94,7 +94,7 @@ printString
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'DistanceMeasure class' category: #'Distance-Solution'!
+!classDefinition: 'DistanceMeasure class' category: #'Measure-Solution'!
 DistanceMeasure class
 	instanceVariableNames: 'quantity'!
 
@@ -104,12 +104,12 @@ initializeWith: aSmallInteger asUnit: anUnitType
 	^self new initializeWith: aSmallInteger asUnit: anUnitType .! !
 
 
-!classDefinition: #TemperatureMeasure category: #'Distance-Solution'!
+!classDefinition: #TemperatureMeasure category: #'Measure-Solution'!
 Magnitude subclass: #TemperatureMeasure
 	instanceVariableNames: 'quantity unitType'
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'Distance-Solution'!
+	category: 'Measure-Solution'!
 
 !TemperatureMeasure methodsFor: 'initialization' stamp: 'JI 6/4/2017 16:14:57'!
 initializeWith: aNumber asUnit: aTemperatureUnits 
@@ -117,60 +117,66 @@ initializeWith: aNumber asUnit: aTemperatureUnits
 	unitType _ aTemperatureUnits .! !
 
 
-!TemperatureMeasure methodsFor: 'as yet unclassified' stamp: 'JI 6/5/2017 00:38:42'!
-* aNumber 
-	
-	^ TemperatureMeasure initializeWith: quantity * aNumber  asUnit:  unitType .! !
+!TemperatureMeasure methodsFor: 'conversion' stamp: 'JI 6/5/2017 12:21:11'!
+transformarGradosAUnidad: aTemperatureUnits 
+	^ aTemperatureUnits transformarCelsiusAMi: self obtenerGradosEnCelsius ! !
 
-!TemperatureMeasure methodsFor: 'as yet unclassified' stamp: 'JI 6/5/2017 12:48:21'!
-+ aTemperatureMeasure 
-	| aTemperatureMeasureInMyScaleAmount |
-	aTemperatureMeasureInMyScaleAmount _	aTemperatureMeasure transformarGradosAUnidad: unitType .
-	^ TemperatureMeasure initializeWith: aTemperatureMeasureInMyScaleAmount+quantity asUnit: unitType ! !
 
-!TemperatureMeasure methodsFor: 'as yet unclassified' stamp: 'JI 6/5/2017 00:07:47'!
-- aTemperatureMeasure 
-	| restaEnCelsius |
-	restaEnCelsius _	self obtenerGradosEnCelsius - aTemperatureMeasure obtenerGradosEnCelsius .
-	^ TemperatureMeasure initializeWith: restaEnCelsius asUnit: TemperatureUnits initializeCelsius ! !
-
-!TemperatureMeasure methodsFor: 'as yet unclassified' stamp: 'JI 6/5/2017 00:40:49'!
-/ aNumber 
-	^ TemperatureMeasure initializeWith: quantity / aNumber asUnit: unitType ! !
-
-!TemperatureMeasure methodsFor: 'as yet unclassified' stamp: 'JI 6/5/2017 01:27:58'!
+!TemperatureMeasure methodsFor: 'comparing' stamp: 'JI 6/5/2017 01:27:58'!
 < aTemperatureMeasure 
 	^ self obtenerGradosEnCelsius  < aTemperatureMeasure obtenerGradosEnCelsius 
 	! !
 
-!TemperatureMeasure methodsFor: 'as yet unclassified' stamp: 'JI 6/4/2017 16:17:11'!
+!TemperatureMeasure methodsFor: 'comparing' stamp: 'JI 6/4/2017 16:17:11'!
 = anotherTemperatureMeasure
 	^ self obtenerGradosEnCelsius = anotherTemperatureMeasure obtenerGradosEnCelsius! !
 
-!TemperatureMeasure methodsFor: 'as yet unclassified' stamp: 'JI 6/5/2017 00:44:04'!
-adaptToNumber: aNumber andSend: selector 
-	^self perform: selector with: aNumber.! !
-
-!TemperatureMeasure methodsFor: 'as yet unclassified' stamp: 'JI 6/5/2017 11:59:30'!
-amount
-	^quantity ! !
-
-!TemperatureMeasure methodsFor: 'as yet unclassified' stamp: 'JI 6/5/2017 12:21:11'!
-transformarGradosAUnidad: aTemperatureUnits 
-	^ aTemperatureUnits transformarCelsiusAMi: self obtenerGradosEnCelsius ! !
-
-!TemperatureMeasure methodsFor: 'as yet unclassified' stamp: 'JI 6/5/2017 11:59:42'!
-unit
-	^ unitType ! !
-
+!TemperatureMeasure methodsFor: 'comparing' stamp: 'JAK 6/5/2017 20:14:11'!
+hash
+	^self obtenerGradosEnCelsius ! !
 
 !TemperatureMeasure methodsFor: 'comparing' stamp: 'JI 6/4/2017 16:18:06'!
 obtenerGradosEnCelsius
 	^ unitType convertirACelsiusLaCantidad: quantity ! !
 
+
+!TemperatureMeasure methodsFor: 'operating' stamp: 'JI 6/5/2017 00:38:42'!
+* aNumber 
+	
+	^ TemperatureMeasure initializeWith: quantity * aNumber  asUnit:  unitType .! !
+
+!TemperatureMeasure methodsFor: 'operating' stamp: 'JI 6/5/2017 12:48:21'!
++ aTemperatureMeasure 
+	| aTemperatureMeasureInMyScaleAmount |
+	aTemperatureMeasureInMyScaleAmount _	aTemperatureMeasure transformarGradosAUnidad: unitType .
+	^ TemperatureMeasure initializeWith: aTemperatureMeasureInMyScaleAmount+quantity asUnit: unitType ! !
+
+!TemperatureMeasure methodsFor: 'operating' stamp: 'JI 6/5/2017 00:07:47'!
+- aTemperatureMeasure 
+	| restaEnCelsius |
+	restaEnCelsius _	self obtenerGradosEnCelsius - aTemperatureMeasure obtenerGradosEnCelsius .
+	^ TemperatureMeasure initializeWith: restaEnCelsius asUnit: TemperatureUnits initializeCelsius ! !
+
+!TemperatureMeasure methodsFor: 'operating' stamp: 'JI 6/5/2017 00:40:49'!
+/ aNumber 
+	^ TemperatureMeasure initializeWith: quantity / aNumber asUnit: unitType ! !
+
+!TemperatureMeasure methodsFor: 'operating' stamp: 'JI 6/5/2017 00:44:04'!
+adaptToNumber: aNumber andSend: selector 
+	^self perform: selector with: aNumber.! !
+
+
+!TemperatureMeasure methodsFor: 'inspecting' stamp: 'JI 6/5/2017 11:59:30'!
+amount
+	^quantity ! !
+
+!TemperatureMeasure methodsFor: 'inspecting' stamp: 'JI 6/5/2017 11:59:42'!
+unit
+	^ unitType ! !
+
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'TemperatureMeasure class' category: #'Distance-Solution'!
+!classDefinition: 'TemperatureMeasure class' category: #'Measure-Solution'!
 TemperatureMeasure class
 	instanceVariableNames: ''!
 
@@ -179,12 +185,12 @@ initializeWith: aNumber asUnit: aTemperatureUnits
 	^self new initializeWith: aNumber asUnit: aTemperatureUnits .! !
 
 
-!classDefinition: #DistanceTests category: #'Distance-Solution'!
+!classDefinition: #DistanceTests category: #'Measure-Solution'!
 TestCase subclass: #DistanceTests
 	instanceVariableNames: 'centimetros100 centimetros200 metros1 metros2 metrosOtro1 milimetros1000 milimetros2000 centimetrosOtro100 milimetrosOtro1000 kilometros1Over1000 kilometrosOtro1Over1000 kilometros2Over1000 metros3 metros4 kilometros3Over1000 centimetros300 milimetros3000 kilometros1 kilometrosOtro1 kilometros2 kilometros3 metrosMinus1 metros0 metros30 intervaloVacio intervaloDeKilometros1To2 intervaloDeKilometros2To1 intervaloDeKilometros1To2By100Metros metros100 intervaloDeKilometros2To1By100Metros intervaloDeMetros1To30 intervaloDeMetros30To1 intervaloDeMetros1To30By200Centimetros intervaloDeMetros30To1By200Centimetros intervaloDeCentimetros100To1000 centimetros1000 intervaloDeCentimetros1000To100 intervaloDeCentimetros100To1000By500Milimetros milimetros500 intervaloDeCentimetros1000To100By500Milimetros intervaloDeMilimetros1000To10000 milimetros10000 intervaloDeMilimetros10000To1000 intervaloDeMilimetros1000To10000By1Over1000Kilometro intervaloDeMilimetros10000To1000By1Over1000Kilometro centimetros1 milimetros1 celsius1 celsiusOtro1 celsius2 kekelvin274con15 celsius0 kelvin273con15 celsiusMinus273con15 kelvin0 kelvin274con15 fahrenheit33With8 fahrenheit32 fahrenheitMinus459With67'
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'Distance-Solution'!
+	category: 'Measure-Solution'!
 
 !DistanceTests methodsFor: 'DistanceUnits * y /' stamp: 'JI 6/1/2017 16:46:07'!
 test001_DistanceMultipliedByANumber
@@ -809,12 +815,12 @@ setUp
 	! !
 
 
-!classDefinition: #TemperatureTests category: #'Distance-Solution'!
+!classDefinition: #TemperatureTests category: #'Measure-Solution'!
 TestCase subclass: #TemperatureTests
 	instanceVariableNames: 'grados unidad celsiusMinus273con15 celsius0 celsius1 celsiusOtro1 celsius2 fahrenheitMinus459With67 fahrenheit32 fahrenheit33With8 kelvin0 kelvin273con15 kelvin274con15 kelvinOtro273con15 fahrenheitOtro32 celsius75 celsiusMinus80 celsiusMinus5 celsius77 kelvin275con15 celsius3 fahrenheit35With6 celsius155 celsiusMinus20 celsiusMinus5Over4 fahrenheit17With8 intervaloVacio intervaloDeCelsius1To10 intervaloDeKelvin1To30 kelvin1 intervaloDefahrenheit32to40 fahrenheit1 celsius10 kelvin30 fahrenheit40 kelvin546Point3 kelvin547Point3 kelvin549Point3 kelvin548Point3 fahrenheit64 fahrenheit65Point8 fahrenheit69Point4 intervaloDeCelsius1To10By2 intervaloDeKelvin1To30By2 kelvin2 intervaloDefahrenheit32to40By2 fahrenheit2 intervaloDeCelsius1To10ByKelvin275Point15 intervaloDeKelvin1To30By2Fahrenheit456Point07 intervaloDefahrenheit32to40ByCelsius1Point8 intervaloDeKelvin1To30By2FahrenheitMinus456Point07 celsius1Point8 fahrenheitMinus456With67 fahrenheitMinus456With07 intervaloDefahrenheit32to40ByCelsiusMinus31Multiplied5Over9 celsiusMinus31Multiplied5Over9'
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'Distance-Solution'!
+	category: 'Measure-Solution'!
 
 !TemperatureTests methodsFor: 'Tests -' stamp: 'JI 6/5/2017 00:05:56'!
 test001_celsiusMenosCelsius
@@ -1186,54 +1192,12 @@ setUp
 	self intervalosSetUp.! !
 
 
-!classDefinition: #DistanceFactory category: #'Distance-Solution'!
-Object subclass: #DistanceFactory
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'Distance-Solution'!
-
-!DistanceFactory methodsFor: 'newInstances' stamp: 'JI 6/4/2017 15:43:38'!
-minusOneMeter
-	^ DistanceMeasure initializeWith: -1 asUnit: DistanceUnit initializeMetro 
-! !
-
-!DistanceFactory methodsFor: 'newInstances' stamp: 'JI 6/4/2017 15:44:12'!
-oneCentimeter
-	^ DistanceMeasure initializeWith: 1 asUnit: DistanceUnit initializeCentimetro ! !
-
-!DistanceFactory methodsFor: 'newInstances' stamp: 'JI 6/4/2017 15:44:00'!
-oneHundredCentimeters
-	^ DistanceMeasure initializeWith: 100 asUnit: DistanceUnit initializeCentimetro ! !
-
-!DistanceFactory methodsFor: 'newInstances' stamp: 'JI 6/4/2017 15:44:23'!
-oneMeter
-	^ DistanceMeasure initializeWith: 1 asUnit: DistanceUnit initializeMetro ! !
-
-!DistanceFactory methodsFor: 'newInstances' stamp: 'JI 6/4/2017 15:44:50'!
-oneMilimeter
-	^ DistanceMeasure initializeWith: 1 asUnit: DistanceUnit initializeMilimetro ! !
-
-!DistanceFactory methodsFor: 'newInstances' stamp: 'JI 6/4/2017 15:43:20'!
-twoHundredCentimeters
-	^ DistanceMeasure initializeWith: 200 asUnit: DistanceUnit initializeCentimetro ! !
-
-!DistanceFactory methodsFor: 'newInstances' stamp: 'JI 6/4/2017 15:44:35'!
-twoMeters
-	^ DistanceMeasure initializeWith: 2 asUnit: DistanceUnit initializeMetro 
-! !
-
-!DistanceFactory methodsFor: 'newInstances' stamp: 'JI 6/4/2017 15:43:08'!
-zeroMeters
-	^ DistanceMeasure initializeWith: 0 asUnit: DistanceUnit initializeMetro .! !
-
-
-!classDefinition: #DistanceUnit category: #'Distance-Solution'!
+!classDefinition: #DistanceUnit category: #'Measure-Solution'!
 Object subclass: #DistanceUnit
 	instanceVariableNames: 'conversionFactor unitType'
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'Distance-Solution'!
+	category: 'Measure-Solution'!
 
 !DistanceUnit methodsFor: 'printing' stamp: 'JI 6/4/2017 15:25:35'!
 printString
@@ -1243,6 +1207,10 @@ printString
 !DistanceUnit methodsFor: 'comparing' stamp: 'jak 6/1/2017 19:52:32'!
 = anotherUnit
 	^(self class = anotherUnit class) and: [self convertionFactor = anotherUnit convertionFactor]! !
+
+!DistanceUnit methodsFor: 'comparing' stamp: 'JAK 6/5/2017 20:12:31'!
+hash
+	^self convertionFactor ! !
 
 
 !DistanceUnit methodsFor: 'conversion' stamp: 'JI 6/3/2017 14:35:06'!
@@ -1291,7 +1259,7 @@ initializeMilimetro
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'DistanceUnit class' category: #'Distance-Solution'!
+!classDefinition: 'DistanceUnit class' category: #'Measure-Solution'!
 DistanceUnit class
 	instanceVariableNames: ''!
 
@@ -1324,21 +1292,12 @@ initializeMilimetro
 	^ self new initializeMilimetro .! !
 
 
-!classDefinition: #IntervalOfDistances category: #'Distance-Solution'!
+!classDefinition: #IntervalOfDistances category: #'Measure-Solution'!
 Object subclass: #IntervalOfDistances
 	instanceVariableNames: 'intervalo unitType fromDistance toDistance byDistance'
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'Distance-Solution'!
-
-!IntervalOfDistances methodsFor: 'initialization' stamp: 'JI 6/4/2017 15:51:19'!
-from: aDistanceUnits to: aDistanceUnits2 by: aDistanceUnits3 
-	
-	intervalo _ Interval from: (aDistanceUnits factorValue ) to: (aDistanceUnits2 factorValue ) by: (aDistanceUnits3 factorValue ).
-	unitType _ DistanceUnit initializeMetro .
-	fromDistance _ aDistanceUnits .
-	toDistance _ aDistanceUnits2 .
-	byDistance _ aDistanceUnits3 ! !
+	category: 'Measure-Solution'!
 
 !IntervalOfDistances methodsFor: 'initialization' stamp: 'Ji 6/1/2017 19:58:39'!
 intervaloVacio
@@ -1350,21 +1309,21 @@ size
 	intervalo = nil ifTrue: [^0] ifFalse: [^ intervalo size] ! !
 
 
-!IntervalOfDistances methodsFor: 'as yet unclassified' stamp: 'JI 6/2/2017 03:52:46'!
+!IntervalOfDistances methodsFor: 'enumerating' stamp: 'JI 6/2/2017 03:52:46'!
 by
 
 	^  byDistance ! !
 
-!IntervalOfDistances methodsFor: 'as yet unclassified' stamp: 'JI 6/4/2017 15:45:22'!
+!IntervalOfDistances methodsFor: 'enumerating' stamp: 'JI 6/4/2017 15:45:22'!
 do: aBlockClosure 
 	intervalo do: [ :aNumber | aBlockClosure value: (DistanceMeasure initializeWith: aNumber asUnit: unitType) ]! !
 
-!IntervalOfDistances methodsFor: 'as yet unclassified' stamp: 'JI 6/2/2017 03:52:30'!
+!IntervalOfDistances methodsFor: 'enumerating' stamp: 'JI 6/2/2017 03:52:30'!
 from
 
 	^  fromDistance ! !
 
-!IntervalOfDistances methodsFor: 'as yet unclassified' stamp: 'JI 6/4/2017 15:45:14'!
+!IntervalOfDistances methodsFor: 'enumerating' stamp: 'JI 6/4/2017 15:45:14'!
 from: aDistanceUnits to: aDistanceUnits2 
 	| unidad |
 	unidad _ DistanceMeasure  initializeWith: 1 asUnit: aDistanceUnits unit.
@@ -1372,14 +1331,23 @@ from: aDistanceUnits to: aDistanceUnits2
 	^ IntervalOfDistances from: aDistanceUnits  to: aDistanceUnits2  by: unidad.
 	! !
 
-!IntervalOfDistances methodsFor: 'as yet unclassified' stamp: 'JI 6/2/2017 03:52:41'!
+!IntervalOfDistances methodsFor: 'enumerating' stamp: 'JI 6/4/2017 15:51:19'!
+from: aDistanceUnits to: aDistanceUnits2 by: aDistanceUnits3 
+	
+	intervalo _ Interval from: (aDistanceUnits factorValue ) to: (aDistanceUnits2 factorValue ) by: (aDistanceUnits3 factorValue ).
+	unitType _ DistanceUnit initializeMetro .
+	fromDistance _ aDistanceUnits .
+	toDistance _ aDistanceUnits2 .
+	byDistance _ aDistanceUnits3 ! !
+
+!IntervalOfDistances methodsFor: 'enumerating' stamp: 'JI 6/2/2017 03:52:41'!
 to
 
 	^  toDistance ! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'IntervalOfDistances class' category: #'Distance-Solution'!
+!classDefinition: 'IntervalOfDistances class' category: #'Measure-Solution'!
 IntervalOfDistances class
 	instanceVariableNames: ''!
 
@@ -1401,12 +1369,217 @@ from: aDistanceUnits to: aDistanceUnits2 by: aDistanceUnits3 do: aBlockClosure
 	(self from: aDistanceUnits to: aDistanceUnits2 by: aDistanceUnits3) do: aBlockClosure ! !
 
 
-!classDefinition: #TemperatureInterval category: #'Distance-Solution'!
+!classDefinition: #MeasureFactory category: #'Measure-Solution'!
+Object subclass: #MeasureFactory
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Measure-Solution'!
+
+!MeasureFactory methodsFor: 'distance instances' stamp: 'JI 6/4/2017 15:43:38'!
+minusOneMeter
+	^ DistanceMeasure initializeWith: -1 asUnit: DistanceUnit initializeMetro 
+! !
+
+!MeasureFactory methodsFor: 'distance instances' stamp: 'JI 6/4/2017 15:44:12'!
+oneCentimeter
+	^ DistanceMeasure initializeWith: 1 asUnit: DistanceUnit initializeCentimetro ! !
+
+!MeasureFactory methodsFor: 'distance instances' stamp: 'JI 6/4/2017 15:44:00'!
+oneHundredCentimeters
+	^ DistanceMeasure initializeWith: 100 asUnit: DistanceUnit initializeCentimetro ! !
+
+!MeasureFactory methodsFor: 'distance instances' stamp: 'JI 6/4/2017 15:44:23'!
+oneMeter
+	^ DistanceMeasure initializeWith: 1 asUnit: DistanceUnit initializeMetro ! !
+
+!MeasureFactory methodsFor: 'distance instances' stamp: 'JI 6/4/2017 15:44:50'!
+oneMilimeter
+	^ DistanceMeasure initializeWith: 1 asUnit: DistanceUnit initializeMilimetro ! !
+
+!MeasureFactory methodsFor: 'distance instances' stamp: 'JI 6/4/2017 15:43:20'!
+twoHundredCentimeters
+	^ DistanceMeasure initializeWith: 200 asUnit: DistanceUnit initializeCentimetro ! !
+
+!MeasureFactory methodsFor: 'distance instances' stamp: 'JI 6/4/2017 15:44:35'!
+twoMeters
+	^ DistanceMeasure initializeWith: 2 asUnit: DistanceUnit initializeMetro 
+! !
+
+!MeasureFactory methodsFor: 'distance instances' stamp: 'JI 6/4/2017 15:43:08'!
+zeroMeters
+	^ DistanceMeasure initializeWith: 0 asUnit: DistanceUnit initializeMetro .! !
+
+
+!MeasureFactory methodsFor: 'finalVelocity' stamp: 'JAK 6/5/2017 20:01:18'!
+finalSpeedStartingAt: initialVelocity accelerating: aceleration during: aPeriodOfTime
+	^ initialVelocity + (aceleration * aPeriodOfTime )! !
+
+
+!MeasureFactory methodsFor: 'compound measures' stamp: 'JAK 6/5/2017 19:58:09'!
+eightCubicMeters
+	^nil! !
+
+!MeasureFactory methodsFor: 'compound measures' stamp: 'JAK 6/5/2017 19:58:19'!
+fourSquaredMeters
+	^nil! !
+
+!MeasureFactory methodsFor: 'compound measures' stamp: 'JAK 6/5/2017 19:58:23'!
+oneHundredTwentyOneMetersPerSecond
+	^nil! !
+
+!MeasureFactory methodsFor: 'compound measures' stamp: 'JAK 6/5/2017 19:58:27'!
+oneMeterPerSecond 
+	^nil! !
+
+!MeasureFactory methodsFor: 'compound measures' stamp: 'JAK 6/5/2017 19:58:31'!
+oneSquaredMeter 
+	^nil! !
+
+!MeasureFactory methodsFor: 'compound measures' stamp: 'JAK 6/5/2017 19:58:35'!
+oneSquaredSecond 
+	^nil! !
+
+!MeasureFactory methodsFor: 'compound measures' stamp: 'JAK 6/5/2017 19:58:40'!
+twoMetersBySecond 
+	^nil! !
+
+!MeasureFactory methodsFor: 'compound measures' stamp: 'JAK 6/5/2017 19:58:45'!
+twoMetersPerSquaredSecond 
+	^nil! !
+
+!MeasureFactory methodsFor: 'compound measures' stamp: 'JAK 6/5/2017 19:58:50'!
+twoMetersTimesSecond 
+	^nil! !
+
+
+!MeasureFactory methodsFor: 'time instances' stamp: 'JAK 6/5/2017 19:56:59'!
+oneDay
+	^nil! !
+
+!MeasureFactory methodsFor: 'time instances' stamp: 'JAK 6/5/2017 19:57:04'!
+oneHour
+	^nil! !
+
+!MeasureFactory methodsFor: 'time instances' stamp: 'JAK 6/5/2017 19:57:08'!
+oneMinute
+	^nil! !
+
+!MeasureFactory methodsFor: 'time instances' stamp: 'JAK 6/5/2017 19:57:13'!
+oneSecond
+	^nil! !
+
+!MeasureFactory methodsFor: 'time instances' stamp: 'JAK 6/5/2017 19:57:17'!
+sixtyMinutes
+	^nil! !
+
+!MeasureFactory methodsFor: 'time instances' stamp: 'JAK 6/5/2017 19:57:22'!
+sixtyOneSeconds
+	^nil! !
+
+!MeasureFactory methodsFor: 'time instances' stamp: 'JAK 6/5/2017 19:57:27'!
+sixtySeconds
+	^nil! !
+
+!MeasureFactory methodsFor: 'time instances' stamp: 'JAK 6/5/2017 19:57:31'!
+twentyFourHours
+	^nil! !
+
+!MeasureFactory methodsFor: 'time instances' stamp: 'JAK 6/5/2017 19:57:36'!
+twoSeconds 
+	^nil! !
+
+!MeasureFactory methodsFor: 'time instances' stamp: 'JAK 6/5/2017 19:57:41'!
+zeroSeconds 
+	^nil! !
+
+
+!MeasureFactory methodsFor: 'time units' stamp: 'JAK 6/5/2017 19:56:19'!
+day
+	^nil! !
+
+!MeasureFactory methodsFor: 'time units' stamp: 'JAK 6/5/2017 19:56:25'!
+hour
+	^nil! !
+
+!MeasureFactory methodsFor: 'time units' stamp: 'JAK 6/5/2017 19:56:31'!
+minute
+	^nil! !
+
+!MeasureFactory methodsFor: 'time units' stamp: 'JAK 6/5/2017 19:56:35'!
+second
+	^nil! !
+
+
+!MeasureFactory methodsFor: 'temperature instances' stamp: 'JAK 6/5/2017 19:55:04'!
+oneCelsius
+	^TemperatureMeasure initializeWith: 1 asUnit: TemperatureUnits initializeCelsius ! !
+
+!MeasureFactory methodsFor: 'temperature instances' stamp: 'JAK 6/5/2017 19:55:23'!
+thirtyTwoFahrenheits
+	^TemperatureMeasure initializeWith: 32 asUnit: TemperatureUnits initializeFahrenheit ! !
+
+!MeasureFactory methodsFor: 'temperature instances' stamp: 'JAK 6/5/2017 19:55:32'!
+twoCelsius
+	^TemperatureMeasure initializeWith: 2 asUnit: TemperatureUnits initializeCelsius ! !
+
+!MeasureFactory methodsFor: 'temperature instances' stamp: 'JAK 6/5/2017 19:55:40'!
+zeroCelsius
+	^TemperatureMeasure initializeWith: 0 asUnit: TemperatureUnits initializeCelsius ! !
+
+!MeasureFactory methodsFor: 'temperature instances' stamp: 'JAK 6/5/2017 19:55:49'!
+zeroKelvin
+	^TemperatureMeasure initializeWith: 0 asUnit: TemperatureUnits initializeKelvin ! !
+
+
+!MeasureFactory methodsFor: 'temperature units' stamp: 'JAK 6/5/2017 19:54:02'!
+celsius
+	^TemperatureUnits  initializeCelsius ! !
+
+!MeasureFactory methodsFor: 'temperature units' stamp: 'JAK 6/5/2017 19:54:10'!
+fahrenheit
+	^TemperatureUnits  initializeFahrenheit ! !
+
+!MeasureFactory methodsFor: 'temperature units' stamp: 'JAK 6/5/2017 19:54:19'!
+kelvin
+	^TemperatureUnits  initializeKelvin ! !
+
+
+!MeasureFactory methodsFor: 'distance units' stamp: 'JAK 6/5/2017 19:51:45'!
+centimeter
+	^DistanceUnit initializeCentimetro ! !
+
+!MeasureFactory methodsFor: 'distance units' stamp: 'JAK 6/5/2017 19:52:21'!
+decameter
+	^DistanceUnit initializeDecametro ! !
+
+!MeasureFactory methodsFor: 'distance units' stamp: 'JAK 6/5/2017 19:51:59'!
+decimeter
+	^DistanceUnit initializeDecimetro ! !
+
+!MeasureFactory methodsFor: 'distance units' stamp: 'JAK 6/5/2017 19:52:31'!
+hectometer
+	^DistanceUnit initializeHectometro ! !
+
+!MeasureFactory methodsFor: 'distance units' stamp: 'JAK 6/5/2017 19:52:39'!
+kilometer
+	^DistanceUnit initializeKilometro ! !
+
+!MeasureFactory methodsFor: 'distance units' stamp: 'JAK 6/5/2017 19:52:10'!
+meter
+	^DistanceUnit initializeMetro ! !
+
+!MeasureFactory methodsFor: 'distance units' stamp: 'JAK 6/5/2017 19:51:27'!
+millimeter
+	^DistanceUnit initializeMilimetro ! !
+
+
+!classDefinition: #TemperatureInterval category: #'Measure-Solution'!
 Object subclass: #TemperatureInterval
 	instanceVariableNames: 'intervalo unitType'
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'Distance-Solution'!
+	category: 'Measure-Solution'!
 
 !TemperatureInterval methodsFor: 'as yet unclassified' stamp: 'JI 6/5/2017 12:06:20'!
 do: aBlockClosure 
@@ -1434,7 +1607,7 @@ size
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'TemperatureInterval class' category: #'Distance-Solution'!
+!classDefinition: 'TemperatureInterval class' category: #'Measure-Solution'!
 TemperatureInterval class
 	instanceVariableNames: ''!
 
@@ -1455,12 +1628,12 @@ intervaloVacio
 	^self new intervaloVacio ! !
 
 
-!classDefinition: #TemperatureUnits category: #'Distance-Solution'!
+!classDefinition: #TemperatureUnits category: #'Measure-Solution'!
 Object subclass: #TemperatureUnits
 	instanceVariableNames: 'grados unidad equivalenciaAKelvin equivalenciaACelsius equivalenciaAFahrenheit isFahrenheit'
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'Distance-Solution'!
+	category: 'Measure-Solution'!
 
 !TemperatureUnits methodsFor: 'initialization' stamp: 'JI 6/4/2017 23:23:43'!
 initializeCelsius
@@ -1481,19 +1654,29 @@ initializeKelvin
 	isFahrenheit _ false.! !
 
 
-!TemperatureUnits methodsFor: 'converting' stamp: 'JI 6/5/2017 12:35:45'!
+!TemperatureUnits methodsFor: 'comparing' stamp: 'JAK 6/5/2017 20:16:34'!
+= anotherUnit
+	"falta comletar"
+	^(self class = anotherUnit class)! !
+
+!TemperatureUnits methodsFor: 'comparing' stamp: 'JAK 6/5/2017 20:16:56'!
+hash
+	"falta completar"
+	^equivalenciaAKelvin ! !
+
+
+!TemperatureUnits methodsFor: 'conversion' stamp: 'JI 6/5/2017 12:35:45'!
 convertirACelsiusLaCantidad: aNumber
 	
 	isFahrenheit ifTrue: [^aNumber -32 * (5/9)]  ifFalse: [^aNumber + equivalenciaACelsius ]! !
 
-
-!TemperatureUnits methodsFor: 'as yet unclassified' stamp: 'JI 6/5/2017 12:32:06'!
+!TemperatureUnits methodsFor: 'conversion' stamp: 'JI 6/5/2017 12:32:06'!
 transformarCelsiusAMi: aNumber
 	isFahrenheit ifTrue: [^9/5*aNumber + 32] ifFalse: [^aNumber - equivalenciaACelsius ]! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'TemperatureUnits class' category: #'Distance-Solution'!
+!classDefinition: 'TemperatureUnits class' category: #'Measure-Solution'!
 TemperatureUnits class
 	instanceVariableNames: ''!
 
