@@ -799,7 +799,7 @@ setUp
 
 !classDefinition: #TemperatureTests category: #'Distance-Solution'!
 TestCase subclass: #TemperatureTests
-	instanceVariableNames: 'grados unidad celsiusMinus273con15 celsius0 celsius1 celsiusOtro1 celsius2 fahrenheitMinus459With67 fahrenheit32 fahrenheit33With8 kelvin0 kelvin273con15 kelvin274con15 kelvinOtro273con15 fahrenheitOtro32 celsius75 celsiusMinus80 celsiusMinus5 celsius77 kelvin275con15 celsius3 fahrenheit35With6 celsius155 celsiusMinus20 celsiusMinus5Over4 fahrenheit17With8'
+	instanceVariableNames: 'grados unidad celsiusMinus273con15 celsius0 celsius1 celsiusOtro1 celsius2 fahrenheitMinus459With67 fahrenheit32 fahrenheit33With8 kelvin0 kelvin273con15 kelvin274con15 kelvinOtro273con15 fahrenheitOtro32 celsius75 celsiusMinus80 celsiusMinus5 celsius77 kelvin275con15 celsius3 fahrenheit35With6 celsius155 celsiusMinus20 celsiusMinus5Over4 fahrenheit17With8 intervaloVacio'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Distance-Solution'!
@@ -1015,10 +1015,10 @@ test004_TemperaturaGreaterorEqual
 	self assert: celsius75 >= celsius1 .! !
 
 
-!TemperatureTests methodsFor: 'Test Intervalos' stamp: 'JI 6/5/2017 02:10:33'!
+!TemperatureTests methodsFor: 'Test Intervalos' stamp: 'JI 6/5/2017 02:20:50'!
 test001_IntervaloVacio
 	
-	! !
+	self assert: intervaloVacio size = 0.! !
 
 
 !TemperatureTests methodsFor: 'setUp' stamp: 'JI 6/5/2017 01:29:05'!
@@ -1051,6 +1051,11 @@ fahrenheitSetUp
 	fahrenheit33With8  _ TemperatureMeasure initializeWith: 33+(8/10) asUnit:TemperatureUnits initializeFahrenheit  .
 	fahrenheit35With6  _ TemperatureMeasure initializeWith: 35+(6/10) asUnit:TemperatureUnits initializeFahrenheit  .! !
 
+!TemperatureTests methodsFor: 'setUp' stamp: 'JI 6/5/2017 02:27:40'!
+intervalosSetUp
+	
+	 intervaloVacio _ TemperatureInterval intervaloVacio .! !
+
 !TemperatureTests methodsFor: 'setUp' stamp: 'JI 6/4/2017 23:59:13'!
 kelvinSetUp
 	
@@ -1060,11 +1065,13 @@ kelvinSetUp
 	kelvin274con15  _ TemperatureMeasure initializeWith: (274+(15/100)) asUnit: TemperatureUnits initializeKelvin .
 	kelvin275con15  _ TemperatureMeasure initializeWith: (275+(15/100)) asUnit: TemperatureUnits initializeKelvin .! !
 
-!TemperatureTests methodsFor: 'setUp' stamp: 'JI 6/4/2017 16:13:27'!
+!TemperatureTests methodsFor: 'setUp' stamp: 'JI 6/5/2017 02:23:55'!
 setUp
 	self celsiusSetUp .
 	self fahrenheitSetUp .
-	self kelvinSetUp .! !
+	self kelvinSetUp .
+	
+	self intervalosSetUp.! !
 
 
 !classDefinition: #DistanceFactory category: #'Distance-Solution'!
@@ -1280,6 +1287,32 @@ from: aDistanceUnits to: aDistanceUnits2 by: aDistanceUnits3
 !IntervalOfDistances class methodsFor: 'as yet unclassified' stamp: 'JI 6/2/2017 03:40:18'!
 from: aDistanceUnits to: aDistanceUnits2 by: aDistanceUnits3 do: aBlockClosure 
 	(self from: aDistanceUnits to: aDistanceUnits2 by: aDistanceUnits3) do: aBlockClosure ! !
+
+
+!classDefinition: #TemperatureInterval category: #'Distance-Solution'!
+Object subclass: #TemperatureInterval
+	instanceVariableNames: 'intervalo'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Distance-Solution'!
+
+!TemperatureInterval methodsFor: 'as yet unclassified' stamp: 'JI 6/5/2017 02:29:20'!
+intervaloVacio
+	intervalo _ nil! !
+
+!TemperatureInterval methodsFor: 'as yet unclassified' stamp: 'JI 6/5/2017 02:30:02'!
+size
+	intervalo = nil ifTrue: [^0] ifFalse: [^ intervalo size] ! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'TemperatureInterval class' category: #'Distance-Solution'!
+TemperatureInterval class
+	instanceVariableNames: ''!
+
+!TemperatureInterval class methodsFor: 'as yet unclassified' stamp: 'JI 6/5/2017 02:29:06'!
+intervaloVacio
+	^self new intervaloVacio ! !
 
 
 !classDefinition: #TemperatureUnits category: #'Distance-Solution'!
