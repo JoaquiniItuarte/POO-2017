@@ -122,11 +122,11 @@ initializeWith: aNumber asUnit: aTemperatureUnits
 	
 	^ TemperatureMeasure initializeWith: quantity * aNumber  asUnit:  unitType .! !
 
-!TemperatureMeasure methodsFor: 'as yet unclassified' stamp: 'JI 6/5/2017 00:07:26'!
+!TemperatureMeasure methodsFor: 'as yet unclassified' stamp: 'JI 6/5/2017 12:48:21'!
 + aTemperatureMeasure 
-	| sumaEnCelsius |
-	sumaEnCelsius _	self obtenerGradosEnCelsius + aTemperatureMeasure obtenerGradosEnCelsius .
-	^ TemperatureMeasure initializeWith: sumaEnCelsius asUnit: TemperatureUnits initializeCelsius ! !
+	| aTemperatureMeasureInMyScaleAmount |
+	aTemperatureMeasureInMyScaleAmount _	aTemperatureMeasure transformarGradosAUnidad: unitType .
+	^ TemperatureMeasure initializeWith: aTemperatureMeasureInMyScaleAmount+quantity asUnit: unitType ! !
 
 !TemperatureMeasure methodsFor: 'as yet unclassified' stamp: 'JI 6/5/2017 00:07:47'!
 - aTemperatureMeasure 
@@ -150,6 +150,18 @@ initializeWith: aNumber asUnit: aTemperatureUnits
 !TemperatureMeasure methodsFor: 'as yet unclassified' stamp: 'JI 6/5/2017 00:44:04'!
 adaptToNumber: aNumber andSend: selector 
 	^self perform: selector with: aNumber.! !
+
+!TemperatureMeasure methodsFor: 'as yet unclassified' stamp: 'JI 6/5/2017 11:59:30'!
+amount
+	^quantity ! !
+
+!TemperatureMeasure methodsFor: 'as yet unclassified' stamp: 'JI 6/5/2017 12:21:11'!
+transformarGradosAUnidad: aTemperatureUnits 
+	^ aTemperatureUnits transformarCelsiusAMi: self obtenerGradosEnCelsius ! !
+
+!TemperatureMeasure methodsFor: 'as yet unclassified' stamp: 'JI 6/5/2017 11:59:42'!
+unit
+	^ unitType ! !
 
 
 !TemperatureMeasure methodsFor: 'comparing' stamp: 'JI 6/4/2017 16:18:06'!
@@ -799,7 +811,7 @@ setUp
 
 !classDefinition: #TemperatureTests category: #'Distance-Solution'!
 TestCase subclass: #TemperatureTests
-	instanceVariableNames: 'grados unidad celsiusMinus273con15 celsius0 celsius1 celsiusOtro1 celsius2 fahrenheitMinus459With67 fahrenheit32 fahrenheit33With8 kelvin0 kelvin273con15 kelvin274con15 kelvinOtro273con15 fahrenheitOtro32 celsius75 celsiusMinus80 celsiusMinus5 celsius77 kelvin275con15 celsius3 fahrenheit35With6 celsius155 celsiusMinus20 celsiusMinus5Over4 fahrenheit17With8 intervaloVacio'
+	instanceVariableNames: 'grados unidad celsiusMinus273con15 celsius0 celsius1 celsiusOtro1 celsius2 fahrenheitMinus459With67 fahrenheit32 fahrenheit33With8 kelvin0 kelvin273con15 kelvin274con15 kelvinOtro273con15 fahrenheitOtro32 celsius75 celsiusMinus80 celsiusMinus5 celsius77 kelvin275con15 celsius3 fahrenheit35With6 celsius155 celsiusMinus20 celsiusMinus5Over4 fahrenheit17With8 intervaloVacio intervaloDeCelsius1To10 intervaloDeKelvin1To30 kelvin1 intervaloDefahrenheit32to40 fahrenheit1 celsius10 kelvin30 fahrenheit40 kelvin546Point3 kelvin547Point3 kelvin549Point3 kelvin548Point3 fahrenheit64 fahrenheit65Point8 fahrenheit69Point4'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Distance-Solution'!
@@ -869,21 +881,21 @@ test003_celsiusMasFahrenheit
 	self assert: celsius1 + fahrenheit33With8 = celsius2 .
 	self deny: celsius75 + fahrenheit32 = celsius77.! !
 
-!TemperatureTests methodsFor: 'Tests +' stamp: 'JI 6/5/2017 00:04:44'!
+!TemperatureTests methodsFor: 'Tests +' stamp: 'JI 6/5/2017 12:51:27'!
 test004_kelvinMasUnaTemperatura
 
-	self assert: kelvin273con15 + fahrenheit32 = fahrenheit32 .
-	self assert: kelvin274con15 + celsius0 = celsius1 .
-	self assert: kelvin275con15 + kelvin274con15 = celsius3 .
-	self deny: kelvin275con15 + fahrenheit32 = celsius77.! !
+	self assert: kelvin273con15 + fahrenheit32 = kelvin546Point3 .
+	self assert: kelvin274con15 + celsius0 = kelvin547Point3 .
+	self assert: kelvin275con15 + kelvin274con15 = kelvin549Point3 .
+	self deny: kelvin275con15 + fahrenheit32 = kelvin549Point3.! !
 
-!TemperatureTests methodsFor: 'Tests +' stamp: 'JI 6/5/2017 00:03:54'!
+!TemperatureTests methodsFor: 'Tests +' stamp: 'JI 6/5/2017 12:52:51'!
 test005_FahrenheitMasUnaTemperatura
 
-	self assert: fahrenheit32 + fahrenheit32 = fahrenheit32 .
-	self assert: fahrenheit33With8 + celsius0 = celsius1 .
-	self assert: fahrenheit35With6 + kelvin274con15 = celsius3 .
-	self deny: fahrenheit35With6 + fahrenheit32 = celsius77.! !
+	self assert: fahrenheit32 + fahrenheit32 = fahrenheit64 .
+	self assert: fahrenheit33With8 + celsius0 = fahrenheit65Point8 .
+	self assert: fahrenheit35With6 + kelvin274con15 = fahrenheit69Point4.
+	self deny: fahrenheit35With6 + fahrenheit32 = fahrenheit64.! !
 
 
 !TemperatureTests methodsFor: 'Tests =' stamp: 'JI 6/4/2017 16:11:19'!
@@ -1020,8 +1032,32 @@ test001_IntervaloVacio
 	
 	self assert: intervaloVacio size = 0.! !
 
+!TemperatureTests methodsFor: 'Test Intervalos' stamp: 'JI 6/5/2017 12:03:11'!
+test002_IntervaloFromToAscendenteDeTemperaturas
+	
+	| i |
+	
+	i _ celsius1 .
+	intervaloDeCelsius1To10 do: [ :aTemperature | 
+		self assert: aTemperature = i.
+		i _ i+ celsius1 .].
+	self assert: intervaloDeCelsius1To10 size = 10.
+	
+	i _ kelvin1.
+	intervaloDeKelvin1To30 do: [ :aTemperature | 
+		self assert: aTemperature = i.
+		i _ i+kelvin1.].
+	self assert: intervaloDeKelvin1To30 size =30.
+	
+	i _ fahrenheit32 .
+	intervaloDefahrenheit32to40 do: [ :aTemperature | 
+		self assert: aTemperature  = i.
+		i _ i+fahrenheit1.].
+	self assert: intervaloDefahrenheit32to40 size = 9.
+	! !
 
-!TemperatureTests methodsFor: 'setUp' stamp: 'JI 6/5/2017 01:29:05'!
+
+!TemperatureTests methodsFor: 'setUp' stamp: 'JI 6/5/2017 11:53:40'!
 celsiusSetUp
 	
 	celsiusMinus273con15 _ TemperatureMeasure initializeWith: -273-(15/100) asUnit: TemperatureUnits initializeCelsius .
@@ -1034,6 +1070,7 @@ celsiusSetUp
 	celsiusOtro1  _ TemperatureMeasure initializeWith: 1  asUnit:  TemperatureUnits initializeCelsius .
 	celsius2  _ TemperatureMeasure initializeWith: 2  asUnit:  TemperatureUnits initializeCelsius .
 	celsius3  _ TemperatureMeasure initializeWith: 3  asUnit:  TemperatureUnits initializeCelsius .
+	celsius10  _ TemperatureMeasure initializeWith: 10  asUnit:  TemperatureUnits initializeCelsius .
 	celsius75  _ TemperatureMeasure initializeWith: 75  asUnit:  TemperatureUnits initializeCelsius .
 	celsius77  _ TemperatureMeasure initializeWith: 77  asUnit:  TemperatureUnits initializeCelsius .
 	celsius155  _ TemperatureMeasure initializeWith: 155  asUnit:  TemperatureUnits initializeCelsius .
@@ -1041,29 +1078,46 @@ celsiusSetUp
 	
 	! !
 
-!TemperatureTests methodsFor: 'setUp' stamp: 'JI 6/5/2017 00:42:25'!
+!TemperatureTests methodsFor: 'setUp' stamp: 'JI 6/5/2017 12:53:51'!
 fahrenheitSetUp
 	
 	fahrenheitMinus459With67 _ TemperatureMeasure initializeWith: -459-(67/100) asUnit: TemperatureUnits initializeFahrenheit .
+	fahrenheit1  _ TemperatureMeasure initializeWith: 1 asUnit:TemperatureUnits initializeFahrenheit  .
 	fahrenheit17With8 _ TemperatureMeasure initializeWith: 17 + (8/10) asUnit:TemperatureUnits initializeFahrenheit .
 	fahrenheit32  _ TemperatureMeasure initializeWith: 32 asUnit:TemperatureUnits initializeFahrenheit .
 	fahrenheitOtro32  _ TemperatureMeasure initializeWith: 32 asUnit:TemperatureUnits initializeFahrenheit .
 	fahrenheit33With8  _ TemperatureMeasure initializeWith: 33+(8/10) asUnit:TemperatureUnits initializeFahrenheit  .
-	fahrenheit35With6  _ TemperatureMeasure initializeWith: 35+(6/10) asUnit:TemperatureUnits initializeFahrenheit  .! !
+	fahrenheit35With6  _ TemperatureMeasure initializeWith: 35+(6/10) asUnit:TemperatureUnits initializeFahrenheit  .
+	fahrenheit40  _ TemperatureMeasure initializeWith: 40 asUnit:TemperatureUnits initializeFahrenheit  .
+	fahrenheit64  _ TemperatureMeasure initializeWith: 64 asUnit:TemperatureUnits initializeFahrenheit  .
+	fahrenheit65Point8  _ TemperatureMeasure initializeWith: 65 +(80/100) asUnit:TemperatureUnits initializeFahrenheit  .
+	fahrenheit69Point4  _ TemperatureMeasure initializeWith: 69 + (40/100) asUnit:TemperatureUnits initializeFahrenheit  .! !
 
-!TemperatureTests methodsFor: 'setUp' stamp: 'JI 6/5/2017 02:27:40'!
+!TemperatureTests methodsFor: 'setUp' stamp: 'JI 6/5/2017 11:55:20'!
 intervalosSetUp
 	
-	 intervaloVacio _ TemperatureInterval intervaloVacio .! !
+	intervaloVacio _ TemperatureInterval intervaloVacio .
+	
+	intervaloDeCelsius1To10 _ TemperatureInterval from: celsius1 to: celsius10.
+	
+	intervaloDeKelvin1To30 _ TemperatureInterval from: kelvin1 to: kelvin30.
+	
+	intervaloDefahrenheit32to40 _ TemperatureInterval from: fahrenheit32 to: fahrenheit40.! !
 
-!TemperatureTests methodsFor: 'setUp' stamp: 'JI 6/4/2017 23:59:13'!
+!TemperatureTests methodsFor: 'setUp' stamp: 'JI 6/5/2017 12:50:57'!
 kelvinSetUp
 	
 	kelvin0 _ TemperatureMeasure initializeWith: 0 asUnit: TemperatureUnits initializeKelvin .
+	kelvin1 _ TemperatureMeasure initializeWith: 1 asUnit: TemperatureUnits initializeKelvin .
+	kelvin30 _ TemperatureMeasure initializeWith: 30 asUnit: TemperatureUnits initializeKelvin .
 	kelvin273con15  _ TemperatureMeasure initializeWith: (273+(15/100)) asUnit: TemperatureUnits initializeKelvin .
 	kelvinOtro273con15 _ TemperatureMeasure initializeWith: (273+(15/100)) asUnit: TemperatureUnits initializeKelvin .
 	kelvin274con15  _ TemperatureMeasure initializeWith: (274+(15/100)) asUnit: TemperatureUnits initializeKelvin .
-	kelvin275con15  _ TemperatureMeasure initializeWith: (275+(15/100)) asUnit: TemperatureUnits initializeKelvin .! !
+	kelvin275con15  _ TemperatureMeasure initializeWith: (275+(15/100)) asUnit: TemperatureUnits initializeKelvin .
+	kelvin546Point3 _  TemperatureMeasure initializeWith: (546+(30/100)) asUnit: TemperatureUnits initializeKelvin .
+	kelvin547Point3 _  TemperatureMeasure initializeWith: (547+(30/100)) asUnit: TemperatureUnits initializeKelvin .
+	kelvin548Point3 _  TemperatureMeasure initializeWith: (548+(30/100)) asUnit: TemperatureUnits initializeKelvin .
+	kelvin549Point3 _  TemperatureMeasure initializeWith: (549+(30/100)) asUnit: TemperatureUnits initializeKelvin .! !
 
 !TemperatureTests methodsFor: 'setUp' stamp: 'JI 6/5/2017 02:23:55'!
 setUp
@@ -1291,10 +1345,21 @@ from: aDistanceUnits to: aDistanceUnits2 by: aDistanceUnits3 do: aBlockClosure
 
 !classDefinition: #TemperatureInterval category: #'Distance-Solution'!
 Object subclass: #TemperatureInterval
-	instanceVariableNames: 'intervalo'
+	instanceVariableNames: 'intervalo unitType'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Distance-Solution'!
+
+!TemperatureInterval methodsFor: 'as yet unclassified' stamp: 'JI 6/5/2017 12:06:20'!
+do: aBlockClosure 
+	intervalo do: [ :aNumber | aBlockClosure value: (TemperatureMeasure initializeWith: aNumber asUnit: unitType ) ]! !
+
+!TemperatureInterval methodsFor: 'as yet unclassified' stamp: 'JI 6/5/2017 12:27:54'!
+from: aTemperatureMeasure to: aTemperatureMeasure2 
+
+	unitType _ aTemperatureMeasure unit .	
+	intervalo _ Interval from: (aTemperatureMeasure amount ) to: ( aTemperatureMeasure2 transformarGradosAUnidad: unitType) by: 1.
+! !
 
 !TemperatureInterval methodsFor: 'as yet unclassified' stamp: 'JI 6/5/2017 02:29:20'!
 intervaloVacio
@@ -1309,6 +1374,10 @@ size
 !classDefinition: 'TemperatureInterval class' category: #'Distance-Solution'!
 TemperatureInterval class
 	instanceVariableNames: ''!
+
+!TemperatureInterval class methodsFor: 'as yet unclassified' stamp: 'JI 6/5/2017 11:56:20'!
+from: aTemperatureMeasure to: aTemperatureMeasure2 
+	^self new from: aTemperatureMeasure to: aTemperatureMeasure2 ! !
 
 !TemperatureInterval class methodsFor: 'as yet unclassified' stamp: 'JI 6/5/2017 02:29:06'!
 intervaloVacio
@@ -1341,10 +1410,15 @@ initializeKelvin
 	isFahrenheit _ false.! !
 
 
-!TemperatureUnits methodsFor: 'converting' stamp: 'JI 6/4/2017 23:31:21'!
+!TemperatureUnits methodsFor: 'converting' stamp: 'JI 6/5/2017 12:35:45'!
 convertirACelsiusLaCantidad: aNumber
 	
 	isFahrenheit ifTrue: [^aNumber -32 * (5/9)]  ifFalse: [^aNumber + equivalenciaACelsius ]! !
+
+
+!TemperatureUnits methodsFor: 'as yet unclassified' stamp: 'JI 6/5/2017 12:32:06'!
+transformarCelsiusAMi: aNumber
+	isFahrenheit ifTrue: [^9/5*aNumber + 32] ifFalse: [^aNumber - equivalenciaACelsius ]! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
