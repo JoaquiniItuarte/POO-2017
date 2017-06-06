@@ -81,20 +81,20 @@ negated
 	^ self class initializeWith:  0 - quantity asUnit: unitType ! !
 
 
-!Measure methodsFor: 'interval' stamp: 'JI 6/6/2017 12:31:36'!
+!Measure methodsFor: 'interval' stamp: 'JI 6/6/2017 17:47:52'!
 to: aDistance
 	
-	^ IntervalOfDistances from: self to: aDistance ! !
+	^ IntervalOfMeasure from: self to: aDistance ! !
 
-!Measure methodsFor: 'interval' stamp: 'JI 6/6/2017 12:31:36'!
+!Measure methodsFor: 'interval' stamp: 'JI 6/6/2017 17:49:31'!
 to: aDistance by: stepDistance 
 	
-	^ IntervalOfDistances from: self to: aDistance  by: stepDistance ! !
+	^ IntervalOfMeasure from: self to: aDistance  by: stepDistance ! !
 
-!Measure methodsFor: 'interval' stamp: 'JI 6/6/2017 12:31:36'!
+!Measure methodsFor: 'interval' stamp: 'JI 6/6/2017 17:50:13'!
 to: aDistance by: steps do: aBlockClosure
 	
-		^ IntervalOfDistances from: self to: aDistance  by: steps do: aBlockClosure ! !
+		^ IntervalOfMeasure from: self to: aDistance  by: steps do: aBlockClosure ! !
 
 
 !Measure methodsFor: 'initialization' stamp: 'JI 6/6/2017 12:31:36'!
@@ -528,22 +528,17 @@ test004_DistanceGreaterOrEqualThanDistance
 	self assert: kilometros1Over1000 >= metros0.! !
 
 
-!TestsDistance methodsFor: 'Interval' stamp: 'JI 6/6/2017 12:54:18'!
-hacerQueElIntervaloDevuelvaDistanciasYNoNumeros
-	
-	! !
-
-!TestsDistance methodsFor: 'Interval' stamp: 'JI 6/6/2017 15:13:37'!
+!TestsDistance methodsFor: 'Interval' stamp: 'JI 6/6/2017 17:55:00'!
 test001_IntervaloVacio
 	
-	intervaloVacio _ IntervalOfDistances intervaloVacio .
-	'self assert: intervaloVacio size = 0.'! !
+	intervaloVacio _ IntervalOfMeasure intervaloVacio .
+ 	self assert: intervaloVacio size = 0.! !
 
-!TestsDistance methodsFor: 'Interval' stamp: 'JI 6/6/2017 15:13:47'!
+!TestsDistance methodsFor: 'Interval' stamp: 'JI 6/6/2017 17:55:19'!
 test002_IntervaloFromToDeDistanciasPositivas
 	
 	| i |
-	'
+	
 	i _ kilometros1 .
 	intervaloDeKilometros1To2 do: [ :aDistance | 
 		self assert: aDistance = i.
@@ -567,14 +562,13 @@ test002_IntervaloFromToDeDistanciasPositivas
 		self assert: aDistance  = i.
 		i _ i+ milimetros1 .].
 	self assert: intervaloDeMilimetros1000To10000 size =9001.
-	'! !
+	! !
 
-!TestsDistance methodsFor: 'Interval' stamp: 'JI 6/6/2017 15:13:56'!
+!TestsDistance methodsFor: 'Interval' stamp: 'JI 6/6/2017 17:55:25'!
 test003_IntervaloFromToDeDistanciasNegativas
 	
 	| i |
 	
-	'
 	i _ kilometros2 .
 	intervaloDeKilometros2To1 do: [ :aDistance | 
 		self assert: aDistance = i.
@@ -598,12 +592,11 @@ test003_IntervaloFromToDeDistanciasNegativas
 		self assert: aDistance  = i.
 		i _ i-milimetros1 .].
 	self assert: intervaloDeMilimetros10000To1000 size =9001.
-	
-	'! !
+	! !
 
-!TestsDistance methodsFor: 'Interval' stamp: 'JI 6/6/2017 15:14:05'!
+!TestsDistance methodsFor: 'Interval' stamp: 'JI 6/6/2017 17:55:31'!
 test004_IntervaloFromToByDeDistanciasPositivas
-	'
+	
 	| i |
 	
 	i _ kilometros1 .
@@ -630,11 +623,11 @@ test004_IntervaloFromToByDeDistanciasPositivas
 		i _ i+kilometros1Over1000 .].
 	self assert: intervaloDeMilimetros1000To10000By1Over1000Kilometro size =10.
 	
-	'! !
+	! !
 
-!TestsDistance methodsFor: 'Interval' stamp: 'JI 6/6/2017 15:14:12'!
+!TestsDistance methodsFor: 'Interval' stamp: 'JI 6/6/2017 17:55:38'!
 test005_IntervaloFromToByDeDistanciasNegativas
-	'
+	
 	| i |
 	
 	i _ kilometros2 .
@@ -661,34 +654,34 @@ test005_IntervaloFromToByDeDistanciasNegativas
 		i _ i-kilometros1Over1000 .].
 	self assert: intervaloDeMilimetros10000To1000By1Over1000Kilometro size =10.
 	
-	'! !
+	! !
 
-!TestsDistance methodsFor: 'Interval' stamp: 'JI 6/6/2017 15:14:19'!
+!TestsDistance methodsFor: 'Interval' stamp: 'JI 6/6/2017 17:56:02'!
 test006_IntervaloFromToByDoDeDistancias
-	'
+	
 	| i |
 	
 	i _ kilometros1 .
-	IntervalOfDistances from: kilometros1  to:  kilometros2 by: metros100 do: [ :aDistance | 
+	kilometros1  to:  kilometros2 by: metros100 do: [ :aDistance | 
 		self assert: aDistance = i.
 		i _ i+metros100 .].
 	
 	i _ metros1 .
-	IntervalOfDistances from: metros1  to: metros30 by: centimetros200 do: [ :aDistance | 
+	metros1  to: metros30 by: centimetros200 do: [ :aDistance | 
 		self assert: aDistance = i.
 		i _ i+centimetros200 .].
 	
 	i _ centimetros100 .
-	IntervalOfDistances from: centimetros100  to: centimetros1000 by: milimetros500 do: [ :aDistance | 
+	centimetros100  to: centimetros1000 by: milimetros500 do: [ :aDistance | 
 		self assert: aDistance = i.
 		i _ i+milimetros500 .].
 	
 	i _ milimetros1000 .
-	IntervalOfDistances from: milimetros1000  to: milimetros10000 by: kilometros1Over1000 do: [ :aDistance | 
+	milimetros1000  to: milimetros10000 by: kilometros1Over1000 do: [ :aDistance | 
 		self assert: aDistance = i.
 		i _ i+kilometros1Over1000 .].
 	
-	'! !
+	! !
 
 
 !TestsDistance methodsFor: 'SetUp' stamp: 'JI 6/6/2017 13:50:40'!
@@ -701,32 +694,32 @@ centimetrosSetUp
 	centimetros300 _ Measure initializeWith: 300 asUnit: UnitDistance initializeCentimetro .	
 	centimetros1000 _ Measure initializeWith: 1000 asUnit:  UnitDistance initializeCentimetro .		! !
 
-!TestsDistance methodsFor: 'SetUp' stamp: 'JI 6/6/2017 12:54:18'!
+!TestsDistance methodsFor: 'SetUp' stamp: 'JI 6/6/2017 17:54:45'!
 intervalosSetUp
 	
-	intervaloVacio _ IntervalOfDistances intervaloVacio.
+	intervaloVacio _ IntervalOfMeasure intervaloVacio.
 	
-	intervaloDeKilometros1To2 _ IntervalOfDistances from: kilometros1 to: kilometros2 .
-	intervaloDeKilometros2To1 _ IntervalOfDistances from: kilometros2 to: kilometros1 .
-	intervaloDeKilometros1To2By100Metros _ IntervalOfDistances from: kilometros1 to: kilometros2 by: metros100.
-	intervaloDeKilometros2To1By100Metros _ IntervalOfDistances from: kilometros2 to: kilometros1 by: metros100 negated .
+	intervaloDeKilometros1To2 _ kilometros1 to: kilometros2 .
+	intervaloDeKilometros2To1 _ kilometros2 to: kilometros1 .
+	intervaloDeKilometros1To2By100Metros _ kilometros1 to: kilometros2 by: metros100.
+	intervaloDeKilometros2To1By100Metros _ kilometros2 to: kilometros1 by: metros100 negated .
 	
-	intervaloDeMetros1To30 _ IntervalOfDistances from: metros1  to: metros30  .
-	intervaloDeMetros30To1 _ IntervalOfDistances from: metros30 to:  metros1 .
-	intervaloDeMetros1To30By200Centimetros _ IntervalOfDistances from: metros1  to: metros30 by: centimetros200 .
-	intervaloDeMetros30To1By200Centimetros _ IntervalOfDistances from: metros30  to: metros1 by: centimetros200  negated.
+	intervaloDeMetros1To30 _ metros1  to: metros30  .
+	intervaloDeMetros30To1 _ metros30 to:  metros1 .
+	intervaloDeMetros1To30By200Centimetros _ metros1  to: metros30 by: centimetros200 .
+	intervaloDeMetros30To1By200Centimetros _ metros30  to: metros1 by: centimetros200  negated.
 
 	
-	intervaloDeCentimetros100To1000 _ IntervalOfDistances from: centimetros100  to: centimetros1000  .
-	intervaloDeCentimetros1000To100 _ IntervalOfDistances from: centimetros1000 to: centimetros100 .
-	intervaloDeCentimetros100To1000By500Milimetros _ IntervalOfDistances from: centimetros100 to: centimetros1000 by: milimetros500.
-	intervaloDeCentimetros1000To100By500Milimetros _ IntervalOfDistances from: centimetros1000 to: centimetros100 by: milimetros500  negated.
+	intervaloDeCentimetros100To1000 _ centimetros100  to: centimetros1000  .
+	intervaloDeCentimetros1000To100 _ centimetros1000 to: centimetros100 .
+	intervaloDeCentimetros100To1000By500Milimetros _ centimetros100 to: centimetros1000 by: milimetros500.
+	intervaloDeCentimetros1000To100By500Milimetros _ centimetros1000 to: centimetros100 by: milimetros500  negated.
 	
 	
-	intervaloDeMilimetros1000To10000 _ IntervalOfDistances from: milimetros1000  to: milimetros10000.
-	intervaloDeMilimetros10000To1000 _ IntervalOfDistances from: milimetros10000 to: milimetros1000 .
-	intervaloDeMilimetros1000To10000By1Over1000Kilometro  _ IntervalOfDistances from: milimetros1000 to: milimetros10000 by: kilometros1Over1000 .
-	intervaloDeMilimetros10000To1000By1Over1000Kilometro  _ IntervalOfDistances from: milimetros10000 to: milimetros1000 by: kilometros1Over1000  negated.
+	intervaloDeMilimetros1000To10000 _ milimetros1000  to: milimetros10000.
+	intervaloDeMilimetros10000To1000 _ milimetros10000 to: milimetros1000 .
+	intervaloDeMilimetros1000To10000By1Over1000Kilometro  _ milimetros1000 to: milimetros10000 by: kilometros1Over1000 .
+	intervaloDeMilimetros10000To1000By1Over1000Kilometro  _ milimetros10000 to: milimetros1000 by: kilometros1Over1000  negated.
 
 
 	
@@ -770,13 +763,13 @@ milimetrosSetUp
 	milimetros10000 _  Measure initializeWith: 10000 asUnit:  UnitDistance initializeMilimetro .
 	! !
 
-!TestsDistance methodsFor: 'SetUp' stamp: 'JI 6/6/2017 13:00:25'!
+!TestsDistance methodsFor: 'SetUp' stamp: 'JI 6/6/2017 17:52:48'!
 setUp
 	self kilometrosSetUp .
 	self metrosSetUp.
 	self centimetrosSetUp .
 	self milimetrosSetUp .
-	'self intervalosSetUp .'
+	self intervalosSetUp .
 	! !
 
 
@@ -998,14 +991,14 @@ test004_TemperaturaGreaterorEqual
 	self assert: celsius75 >= celsius1 .! !
 
 
-!TestsTemperature methodsFor: 'Test Intervalos' stamp: 'JI 6/6/2017 15:18:52'!
+!TestsTemperature methodsFor: 'Test Intervalos' stamp: 'JI 6/6/2017 17:44:54'!
 test001_IntervaloVacio
 	
-'	self assert: intervaloVacio size = 0.'! !
+	self assert: intervaloVacio size = 0.! !
 
-!TestsTemperature methodsFor: 'Test Intervalos' stamp: 'JI 6/6/2017 15:18:58'!
+!TestsTemperature methodsFor: 'Test Intervalos' stamp: 'JI 6/6/2017 17:45:00'!
 test002_IntervaloFromToAscendenteDeTemperaturas
-	'
+	
 	| i |
 	
 	i _ celsius1 .
@@ -1026,12 +1019,11 @@ test002_IntervaloFromToAscendenteDeTemperaturas
 		i _ i+fahrenheit1.].
 	self assert: intervaloDefahrenheit32to40 size = 9.
 	
-	'! !
+	! !
 
-!TestsTemperature methodsFor: 'Test Intervalos' stamp: 'JI 6/6/2017 15:19:07'!
+!TestsTemperature methodsFor: 'Test Intervalos' stamp: 'JI 6/6/2017 17:45:07'!
 test003_IntervaloFromToByAscendenteDeTemperaturas
 	
-	'
 	| i |
 	
 	i _ celsius1 .
@@ -1051,36 +1043,33 @@ test003_IntervaloFromToByAscendenteDeTemperaturas
 		self assert: aTemperature  = i.
 		i _ i+fahrenheit1.].
 	self assert: intervaloDefahrenheit32to40ByCelsiusMinus31Multiplied5Over9 size = 9.
-	
-	'
 	! !
 
-!TestsTemperature methodsFor: 'Test Intervalos' stamp: 'JI 6/6/2017 15:19:14'!
+!TestsTemperature methodsFor: 'Test Intervalos' stamp: 'JI 6/6/2017 17:47:29'!
 test004_IntervaloFromToByDoAscendenteDeTemperaturas
-	'
+	
 	| i |
-	i _ celsius1 .
 	
 	i _ celsius1 .
-	TemperatureInterval from: celsius1 to: celsius10 by: kelvin275con15 do: [ :aTemperature | 
+	celsius1 to: celsius10 by: kelvin275con15 do: [ :aTemperature | 
 		self assert: aTemperature = i.
 		i _ i+ celsius2 .].
 	self assert: intervaloDeCelsius1To10ByKelvin275Point15 size = 5.
 	
 	i _ kelvin1 .
-	TemperatureInterval from: kelvin1 to: kelvin30 by: fahrenheitMinus456With07 do: [ :aTemperature | 
+	kelvin1 to: kelvin30 by: fahrenheitMinus456With07 do: [ :aTemperature | 
 		self assert: aTemperature = i.
 		i _ i+kelvin2.].
 	self assert: intervaloDeKelvin1To30By2FahrenheitMinus456Point07 size =15.
 	
 	i _ fahrenheit32 .
 	
-	TemperatureInterval from: fahrenheit32 to: fahrenheit40 by: celsiusMinus31Multiplied5Over9 do: [ :aTemperature | 
+	fahrenheit32 to: fahrenheit40 by: celsiusMinus31Multiplied5Over9 do: [ :aTemperature | 
 		self assert: aTemperature  = i.
 		i _ i+fahrenheit1.].
 	self assert: intervaloDefahrenheit32to40ByCelsiusMinus31Multiplied5Over9 size = 9.
 	
-	'! !
+! !
 
 
 !TestsTemperature methodsFor: 'setUp' stamp: 'JI 6/6/2017 15:53:05'!
@@ -1127,19 +1116,19 @@ fahrenheitSetUp
 	fahrenheit65Point8  _ Measure initializeWith: 65 +(80/100) asUnit:UnitTemperature initializeFahrenheit  .
 	fahrenheit69Point4  _ Measure initializeWith: 69 + (40/100) asUnit: UnitTemperature initializeFahrenheit  .! !
 
-!TestsTemperature methodsFor: 'setUp' stamp: 'JI 6/6/2017 15:16:23'!
+!TestsTemperature methodsFor: 'setUp' stamp: 'JI 6/6/2017 17:46:36'!
 intervalosSetUp
 	
-	intervaloVacio _ TemperatureInterval intervaloVacio .
+	intervaloVacio _ IntervalOfMeasure intervaloVacio .
 	
-	intervaloDeCelsius1To10 _ TemperatureInterval from: celsius1 to: celsius10 .
-	intervaloDeCelsius1To10ByKelvin275Point15 _ TemperatureInterval from: celsius1 to: celsius10 by: kelvin275con15 .
+	intervaloDeCelsius1To10 _ celsius1 to: celsius10 .
+	intervaloDeCelsius1To10ByKelvin275Point15 _ celsius1 to: celsius10 by: kelvin275con15 .
 	
-	intervaloDeKelvin1To30 _ TemperatureInterval from: kelvin1 to: kelvin30.
-	intervaloDeKelvin1To30By2FahrenheitMinus456Point07 _ TemperatureInterval from: kelvin1 to: kelvin30 by: fahrenheitMinus456With07 .
+	intervaloDeKelvin1To30 _ kelvin1 to: kelvin30.
+	intervaloDeKelvin1To30By2FahrenheitMinus456Point07 _ kelvin1 to: kelvin30 by: fahrenheitMinus456With07 .
 	
-	intervaloDefahrenheit32to40 _ TemperatureInterval from: fahrenheit32 to: fahrenheit40.
-	intervaloDefahrenheit32to40ByCelsiusMinus31Multiplied5Over9 _ TemperatureInterval from: fahrenheit32 to: fahrenheit40 by: celsiusMinus31Multiplied5Over9.! !
+	intervaloDefahrenheit32to40 _ fahrenheit32 to: fahrenheit40.
+	intervaloDefahrenheit32to40ByCelsiusMinus31Multiplied5Over9 _ fahrenheit32 to: fahrenheit40 by: celsiusMinus31Multiplied5Over9.! !
 
 !TestsTemperature methodsFor: 'setUp' stamp: 'JI 6/6/2017 15:18:09'!
 kelvinSetUp
@@ -1157,13 +1146,13 @@ kelvinSetUp
 	kelvin548Point3 _  Measure initializeWith: (548+(30/100)) asUnit: UnitTemperature initializeKelvin .
 	kelvin549Point3 _  Measure initializeWith: (549+(30/100)) asUnit: UnitTemperature initializeKelvin .! !
 
-!TestsTemperature methodsFor: 'setUp' stamp: 'JI 6/6/2017 15:18:37'!
+!TestsTemperature methodsFor: 'setUp' stamp: 'JI 6/6/2017 17:44:33'!
 setUp
 	self celsiusSetUp .
 	self fahrenheitSetUp .
 	self kelvinSetUp .
 	
-	'self intervalosSetUp.'! !
+	self intervalosSetUp.! !
 
 
 !classDefinition: #TimeTests category: #'Measure-Solution'!
@@ -1207,86 +1196,9 @@ setUp
 	oneHour := TimeMeasure initializeHoursWith: 1.! !
 
 
-!classDefinition: #IntervalOfDistances category: #'Measure-Solution'!
-Object subclass: #IntervalOfDistances
-	instanceVariableNames: 'intervalo unitType fromDistance toDistance byDistance'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'Measure-Solution'!
-
-!IntervalOfDistances methodsFor: 'initialization' stamp: 'Ji 6/1/2017 19:58:39'!
-intervaloVacio
-	intervalo _ nil
-	! !
-
-!IntervalOfDistances methodsFor: 'initialization' stamp: 'Ji 6/1/2017 19:59:12'!
-size
-	intervalo = nil ifTrue: [^0] ifFalse: [^ intervalo size] ! !
-
-
-!IntervalOfDistances methodsFor: 'enumerating' stamp: 'JI 6/2/2017 03:52:46'!
-by
-
-	^  byDistance ! !
-
-!IntervalOfDistances methodsFor: 'enumerating' stamp: 'JI 6/4/2017 15:45:22'!
-do: aBlockClosure 
-	intervalo do: [ :aNumber | aBlockClosure value: (DistanceMeasure initializeWith: aNumber asUnit: unitType) ]! !
-
-!IntervalOfDistances methodsFor: 'enumerating' stamp: 'JI 6/2/2017 03:52:30'!
-from
-
-	^  fromDistance ! !
-
-!IntervalOfDistances methodsFor: 'enumerating' stamp: 'JI 6/4/2017 15:45:14'!
-from: aDistanceUnits to: aDistanceUnits2 
-	| unidad |
-	unidad _ DistanceMeasure  initializeWith: 1 asUnit: aDistanceUnits unit.
-	(aDistanceUnits - aDistanceUnits2) factorValue > 0 ifTrue: [unidad _ unidad negated].
-	^ IntervalOfDistances from: aDistanceUnits  to: aDistanceUnits2  by: unidad.
-	! !
-
-!IntervalOfDistances methodsFor: 'enumerating' stamp: 'JI 6/4/2017 15:51:19'!
-from: aDistanceUnits to: aDistanceUnits2 by: aDistanceUnits3 
-	
-	intervalo _ Interval from: (aDistanceUnits factorValue ) to: (aDistanceUnits2 factorValue ) by: (aDistanceUnits3 factorValue ).
-	unitType _ DistanceUnit initializeMetro .
-	fromDistance _ aDistanceUnits .
-	toDistance _ aDistanceUnits2 .
-	byDistance _ aDistanceUnits3 ! !
-
-!IntervalOfDistances methodsFor: 'enumerating' stamp: 'JI 6/2/2017 03:52:41'!
-to
-
-	^  toDistance ! !
-
-"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
-
-!classDefinition: 'IntervalOfDistances class' category: #'Measure-Solution'!
-IntervalOfDistances class
-	instanceVariableNames: ''!
-
-!IntervalOfDistances class methodsFor: 'initialization' stamp: 'Ji 6/1/2017 19:56:59'!
-from: aDistanceUnits to: aDistanceUnits2 
-	^ self new from: aDistanceUnits to: aDistanceUnits2 ! !
-
-!IntervalOfDistances class methodsFor: 'initialization' stamp: 'Ji 6/1/2017 19:49:07'!
-intervaloVacio
-	^ self new intervaloVacio! !
-
-
-!IntervalOfDistances class methodsFor: 'as yet unclassified' stamp: 'Ji 6/1/2017 20:52:06'!
-from: aDistanceUnits to: aDistanceUnits2 by: aDistanceUnits3 
-	^self new from: aDistanceUnits to: aDistanceUnits2  by: aDistanceUnits3 ! !
-
-!IntervalOfDistances class methodsFor: 'as yet unclassified' stamp: 'JI 6/2/2017 03:40:18'!
-from: aDistanceUnits to: aDistanceUnits2 by: aDistanceUnits3 do: aBlockClosure 
-	(self from: aDistanceUnits to: aDistanceUnits2 by: aDistanceUnits3) do: aBlockClosure ! !
-
-
 !classDefinition: #IntervalOfMeasure category: #'Measure-Solution'!
 Object subclass: #IntervalOfMeasure
-	instanceVariableNames: 'intervalo unitType fromDistance toDistance byDistance'
+	instanceVariableNames: 'intervalo unitType byDistance'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Measure-Solution'!
@@ -1306,36 +1218,43 @@ by
 
 	^  byDistance ! !
 
-!IntervalOfMeasure methodsFor: 'enumerating' stamp: 'JI 6/6/2017 12:30:50'!
+!IntervalOfMeasure methodsFor: 'enumerating' stamp: 'JI 6/6/2017 17:39:04'!
 do: aBlockClosure 
-	intervalo do: [ :aNumber | aBlockClosure value: (DistanceMeasure initializeWith: aNumber asUnit: unitType) ]! !
+	intervalo do: [ :aNumber | aBlockClosure value: (self generateMeasureWithValue: aNumber ) ]! !
 
-!IntervalOfMeasure methodsFor: 'enumerating' stamp: 'JI 6/6/2017 12:30:50'!
+!IntervalOfMeasure methodsFor: 'enumerating' stamp: 'JI 6/6/2017 17:37:40'!
 from
 
-	^  fromDistance ! !
+	^ self generateMeasureWithValue: intervalo first! !
 
-!IntervalOfMeasure methodsFor: 'enumerating' stamp: 'JI 6/6/2017 12:30:50'!
+!IntervalOfMeasure methodsFor: 'enumerating' stamp: 'JI 6/6/2017 17:48:14'!
 from: aDistanceUnits to: aDistanceUnits2 
 	| unidad |
-	unidad _ DistanceMeasure  initializeWith: 1 asUnit: aDistanceUnits unit.
-	(aDistanceUnits - aDistanceUnits2) factorValue > 0 ifTrue: [unidad _ unidad negated].
-	^ IntervalOfDistances from: aDistanceUnits  to: aDistanceUnits2  by: unidad.
+	
+	unidad _ Measure  initializeWith: 1 asUnit: aDistanceUnits unit.
+	aDistanceUnits > aDistanceUnits2 ifTrue: [unidad _ unidad negated].
+	
+	^ IntervalOfMeasure from: aDistanceUnits  to: aDistanceUnits2  by: unidad.
 	! !
 
-!IntervalOfMeasure methodsFor: 'enumerating' stamp: 'JI 6/6/2017 12:30:50'!
+!IntervalOfMeasure methodsFor: 'enumerating' stamp: 'JI 6/6/2017 17:49:08'!
 from: aDistanceUnits to: aDistanceUnits2 by: aDistanceUnits3 
 	
-	intervalo _ Interval from: (aDistanceUnits factorValue ) to: (aDistanceUnits2 factorValue ) by: (aDistanceUnits3 factorValue ).
-	unitType _ DistanceUnit initializeMetro .
-	fromDistance _ aDistanceUnits .
-	toDistance _ aDistanceUnits2 .
+	intervalo _ Interval from: aDistanceUnits amount  to: (aDistanceUnits2 convertTo: aDistanceUnits unit) amount by: (aDistanceUnits3 convertTo: aDistanceUnits unit ) amount.
+	unitType _ aDistanceUnits unit.
+	
 	byDistance _ aDistanceUnits3 ! !
 
-!IntervalOfMeasure methodsFor: 'enumerating' stamp: 'JI 6/6/2017 12:30:50'!
+!IntervalOfMeasure methodsFor: 'enumerating' stamp: 'JI 6/6/2017 17:38:21'!
+generateMeasureWithValue: aNumber
+
+	^ Measure initializeWith: aNumber asUnit: unitType
+! !
+
+!IntervalOfMeasure methodsFor: 'enumerating' stamp: 'JI 6/6/2017 17:38:36'!
 to
 
-	^  toDistance ! !
+	^  self generateMeasureWithValue: intervalo last! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -1566,60 +1485,6 @@ millimeter
 	^DistanceUnit initializeMilimetro ! !
 
 
-!classDefinition: #TemperatureInterval category: #'Measure-Solution'!
-Object subclass: #TemperatureInterval
-	instanceVariableNames: 'intervalo unitType'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'Measure-Solution'!
-
-!TemperatureInterval methodsFor: 'as yet unclassified' stamp: 'JI 6/5/2017 12:06:20'!
-do: aBlockClosure 
-	intervalo do: [ :aNumber | aBlockClosure value: (TemperatureMeasure initializeWith: aNumber asUnit: unitType ) ]! !
-
-!TemperatureInterval methodsFor: 'as yet unclassified' stamp: 'JI 6/5/2017 12:27:54'!
-from: aTemperatureMeasure to: aTemperatureMeasure2 
-
-	unitType _ aTemperatureMeasure unit .	
-	intervalo _ Interval from: (aTemperatureMeasure amount ) to: ( aTemperatureMeasure2 transformarGradosAUnidad: unitType) by: 1.
-! !
-
-!TemperatureInterval methodsFor: 'as yet unclassified' stamp: 'JI 6/5/2017 14:43:06'!
-from: aTemperatureMeasure to: aTemperatureMeasure2 by: aTemperatureMeasure3 
-	unitType _ aTemperatureMeasure unit .	
-	intervalo _ Interval from: (aTemperatureMeasure amount ) to: ( aTemperatureMeasure2 transformarGradosAUnidad: unitType) by: ( aTemperatureMeasure3 transformarGradosAUnidad: unitType).! !
-
-!TemperatureInterval methodsFor: 'as yet unclassified' stamp: 'JI 6/5/2017 02:29:20'!
-intervaloVacio
-	intervalo _ nil! !
-
-!TemperatureInterval methodsFor: 'as yet unclassified' stamp: 'JI 6/5/2017 02:30:02'!
-size
-	intervalo = nil ifTrue: [^0] ifFalse: [^ intervalo size] ! !
-
-"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
-
-!classDefinition: 'TemperatureInterval class' category: #'Measure-Solution'!
-TemperatureInterval class
-	instanceVariableNames: ''!
-
-!TemperatureInterval class methodsFor: 'as yet unclassified' stamp: 'JI 6/5/2017 11:56:20'!
-from: aTemperatureMeasure to: aTemperatureMeasure2 
-	^self new from: aTemperatureMeasure to: aTemperatureMeasure2 ! !
-
-!TemperatureInterval class methodsFor: 'as yet unclassified' stamp: 'JI 6/5/2017 14:08:05'!
-from: aTemperatureMeasure to: aTemperatureMeasure2 by: aTemperatureMeasure3 
-	^ self new from: aTemperatureMeasure to: aTemperatureMeasure2  by:  aTemperatureMeasure3 ! !
-
-!TemperatureInterval class methodsFor: 'as yet unclassified' stamp: 'JI 6/5/2017 15:13:10'!
-from: aTemperatureMeasure to: aTemperatureMeasure2 by: aTemperatureMeasure3 do: aBlockClosure 
-	(self from: aTemperatureMeasure to: aTemperatureMeasure2  by: aTemperatureMeasure3 ) do: aBlockClosure ! !
-
-!TemperatureInterval class methodsFor: 'as yet unclassified' stamp: 'JI 6/5/2017 02:29:06'!
-intervaloVacio
-	^self new intervaloVacio ! !
-
-
 !classDefinition: #TimeUnit category: #'Measure-Solution'!
 Object subclass: #TimeUnit
 	instanceVariableNames: ''
@@ -1648,40 +1513,6 @@ printString
 !Unit methodsFor: 'conversion' stamp: 'JI 6/6/2017 14:06:23'!
 convert: aQuantity to: aUnit
 	^ self subclassResponsibility ! !
-
-"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
-
-!classDefinition: 'Unit class' category: #'Measure-Solution'!
-Unit class
-	instanceVariableNames: ''!
-
-!Unit class methodsFor: 'as yet unclassified' stamp: 'JI 6/6/2017 12:53:36'!
-initializeCentimetro
-	^ self new initializeCentimetro .! !
-
-!Unit class methodsFor: 'as yet unclassified' stamp: 'JI 6/6/2017 12:53:36'!
-initializeDecametro
-	^ self new initializeDecametro .! !
-
-!Unit class methodsFor: 'as yet unclassified' stamp: 'JI 6/6/2017 12:53:36'!
-initializeDecimetro
-	^ self new initializeDecimetro .! !
-
-!Unit class methodsFor: 'as yet unclassified' stamp: 'JI 6/6/2017 12:53:36'!
-initializeHectometro
-	^ self new initializeHectometro .! !
-
-!Unit class methodsFor: 'as yet unclassified' stamp: 'JI 6/6/2017 12:53:36'!
-initializeKilometro
-	^ self new initializeKilometro .! !
-
-!Unit class methodsFor: 'as yet unclassified' stamp: 'JI 6/6/2017 12:53:36'!
-initializeMetro
-	^ self new initializeMetro .! !
-
-!Unit class methodsFor: 'as yet unclassified' stamp: 'JI 6/6/2017 12:53:36'!
-initializeMilimetro
-	^ self new initializeMilimetro .! !
 
 
 !classDefinition: #UnitDistance category: #'Measure-Solution'!
