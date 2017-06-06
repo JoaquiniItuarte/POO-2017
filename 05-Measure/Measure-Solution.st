@@ -1,3 +1,38 @@
+!classDefinition: #TimeMeasure category: #'Measure-Solution'!
+Duration subclass: #TimeMeasure
+	instanceVariableNames: 'time'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Measure-Solution'!
+
+!TimeMeasure methodsFor: 'initialization' stamp: 'JAK 6/5/2017 23:21:03'!
+initializeWithTime: aTime
+
+	time := aTime
+	! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'TimeMeasure class' category: #'Measure-Solution'!
+TimeMeasure class
+	instanceVariableNames: ''!
+
+!TimeMeasure class methodsFor: 'instance creation' stamp: 'JAK 6/5/2017 23:38:17'!
+initializeHoursWith: quantity
+
+	^self new initializeWithTime: (Time hour: quantity minute: 0 second: 0).! !
+
+!TimeMeasure class methodsFor: 'instance creation' stamp: 'JAK 6/5/2017 23:33:24'!
+initializeMinutesWith: quantity
+
+	^self new initializeWithTime: (Time hour: 0 minute: quantity second: 0).! !
+
+!TimeMeasure class methodsFor: 'instance creation' stamp: 'JAK 6/5/2017 23:22:37'!
+initializeSecondsWith: quantity
+
+	^self new initializeWithTime: (Time seconds: quantity).! !
+
+
 !classDefinition: #DistanceMeasure category: #'Measure-Solution'!
 Magnitude subclass: #DistanceMeasure
 	instanceVariableNames: 'quantity unitType'
@@ -1192,6 +1227,47 @@ setUp
 	self intervalosSetUp.! !
 
 
+!classDefinition: #TimeTests category: #'Measure-Solution'!
+TestCase subclass: #TimeTests
+	instanceVariableNames: 'zeroSecond oneHoundreadSeconds tenSeconds nintySeconds oneMinute fortySeconds seconds3500 fiftyNineMinutes twoHours oneHour'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Measure-Solution'!
+
+!TimeTests methodsFor: 'Tests -' stamp: 'JAK 6/5/2017 23:26:51'!
+test001_secondMinusSecond
+
+	self assert: zeroSecond - zeroSecond = zeroSecond.
+	self assert: oneHoundreadSeconds - tenSeconds = nintySeconds.! !
+
+!TimeTests methodsFor: 'Tests -' stamp: 'JAK 6/5/2017 23:29:45'!
+test002_secondMinusMinutes
+
+	self assert: oneMinute - zeroSecond = oneMinute.
+	self assert: oneHoundreadSeconds - oneMinute = fortySeconds.! !
+
+!TimeTests methodsFor: 'Tests -' stamp: 'JAK 6/5/2017 23:37:59'!
+test003_secondMinusHours
+
+	self assert: oneHour - oneHoundreadSeconds = seconds3500.
+	self assert: oneHour - oneMinute = fiftyNineMinutes.
+	self assert: twoHours - oneHour = oneHour.! !
+
+
+!TimeTests methodsFor: 'setUp' stamp: 'JAK 6/5/2017 23:37:46'!
+setUp
+	zeroSecond := TimeMeasure initializeSecondsWith: 0.
+	oneHoundreadSeconds:= TimeMeasure initializeSecondsWith: 100.
+	tenSeconds := TimeMeasure initializeSecondsWith: 10.
+	nintySeconds := TimeMeasure initializeSecondsWith: 90.
+	fortySeconds := TimeMeasure initializeSecondsWith: 40.
+	oneMinute := TimeMeasure initializeMinutesWith: 1.
+	seconds3500 := TimeMeasure initializeSecondsWith: 3500.
+	fiftyNineMinutes := TimeMeasure initializeMinutesWith: 59.
+	twoHours := TimeMeasure initializeHoursWith: 2.
+	oneHour := TimeMeasure initializeHoursWith: 1.! !
+
+
 !classDefinition: #DistanceUnit category: #'Measure-Solution'!
 Object subclass: #DistanceUnit
 	instanceVariableNames: 'conversionFactor unitType'
@@ -1691,3 +1767,11 @@ initializeFahrenheit
 !TemperatureUnits class methodsFor: 'initialization' stamp: 'JI 6/4/2017 16:03:57'!
 initializeKelvin
 	^ self new initializeKelvin.! !
+
+
+!classDefinition: #TimeUnit category: #'Measure-Solution'!
+Object subclass: #TimeUnit
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Measure-Solution'!
