@@ -1,38 +1,3 @@
-!classDefinition: #TimeMeasure category: #'Measure-Solution'!
-Duration subclass: #TimeMeasure
-	instanceVariableNames: 'time'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'Measure-Solution'!
-
-!TimeMeasure methodsFor: 'initialization' stamp: 'JAK 6/5/2017 23:21:03'!
-initializeWithTime: aTime
-
-	time := aTime
-	! !
-
-"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
-
-!classDefinition: 'TimeMeasure class' category: #'Measure-Solution'!
-TimeMeasure class
-	instanceVariableNames: ''!
-
-!TimeMeasure class methodsFor: 'instance creation' stamp: 'JAK 6/5/2017 23:38:17'!
-initializeHoursWith: quantity
-
-	^self new initializeWithTime: (Time hour: quantity minute: 0 second: 0).! !
-
-!TimeMeasure class methodsFor: 'instance creation' stamp: 'JAK 6/5/2017 23:33:24'!
-initializeMinutesWith: quantity
-
-	^self new initializeWithTime: (Time hour: 0 minute: quantity second: 0).! !
-
-!TimeMeasure class methodsFor: 'instance creation' stamp: 'JAK 6/5/2017 23:22:37'!
-initializeSecondsWith: quantity
-
-	^self new initializeWithTime: (Time seconds: quantity).! !
-
-
 !classDefinition: #Measure category: #'Measure-Solution'!
 Magnitude subclass: #Measure
 	instanceVariableNames: 'quantity unitType'
@@ -114,6 +79,10 @@ unit
 	^ unitType! !
 
 
+!Measure methodsFor: 'conversion' stamp: 'JI 6/6/2017 15:30:27'!
+amountAsUnit: unitType
+	^  (self convertTo: unitType) amount ! !
+
 !Measure methodsFor: 'conversion' stamp: 'JI 6/6/2017 15:32:28'!
 convertTo: aUnit
 	^ Measure initializeWith: ( unitType convert: quantity to: aUnit)  asUnit: aUnit ! !
@@ -126,11 +95,6 @@ printString
 	quantity > 1 ifTrue: [extraS := 's'].
 	^ quantity printString, ' ' , unitType printString, extraS ! !
 
-
-!Measure methodsFor: 'as yet unclassified' stamp: 'JI 6/6/2017 15:30:27'!
-amountAsUnit: unitType
-	^  (self convertTo: unitType) amount ! !
-
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
 !classDefinition: 'Measure class' category: #'Measure-Solution'!
@@ -141,6 +105,60 @@ Measure class
 initializeWith: aSmallInteger asUnit: anUnitType
 	
 	^self new initializeWith: aSmallInteger asUnit: anUnitType .! !
+
+
+!classDefinition: #TestsCurrency category: #'Measure-Solution'!
+TestCase subclass: #TestsCurrency
+	instanceVariableNames: 'onePeso zeroPeso oneDolar twoDolars threeDolars twoPesos minusOneDolar oneAndHalfDolars'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Measure-Solution'!
+
+!TestsCurrency methodsFor: 'Tests +' stamp: 'JAK 6/6/2017 20:35:36'!
+test001CurrencyPlusAnotherCurrency
+
+	self assert: onePeso + zeroPeso = onePeso.
+	self assert: oneDolar + twoDolars = threeDolars.! !
+
+
+!TestsCurrency methodsFor: 'Tests -' stamp: 'JAK 6/6/2017 20:40:20'!
+test001CurrencyMinusAnotherCurrency
+	
+	self assert: twoPesos - onePeso = onePeso.
+	self assert: oneDolar - twoDolars = minusOneDolar.
+! !
+
+
+!TestsCurrency methodsFor: 'Test * y /' stamp: 'JAK 6/6/2017 20:42:12'!
+test001ACurrencyMultiplyByNumber
+	self assert: twoPesos * 1 = (1*twoPesos ).
+	self assert: twoDolars * 1.5 = threeDolars .
+! !
+
+!TestsCurrency methodsFor: 'Test * y /' stamp: 'JAK 6/6/2017 20:43:34'!
+test002ACurrencyDivideByNumber
+	self assert: threeDolars / 2 = oneAndHalfDolars.
+	self assert: twoPesos / 2 = onePeso .
+! !
+
+
+!TestsCurrency methodsFor: 'setUp' stamp: 'JAK 6/6/2017 20:43:50'!
+setUp
+	onePeso := Measure initializeWith: 1 asUnit: UnitCurrency initializePeso.
+	zeroPeso := Measure initializeWith: 0 asUnit: UnitCurrency initializePeso.
+	oneDolar := Measure initializeWith: 1 asUnit: UnitCurrency initializeDolar.
+	twoDolars := Measure initializeWith: 2 asUnit: UnitCurrency initializeDolar.
+	threeDolars := Measure initializeWith: 3 asUnit: UnitCurrency initializeDolar.
+	twoPesos := Measure initializeWith: 2 asUnit: UnitCurrency initializePeso.
+	minusOneDolar := Measure initializeWith: -1 asUnit: UnitCurrency initializeDolar.
+	oneAndHalfDolars := Measure initializeWith: 1.5 asUnit: UnitCurrency initializeDolar.! !
+
+
+!TestsCurrency methodsFor: 'Operating Between Cross Currency' stamp: 'JAK 6/6/2017 21:01:01'!
+test001SumOrMinusBetweenCrossCurrencyRaiseError
+	self should: [onePeso + oneDolar ]
+	raise: Error
+	withExceptionDo: [:anError | self assert: anError messageText equals: UnitCurrency canNotOperateBetweenCrossCurrencyinitializePeso ]! !
 
 
 !classDefinition: #TestsDistance category: #'Measure-Solution'!
@@ -773,6 +791,362 @@ setUp
 	! !
 
 
+!classDefinition: #TestsLiquid category: #'Measure-Solution'!
+TestCase subclass: #TestsLiquid
+	instanceVariableNames: 'gramo1 otroGramo1 gramo1000 otroGramo1000 kilogramo1Over1000 kilogramo1 hectogramo1Over100 decagramo1Over10 miligramo1000 centigramo100 decigramo10 gramo2 gramo2000 gramo0 kilogramo3Over1000 gramo30 decigramo3 centilitro100 decalitro1Over10 decilitro3 decilitro10 litro0 litro1 otroLitro1 litro2 litro30 litro1000 otroLitro1000 litro2000 hectolitro1Over100 kilolitro1 kilolitro1Over1000 kilolitro3Over1000 mililitro1000'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Measure-Solution'!
+
+!TestsLiquid methodsFor: 'Tests -' stamp: 'Ji 6/6/2017 20:33:39'!
+test001CualquierLiquidoRestaCualquierLiquido
+
+	self assert: mililitro1000 - otroLitro1 = litro0.
+	self assert: centilitro100 - mililitro1000 = litro0.
+	self assert: decilitro10 - litro1 = litro0.
+	self assert: litro1000 - kilolitro1 = litro0.
+	self assert: decalitro1Over10 - hectolitro1Over100 = litro0.
+	self assert: hectolitro1Over100 - kilolitro1Over1000 = litro0.
+	self assert: kilolitro3Over1000 - litro1 = litro2.
+	! !
+
+
+!TestsLiquid methodsFor: 'Tests +' stamp: 'Ji 6/6/2017 20:36:02'!
+test001CualquierLiquidoSumaCualquierLiquido
+
+	self assert: mililitro1000 + otroLitro1 = litro2.
+	self assert: centilitro100 + mililitro1000 = litro2.
+	self assert: decilitro10 + litro1 = litro2.
+	self assert: litro1000 + kilolitro1 = litro2000.
+	self assert: decalitro1Over10 + hectolitro1Over100 = litro2.
+	self assert: hectolitro1Over100 + kilolitro1Over1000 = litro2.
+	self assert: kilolitro1Over1000 + litro1 = litro2.
+	! !
+
+
+!TestsLiquid methodsFor: 'Tests =' stamp: 'Ji 6/6/2017 20:36:29'!
+test001IgualdadEntreLitros
+
+	self assert: litro1 = otroLitro1 .
+	self assert: litro1000 = otroLitro1000 .
+	self deny: litro1 = litro1000 .! !
+
+!TestsLiquid methodsFor: 'Tests =' stamp: 'Ji 6/6/2017 20:37:38'!
+test002IgualdadCualquierMagnitudDeLiquidoConCualquierMagnitudDeLiquido
+
+	self assert: mililitro1000 = otroLitro1 .
+	self assert: centilitro100 = mililitro1000 .
+	self assert: decilitro10 = litro1 .
+	self assert: litro1000 = kilolitro1 .
+	self assert: decalitro1Over10 = hectolitro1Over100 .
+	self assert: hectolitro1Over100 = kilolitro1Over1000 .
+	self assert: kilolitro1Over1000 = litro1.
+	! !
+
+
+!TestsLiquid methodsFor: 'Tests * y /' stamp: 'Ji 6/6/2017 20:38:05'!
+test001_ALiquidMultipliedByANumberWorks
+	
+	self assert: litro1 * 1 = litro1 .
+	self assert: litro2 * 0 = litro0.
+	self assert: kilolitro3Over1000 * 10 = litro30.! !
+
+!TestsLiquid methodsFor: 'Tests * y /' stamp: 'Ji 6/6/2017 20:38:31'!
+test002_ANumberMultipliedByALiquidWorks
+	
+	self assert: 1 * litro1  = litro1 .
+	self assert: 0 * litro2  = litro0.
+	self assert: 10 *kilolitro3Over1000  = litro30.! !
+
+!TestsLiquid methodsFor: 'Tests * y /' stamp: 'Ji 6/6/2017 20:38:52'!
+test003_ALiquidDividedByANumberWorks
+	
+	self assert: litro1 / 1 = litro1 .
+	self assert: litro2 / 2 = litro1.
+	self assert: kilolitro3Over1000 / 10 = decilitro3.! !
+
+
+!TestsLiquid methodsFor: 'Tests comparison' stamp: 'Ji 6/6/2017 20:39:13'!
+test001LesserThanInLiquidWorks
+	
+	self assert: litro1  < litro1000 .
+	self deny: litro1 < litro1.
+	self deny: kilolitro1 < litro1! !
+
+!TestsLiquid methodsFor: 'Tests comparison' stamp: 'Ji 6/6/2017 20:39:33'!
+test002LesserOrEqualsThanInLiquidWorks
+	
+	self assert: litro1  <= litro1000 .
+	self assert: litro1 <= litro1.
+	self deny: kilolitro1 <= litro1! !
+
+!TestsLiquid methodsFor: 'Tests comparison' stamp: 'Ji 6/6/2017 20:39:57'!
+test003GreaterThanInLiquidWorks
+	
+	self deny: litro1  > litro1000 .
+	self deny: litro1 > litro1.
+	self assert: kilolitro1 > litro1! !
+
+!TestsLiquid methodsFor: 'Tests comparison' stamp: 'Ji 6/6/2017 20:40:23'!
+test004GreaterOrEqualsThanInLiquidWorks
+	
+	self deny: litro1  >= litro1000 .
+	self assert: litro1 >= litro1.
+	self assert: kilolitro1 >= litro1! !
+
+
+!TestsLiquid methodsFor: 'setUp' stamp: 'Ji 6/6/2017 20:26:33'!
+centilitrosSetUp
+	
+	centilitro100 _ Measure initializeWith: 100 asUnit: UnitLiquid initializeCentilitro.! !
+
+!TestsLiquid methodsFor: 'setUp' stamp: 'Ji 6/6/2017 20:27:01'!
+decalitrosSetUp
+	
+	decalitro1Over10 _ Measure initializeWith: 1/10 asUnit: UnitLiquid initializeDecalitro.! !
+
+!TestsLiquid methodsFor: 'setUp' stamp: 'Ji 6/6/2017 20:27:43'!
+decilitrosSetUp
+	
+	decilitro3 _ Measure initializeWith: 3 asUnit: UnitLiquid initializeDecilitro.
+	decilitro10 _ Measure initializeWith: 10 asUnit: UnitLiquid initializeDecilitro.! !
+
+!TestsLiquid methodsFor: 'setUp' stamp: 'Ji 6/6/2017 20:30:18'!
+hectolitrosSetUp
+	
+	hectolitro1Over100 _ Measure initializeWith: 1/100 asUnit: UnitLiquid initializeHectolitro.! !
+
+!TestsLiquid methodsFor: 'setUp' stamp: 'Ji 6/6/2017 20:45:26'!
+kilolitrosSetUp
+	
+	kilolitro1 _ Measure initializeWith: 1 asUnit: UnitLiquid initializeKilolitro.
+	kilolitro1Over1000 _ Measure initializeWith: 1/1000 asUnit: UnitLiquid initializeKilolitro.
+	kilolitro3Over1000 _ Measure initializeWith: 3/1000 asUnit: UnitLiquid initializeKilolitro.
+	
+! !
+
+!TestsLiquid methodsFor: 'setUp' stamp: 'Ji 6/6/2017 20:29:09'!
+litrosSetUp
+	
+	litro0 _ Measure initializeWith: 0 asUnit: UnitLiquid initializeLitro.
+	litro1 _ Measure initializeWith: 1 asUnit: UnitLiquid initializeLitro.
+	otroLitro1 _ Measure initializeWith: 1 asUnit: UnitLiquid initializeLitro.
+	litro2 _ Measure initializeWith: 2 asUnit: UnitLiquid initializeLitro.
+	litro30 _ Measure initializeWith: 30 asUnit: UnitLiquid initializeLitro.
+	litro1000 _ Measure initializeWith: 1000 asUnit: UnitLiquid initializeLitro.
+	otroLitro1000 _ Measure initializeWith: 1000 asUnit: UnitLiquid initializeLitro.
+	litro2000 _ Measure initializeWith: 2000 asUnit: UnitLiquid initializeLitro.! !
+
+!TestsLiquid methodsFor: 'setUp' stamp: 'Ji 6/6/2017 20:24:31'!
+miligramosSetUp
+	
+	miligramo1000 _ Measure initializeWith: 1000 asUnit: UnitMass initializeMiligramo.! !
+
+!TestsLiquid methodsFor: 'setUp' stamp: 'Ji 6/6/2017 20:45:13'!
+mililitrosSetUp
+	
+	mililitro1000 _ Measure initializeWith: 1000 asUnit: UnitLiquid initializeMililitro.! !
+
+!TestsLiquid methodsFor: 'setUp' stamp: 'Ji 6/6/2017 20:31:43'!
+setUp
+	self mililitrosSetUp.
+	self centilitrosSetUp .
+	self decilitrosSetUp .
+	self litrosSetUp .
+	self decalitrosSetUp .
+	self hectolitrosSetUp .
+	self kilolitrosSetUp .
+	! !
+
+
+!classDefinition: #TestsMass category: #'Measure-Solution'!
+TestCase subclass: #TestsMass
+	instanceVariableNames: 'gramo1 otroGramo1 gramo1000 otroGramo1000 kilogramo1Over1000 kilogramo1 hectogramo1Over100 decagramo1Over10 miligramo1000 centigramo100 decigramo10 gramo2 gramo2000 gramo0 kilogramo3Over1000 gramo30 decigramo3'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Measure-Solution'!
+
+!TestsMass methodsFor: 'Tests -' stamp: 'Ji 6/6/2017 20:08:22'!
+test001CualquierMasaRestaCualquierMasa
+
+	self assert: miligramo1000 - otroGramo1 = gramo0.
+	self assert: centigramo100 - miligramo1000 = gramo0.
+	self assert: decigramo10 - gramo1 = gramo0.
+	self assert: gramo1000 - kilogramo1 = gramo0.
+	self assert: decagramo1Over10 - hectogramo1Over100 = gramo0.
+	self assert: hectogramo1Over100 - kilogramo1Over1000 =gramo0.
+	self assert: kilogramo3Over1000 - gramo1 =gramo2.
+	! !
+
+
+!TestsMass methodsFor: 'Tests +' stamp: 'Ji 6/6/2017 20:05:22'!
+test001CualquierMasaSumaCualquierMasa
+
+	self assert: miligramo1000 + otroGramo1 = gramo2.
+	self assert: centigramo100 + miligramo1000 =gramo2.
+	self assert: decigramo10 + gramo1 =gramo2.
+	self assert: gramo1000 + kilogramo1 =gramo2000.
+	self assert: decagramo1Over10 + hectogramo1Over100 =gramo2.
+	self assert: hectogramo1Over100 + kilogramo1Over1000 =gramo2.
+	self assert: kilogramo1Over1000 + gramo1 =gramo2.
+	! !
+
+
+!TestsMass methodsFor: 'Tests =' stamp: 'Ji 6/6/2017 19:27:21'!
+test001IgualdadEntreGramos
+
+	self assert: gramo1 = otroGramo1 .
+	self assert: gramo1000 = otroGramo1000 .
+	self deny: gramo1 = gramo1000 .! !
+
+!TestsMass methodsFor: 'Tests =' stamp: 'Ji 6/6/2017 19:27:17'!
+test002IgualdadDeGramoConKilogramo
+
+	self assert: gramo1 = kilogramo1Over1000 .
+	self assert: gramo1000 = kilogramo1 .
+	self deny: gramo1 = kilogramo1 .! !
+
+!TestsMass methodsFor: 'Tests =' stamp: 'Ji 6/6/2017 19:48:20'!
+test003IgualdadGramoConCualquierMagnitudDeMasa
+
+	self assert: gramo1 = otroGramo1 .
+	self deny: gramo1 = gramo1000 .
+	self assert: gramo1000 = kilogramo1 .
+	self deny: gramo1 = kilogramo1 .
+	self assert: gramo1 = hectogramo1Over100.
+	self deny: gramo1000 = hectogramo1Over100.
+	self assert: gramo1 = decagramo1Over10.
+	self deny: gramo1000 = decagramo1Over10.
+	self assert: gramo1 = miligramo1000.
+	self deny: gramo1000 = miligramo1000.
+	self assert: gramo1 = centigramo100.
+	self deny: gramo1000 = centigramo100.
+	self assert: gramo1 = decigramo10.
+	self deny: gramo1000 = decigramo10.! !
+
+!TestsMass methodsFor: 'Tests =' stamp: 'Ji 6/6/2017 20:03:25'!
+test004IgualdadCualquierMagnitudDeMasaConCualquierMagnitudDeMasa
+
+	self assert: miligramo1000 = otroGramo1 .
+	self assert: centigramo100 = miligramo1000 .
+	self assert: decigramo10 = gramo1 .
+	self assert: gramo1000 = kilogramo1 .
+	self assert: decagramo1Over10 = hectogramo1Over100 .
+	self assert: hectogramo1Over100 = kilogramo1Over1000 .
+	self assert: kilogramo1Over1000 = gramo1.
+	! !
+
+
+!TestsMass methodsFor: 'Tests * y /' stamp: 'Ji 6/6/2017 20:10:36'!
+test001_AMassMultipliedByANumberWorks
+	
+	self assert: gramo1 * 1 = gramo1 .
+	self assert: gramo2 * 0 = gramo0.
+	self assert: kilogramo3Over1000 * 10 = gramo30.! !
+
+!TestsMass methodsFor: 'Tests * y /' stamp: 'Ji 6/6/2017 20:11:37'!
+test002_ANumberMultipliedByAMassWorks
+	
+	self assert: 1 * gramo1  = gramo1 .
+	self assert: 0 * gramo2  = gramo0.
+	self assert: 10 *kilogramo3Over1000  = gramo30.! !
+
+!TestsMass methodsFor: 'Tests * y /' stamp: 'Ji 6/6/2017 20:13:08'!
+test003_AMassDividedByANumberWorks
+	
+	self assert: gramo1 / 1 = gramo1 .
+	self assert: gramo2 / 2 = gramo1.
+	self assert: kilogramo3Over1000 / 10 = decigramo3.! !
+
+
+!TestsMass methodsFor: 'Tests comparison' stamp: 'Ji 6/6/2017 20:16:43'!
+test001LesserThanInMassWorks
+	
+	self assert: gramo1  < gramo1000 .
+	self deny: gramo1 < gramo1.
+	self deny: kilogramo1 < gramo1! !
+
+!TestsMass methodsFor: 'Tests comparison' stamp: 'Ji 6/6/2017 20:16:38'!
+test002LesserOrEqualsThanInMassWorks
+	
+	self assert: gramo1  <= gramo1000 .
+	self assert: gramo1 <= gramo1.
+	self deny: kilogramo1 <= gramo1! !
+
+!TestsMass methodsFor: 'Tests comparison' stamp: 'Ji 6/6/2017 20:17:20'!
+test003GreaterThanInMassWorks
+	
+	self deny: gramo1  > gramo1000 .
+	self deny: gramo1 > gramo1.
+	self assert: kilogramo1 > gramo1! !
+
+!TestsMass methodsFor: 'Tests comparison' stamp: 'Ji 6/6/2017 20:17:49'!
+test004GreaterOrEqualsThanInMassWorks
+	
+	self deny: gramo1  >= gramo1000 .
+	self assert: gramo1 >= gramo1.
+	self assert: kilogramo1 >= gramo1! !
+
+
+!TestsMass methodsFor: 'setUp' stamp: 'Ji 6/6/2017 19:46:54'!
+centigramosSetUp
+	
+	centigramo100 _ Measure initializeWith: 100 asUnit: UnitMass initializeCentigramo.! !
+
+!TestsMass methodsFor: 'setUp' stamp: 'Ji 6/6/2017 19:54:51'!
+decagramosSetUp
+	
+	decagramo1Over10 _ Measure initializeWith: 1/10 asUnit: UnitMass initializeDecagramo.! !
+
+!TestsMass methodsFor: 'setUp' stamp: 'Ji 6/6/2017 20:12:57'!
+decigramosSetUp
+	
+	decigramo3 _ Measure initializeWith: 3 asUnit: UnitMass initializeDecigramo.
+	decigramo10 _ Measure initializeWith: 10 asUnit: UnitMass initializeDecigramo.! !
+
+!TestsMass methodsFor: 'setUp' stamp: 'Ji 6/6/2017 20:10:52'!
+gramosSetUp
+	
+	gramo0 _ Measure initializeWith: 0 asUnit: UnitMass initializeGramo.
+	gramo1 _ Measure initializeWith: 1 asUnit: UnitMass initializeGramo.
+	otroGramo1 _ Measure initializeWith: 1 asUnit: UnitMass initializeGramo.
+	gramo2 _ Measure initializeWith: 2 asUnit: UnitMass initializeGramo.
+	gramo30 _ Measure initializeWith: 30 asUnit: UnitMass initializeGramo.
+	gramo1000 _ Measure initializeWith: 1000 asUnit: UnitMass initializeGramo.
+	otroGramo1000 _ Measure initializeWith: 1000 asUnit: UnitMass initializeGramo.
+	gramo2000 _ Measure initializeWith: 2000 asUnit: UnitMass initializeGramo.! !
+
+!TestsMass methodsFor: 'setUp' stamp: 'Ji 6/6/2017 19:47:38'!
+hectogramosSetUp
+	
+	hectogramo1Over100 _ Measure initializeWith: 1/100 asUnit: UnitMass initializeHectogramo.! !
+
+!TestsMass methodsFor: 'setUp' stamp: 'Ji 6/6/2017 20:08:51'!
+kilogramosSetUp
+	
+	kilogramo1 _ Measure initializeWith: 1 asUnit: UnitMass initializeKilogramo.
+	kilogramo1Over1000 _ Measure initializeWith: 1/1000 asUnit: UnitMass initializeKilogramo.
+	kilogramo3Over1000 _ Measure initializeWith: 3/1000 asUnit: UnitMass initializeKilogramo.
+	
+! !
+
+!TestsMass methodsFor: 'setUp' stamp: 'Ji 6/6/2017 19:46:32'!
+miligramosSetUp
+	
+	miligramo1000 _ Measure initializeWith: 1000 asUnit: UnitMass initializeMiligramo.! !
+
+!TestsMass methodsFor: 'setUp' stamp: 'Ji 6/6/2017 19:54:21'!
+setUp
+	self miligramosSetUp.
+	self centigramosSetUp.
+	self decigramosSetUp.
+	self gramosSetUp .
+	self decagramosSetUp.
+	self hectogramosSetUp.
+	self kilogramosSetUp.
+	! !
+
+
 !classDefinition: #TestsTemperature category: #'Measure-Solution'!
 TestCase subclass: #TestsTemperature
 	instanceVariableNames: 'grados unidad celsiusMinus273con15 celsius0 celsius1 celsiusOtro1 celsius2 fahrenheitMinus459With67 fahrenheit32 fahrenheit33With8 kelvin0 kelvin273con15 kelvin274con15 kelvinOtro273con15 fahrenheitOtro32 celsius75 celsiusMinus80 celsiusMinus5 celsius77 kelvin275con15 celsius3 fahrenheit35With6 celsius155 celsiusMinus20 celsiusMinus5Over4 fahrenheit17With8 intervaloVacio intervaloDeCelsius1To10 intervaloDeKelvin1To30 kelvin1 intervaloDefahrenheit32to40 fahrenheit1 celsius10 kelvin30 fahrenheit40 kelvin546Point3 kelvin547Point3 kelvin549Point3 kelvin548Point3 fahrenheit64 fahrenheit65Point8 fahrenheit69Point4 intervaloDeCelsius1To10By2 intervaloDeKelvin1To30By2 kelvin2 intervaloDefahrenheit32to40By2 fahrenheit2 intervaloDeCelsius1To10ByKelvin275Point15 intervaloDeKelvin1To30By2Fahrenheit456Point07 intervaloDefahrenheit32to40ByCelsius1Point8 intervaloDeKelvin1To30By2FahrenheitMinus456Point07 celsius1Point8 fahrenheitMinus456With67 fahrenheitMinus456With07 intervaloDefahrenheit32to40ByCelsiusMinus31Multiplied5Over9 celsiusMinus31Multiplied5Over9 fahrenheit459Point67 celsiusMinus272con15 fahrenheit0 celsiusMinus151Over9 fahrenheit3Point6'
@@ -1155,45 +1529,65 @@ setUp
 	self intervalosSetUp.! !
 
 
-!classDefinition: #TimeTests category: #'Measure-Solution'!
-TestCase subclass: #TimeTests
-	instanceVariableNames: 'zeroSecond oneHoundreadSeconds tenSeconds nintySeconds oneMinute fortySeconds seconds3500 fiftyNineMinutes twoHours oneHour'
+!classDefinition: #TestsTime category: #'Measure-Solution'!
+TestCase subclass: #TestsTime
+	instanceVariableNames: 'zeroSecond oneHoundreadSeconds tenSeconds nintySeconds oneMinute fortySeconds seconds3500 fiftyNineMinutes twoHours oneHour seconds110 seconds70 seconds3670 seconds3610 oneDay seconds86410 minute1With10Seconds'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Measure-Solution'!
 
-!TimeTests methodsFor: 'Tests -' stamp: 'JAK 6/5/2017 23:26:51'!
-test001_secondMinusSecond
+!TestsTime methodsFor: 'Tests +' stamp: 'JAK 6/6/2017 20:05:44'!
+test001TimePlusAnotherTime
+
+	self assert: zeroSecond + zeroSecond = zeroSecond.
+	self assert: oneHoundreadSeconds + tenSeconds = seconds110.
+	self assert: tenSeconds + oneMinute = seconds70.
+	self assert: tenSeconds + oneHour = seconds3610.
+	self assert: tenSeconds  + oneDay = seconds86410.
+	self assert: oneMinute + tenSeconds = minute1With10Seconds.! !
+
+
+!TestsTime methodsFor: 'Tests -' stamp: 'JAK 6/6/2017 20:13:50'!
+test001TimeMinusAnotherTime
 
 	self assert: zeroSecond - zeroSecond = zeroSecond.
-	self assert: oneHoundreadSeconds - tenSeconds = nintySeconds.! !
-
-!TimeTests methodsFor: 'Tests -' stamp: 'JAK 6/5/2017 23:29:45'!
-test002_secondMinusMinutes
-
+	self assert: oneHoundreadSeconds - tenSeconds = nintySeconds.
 	self assert: oneMinute - zeroSecond = oneMinute.
-	self assert: oneHoundreadSeconds - oneMinute = fortySeconds.! !
-
-!TimeTests methodsFor: 'Tests -' stamp: 'JAK 6/5/2017 23:37:59'!
-test003_secondMinusHours
-
+	self assert: oneHoundreadSeconds - oneMinute = fortySeconds.
 	self assert: oneHour - oneHoundreadSeconds = seconds3500.
 	self assert: oneHour - oneMinute = fiftyNineMinutes.
 	self assert: twoHours - oneHour = oneHour.! !
 
 
-!TimeTests methodsFor: 'setUp' stamp: 'JAK 6/5/2017 23:37:46'!
+!TestsTime methodsFor: 'Test * y /' stamp: 'JAK 6/6/2017 20:16:28'!
+test001ATimeMultiplyByNumber
+	self assert: oneDay * 1 = (1 * oneDay) .
+	self assert: oneMinute * 120 = twoHours .! !
+
+!TestsTime methodsFor: 'Test * y /' stamp: 'JAK 6/6/2017 20:17:34'!
+test002ATimeDivideByNumber
+	self assert: oneDay / 24 = oneHour .
+	self assert: twoHours /2 = oneHour .! !
+
+
+!TestsTime methodsFor: 'setUp' stamp: 'JAK 6/6/2017 20:12:30'!
 setUp
-	zeroSecond := TimeMeasure initializeSecondsWith: 0.
-	oneHoundreadSeconds:= TimeMeasure initializeSecondsWith: 100.
-	tenSeconds := TimeMeasure initializeSecondsWith: 10.
-	nintySeconds := TimeMeasure initializeSecondsWith: 90.
-	fortySeconds := TimeMeasure initializeSecondsWith: 40.
-	oneMinute := TimeMeasure initializeMinutesWith: 1.
-	seconds3500 := TimeMeasure initializeSecondsWith: 3500.
-	fiftyNineMinutes := TimeMeasure initializeMinutesWith: 59.
-	twoHours := TimeMeasure initializeHoursWith: 2.
-	oneHour := TimeMeasure initializeHoursWith: 1.! !
+	zeroSecond := Measure initializeWith: 0 asUnit: UnitTime initializeSeconds .
+	oneHoundreadSeconds:= Measure initializeWith: 100 asUnit: UnitTime initializeSeconds.
+	tenSeconds := Measure initializeWith: 10 asUnit: UnitTime initializeSeconds.
+	nintySeconds := Measure initializeWith: 90 asUnit: UnitTime initializeSeconds.
+	fortySeconds := Measure initializeWith: 40 asUnit: UnitTime initializeSeconds.
+	oneMinute := Measure initializeWith: 1 asUnit: UnitTime initializeMinutes .
+	seconds3500 := Measure initializeWith: 3500 asUnit: UnitTime initializeSeconds.
+	fiftyNineMinutes := Measure initializeWith: 59 asUnit: UnitTime initializeMinutes .
+	twoHours := Measure initializeWith: 2 asUnit: UnitTime initializeHours .
+	oneHour := Measure initializeWith: 1 asUnit: UnitTime initializeHours .
+	seconds110 := Measure initializeWith: 110 asUnit: UnitTime initializeSeconds .
+	seconds70 := Measure initializeWith: 70 asUnit: UnitTime initializeSeconds .
+	seconds3610 := Measure initializeWith: 3610 asUnit: UnitTime initializeSeconds .
+	oneDay := Measure initializeWith: 1 asUnit: UnitTime initializeDay .
+	seconds86410 := Measure initializeWith: 86410 asUnit: UnitTime initializeSeconds .
+	minute1With10Seconds := Measure initializeWith: 1 + (1/6) asUnit: UnitTime initializeMinutes .! !
 
 
 !classDefinition: #IntervalOfMeasure category: #'Measure-Solution'!
@@ -1485,14 +1879,6 @@ millimeter
 	^DistanceUnit initializeMilimetro ! !
 
 
-!classDefinition: #TimeUnit category: #'Measure-Solution'!
-Object subclass: #TimeUnit
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'Measure-Solution'!
-
-
 !classDefinition: #Unit category: #'Measure-Solution'!
 Object subclass: #Unit
 	instanceVariableNames: 'unitType'
@@ -1500,19 +1886,72 @@ Object subclass: #Unit
 	poolDictionaries: ''
 	category: 'Measure-Solution'!
 
-!Unit methodsFor: 'printing' stamp: 'JI 6/6/2017 13:54:33'!
+!Unit methodsFor: 'printing' stamp: 'JAK 6/6/2017 19:47:07'!
 printString
-	^ self subclassResponsibility ! !
+	^ unitType! !
 
 
 !Unit methodsFor: 'comparing' stamp: 'JI 6/6/2017 13:54:10'!
 = anotherUnit
 	^ self subclassResponsibility ! !
 
+!Unit methodsFor: 'comparing' stamp: 'JAK 6/6/2017 19:48:32'!
+hash
+	^ self subclassResponsibility ! !
+
 
 !Unit methodsFor: 'conversion' stamp: 'JI 6/6/2017 14:06:23'!
 convert: aQuantity to: aUnit
 	^ self subclassResponsibility ! !
+
+
+!classDefinition: #UnitCurrency category: #'Measure-Solution'!
+Unit subclass: #UnitCurrency
+	instanceVariableNames: 'isDollar'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Measure-Solution'!
+
+!UnitCurrency methodsFor: 'initialization' stamp: 'JAK 6/6/2017 21:02:45'!
+initializeDolar
+	isDollar := true.
+	unitType := 'dollar'! !
+
+!UnitCurrency methodsFor: 'initialization' stamp: 'JAK 6/6/2017 21:03:03'!
+initializePeso
+	isDollar := false.
+	unitType = 'peso'.! !
+
+
+!UnitCurrency methodsFor: 'conversion' stamp: 'JAK 6/6/2017 21:04:21'!
+convert: aQuantity to: aUnit
+	"self class = aUnit class ifFalse: [self error: self class canNotOperateBetweenCrossCurrencyinitializePeso ]."
+	self isDollar = aUnit isDollar ifFalse:[self error: self class canNotOperateBetweenCrossCurrencyinitializePeso ].
+	^aQuantity .! !
+
+
+!UnitCurrency methodsFor: 'inspecting' stamp: 'JAK 6/6/2017 21:04:10'!
+isDollar
+	^isDollar ! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'UnitCurrency class' category: #'Measure-Solution'!
+UnitCurrency class
+	instanceVariableNames: ''!
+
+!UnitCurrency class methodsFor: 'initialization' stamp: 'JAK 6/6/2017 20:36:55'!
+initializeDolar
+	^self new initializeDolar .! !
+
+!UnitCurrency class methodsFor: 'initialization' stamp: 'JAK 6/6/2017 20:30:35'!
+initializePeso
+	^self new initializePeso.! !
+
+
+!UnitCurrency class methodsFor: 'error' stamp: 'JAK 6/6/2017 20:51:32'!
+canNotOperateBetweenCrossCurrencyinitializePeso
+	^'No existe mercado cambiario, larga vida al cepo'! !
 
 
 !classDefinition: #UnitDistance category: #'Measure-Solution'!
@@ -1522,14 +1961,13 @@ Unit subclass: #UnitDistance
 	poolDictionaries: ''
 	category: 'Measure-Solution'!
 
-!UnitDistance methodsFor: 'printing' stamp: 'JI 6/4/2017 15:25:35'!
-printString
-	^ unitType! !
-
-
 !UnitDistance methodsFor: 'comparing' stamp: 'JI 6/6/2017 13:55:41'!
 = anotherUnit
 	^(self class isKindOf: anotherUnit class) and: [convertionFactor = anotherUnit convertionFactor]! !
+
+!UnitDistance methodsFor: 'comparing' stamp: 'JAK 6/6/2017 19:48:20'!
+hash
+	"falta completar"! !
 
 
 !UnitDistance methodsFor: 'conversion' stamp: 'JI 6/6/2017 14:18:05'!
@@ -1611,8 +2049,175 @@ initializeMilimetro
 	^ self new initializeMilimetro .! !
 
 
+!classDefinition: #UnitLiquid category: #'Measure-Solution'!
+Unit subclass: #UnitLiquid
+	instanceVariableNames: 'proporcionAGramos proporcionALitro'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Measure-Solution'!
+
+!UnitLiquid methodsFor: 'as yet unclassified' stamp: 'Ji 6/6/2017 20:45:54'!
+convert: aNumber to: anUnitLiquid
+	^ anUnitLiquid transformarLitrosAMi: (self transformarALitro: aNumber )! !
+
+!UnitLiquid methodsFor: 'as yet unclassified' stamp: 'Ji 6/6/2017 20:42:58'!
+initializeCentilitro
+	proporcionALitro _ 1/100.! !
+
+!UnitLiquid methodsFor: 'as yet unclassified' stamp: 'Ji 6/6/2017 20:43:07'!
+initializeDecalitro
+	proporcionALitro _ 10! !
+
+!UnitLiquid methodsFor: 'as yet unclassified' stamp: 'Ji 6/6/2017 20:43:16'!
+initializeDecilitro
+	proporcionALitro _ 1/10! !
+
+!UnitLiquid methodsFor: 'as yet unclassified' stamp: 'Ji 6/6/2017 20:43:45'!
+initializeHectolitro
+	 proporcionALitro _ 100! !
+
+!UnitLiquid methodsFor: 'as yet unclassified' stamp: 'Ji 6/6/2017 20:44:01'!
+initializeKilolitro
+	
+	proporcionALitro _ 1000.! !
+
+!UnitLiquid methodsFor: 'as yet unclassified' stamp: 'Ji 6/6/2017 20:43:37'!
+initializeLitro
+	proporcionALitro  _ 1! !
+
+!UnitLiquid methodsFor: 'as yet unclassified' stamp: 'Ji 6/6/2017 20:44:14'!
+initializeMililitro
+	proporcionALitro _ 1/1000! !
+
+!UnitLiquid methodsFor: 'as yet unclassified' stamp: 'Ji 6/6/2017 20:44:24'!
+transformarALitro: aNumber 
+	^ aNumber * proporcionALitro .! !
+
+!UnitLiquid methodsFor: 'as yet unclassified' stamp: 'Ji 6/6/2017 20:44:33'!
+transformarLitrosAMi: aNumber
+	^ aNumber / proporcionALitro ! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'UnitLiquid class' category: #'Measure-Solution'!
+UnitLiquid class
+	instanceVariableNames: ''!
+
+!UnitLiquid class methodsFor: 'as yet unclassified' stamp: 'Ji 6/6/2017 20:40:49'!
+initializeCentilitro
+	^ self new initializeCentilitro! !
+
+!UnitLiquid class methodsFor: 'as yet unclassified' stamp: 'Ji 6/6/2017 20:40:59'!
+initializeDecalitro
+	^ self new initializeDecalitro! !
+
+!UnitLiquid class methodsFor: 'as yet unclassified' stamp: 'Ji 6/6/2017 20:41:06'!
+initializeDecilitro
+	^ self new initializeDecilitro! !
+
+!UnitLiquid class methodsFor: 'as yet unclassified' stamp: 'Ji 6/6/2017 20:41:28'!
+initializeHectolitro
+	^ self new initializeHectolitro! !
+
+!UnitLiquid class methodsFor: 'as yet unclassified' stamp: 'Ji 6/6/2017 20:41:34'!
+initializeKilolitro
+	^ self new initializeKilolitro! !
+
+!UnitLiquid class methodsFor: 'as yet unclassified' stamp: 'Ji 6/6/2017 20:41:17'!
+initializeLitro	
+	^ self new initializeLitro! !
+
+!UnitLiquid class methodsFor: 'as yet unclassified' stamp: 'Ji 6/6/2017 20:41:43'!
+initializeMililitro
+	^ self new initializeMililitro! !
+
+
+!classDefinition: #UnitMass category: #'Measure-Solution'!
+Unit subclass: #UnitMass
+	instanceVariableNames: 'proporcionAGramos'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Measure-Solution'!
+
+!UnitMass methodsFor: 'as yet unclassified' stamp: 'Ji 6/6/2017 19:30:46'!
+convert: aNumber to: anUnitMass 
+	^ anUnitMass transformarGramosAMi: (self transformarAGramos: aNumber )! !
+
+!UnitMass methodsFor: 'as yet unclassified' stamp: 'Ji 6/6/2017 19:57:48'!
+initializeCentigramo
+	proporcionAGramos _ 1/100.! !
+
+!UnitMass methodsFor: 'as yet unclassified' stamp: 'Ji 6/6/2017 20:00:02'!
+initializeDecagramo
+	proporcionAGramos _ 10! !
+
+!UnitMass methodsFor: 'as yet unclassified' stamp: 'Ji 6/6/2017 19:58:22'!
+initializeDecigramo
+	proporcionAGramos _ 1/10! !
+
+!UnitMass methodsFor: 'as yet unclassified' stamp: 'Ji 6/6/2017 19:31:59'!
+initializeGramo
+	proporcionAGramos _ 1! !
+
+!UnitMass methodsFor: 'as yet unclassified' stamp: 'Ji 6/6/2017 19:59:23'!
+initializeHectogramo
+	 proporcionAGramos _ 100! !
+
+!UnitMass methodsFor: 'as yet unclassified' stamp: 'Ji 6/6/2017 19:32:15'!
+initializeKilogramo
+	
+	proporcionAGramos _ 1000.! !
+
+!UnitMass methodsFor: 'as yet unclassified' stamp: 'Ji 6/6/2017 19:52:44'!
+initializeMiligramo
+	proporcionAGramos _ 1/1000! !
+
+!UnitMass methodsFor: 'as yet unclassified' stamp: 'Ji 6/6/2017 19:31:28'!
+transformarAGramos: aNumber 
+	^ aNumber * proporcionAGramos.! !
+
+!UnitMass methodsFor: 'as yet unclassified' stamp: 'Ji 6/6/2017 19:34:06'!
+transformarGramosAMi: aNumber
+	^ aNumber / proporcionAGramos ! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'UnitMass class' category: #'Measure-Solution'!
+UnitMass class
+	instanceVariableNames: ''!
+
+!UnitMass class methodsFor: 'as yet unclassified' stamp: 'Ji 6/6/2017 19:57:32'!
+initializeCentigramo
+	^ self new initializeCentigramo ! !
+
+!UnitMass class methodsFor: 'as yet unclassified' stamp: 'Ji 6/6/2017 19:59:41'!
+initializeDecagramo
+	^ self new initializeDecagramo ! !
+
+!UnitMass class methodsFor: 'as yet unclassified' stamp: 'Ji 6/6/2017 19:58:01'!
+initializeDecigramo
+	^ self new initializeDecigramo ! !
+
+!UnitMass class methodsFor: 'as yet unclassified' stamp: 'Ji 6/6/2017 19:21:22'!
+initializeGramo
+	
+	^ self new initializeGramo ! !
+
+!UnitMass class methodsFor: 'as yet unclassified' stamp: 'Ji 6/6/2017 19:59:03'!
+initializeHectogramo
+	^ self new initializeHectogramo ! !
+
+!UnitMass class methodsFor: 'as yet unclassified' stamp: 'Ji 6/6/2017 19:26:48'!
+initializeKilogramo
+	^ self new initializeKilogramo ! !
+
+!UnitMass class methodsFor: 'as yet unclassified' stamp: 'Ji 6/6/2017 19:49:07'!
+initializeMiligramo
+	^ self new initializeMiligramo ! !
+
+
 !classDefinition: #UnitTemperature category: #'Measure-Solution'!
-Object subclass: #UnitTemperature
+Unit subclass: #UnitTemperature
 	instanceVariableNames: 'equivalenciaAKelvin equivalenciaACelsius isFahrenheit'
 	classVariableNames: ''
 	poolDictionaries: ''
@@ -1648,6 +2253,11 @@ hash
 	^equivalenciaAKelvin ! !
 
 
+!UnitTemperature methodsFor: 'conversion' stamp: 'JI 6/6/2017 15:33:14'!
+convert: aQuantity to: anUnitTemperature 
+	
+	^ anUnitTemperature transformarCelsiusAMi: (self convertirACelsiusLaCantidad: aQuantity)! !
+
 !UnitTemperature methodsFor: 'conversion' stamp: 'JI 6/6/2017 15:15:27'!
 convertirACelsiusLaCantidad: aNumber
 	
@@ -1656,12 +2266,6 @@ convertirACelsiusLaCantidad: aNumber
 !UnitTemperature methodsFor: 'conversion' stamp: 'JI 6/6/2017 15:15:27'!
 transformarCelsiusAMi: aNumber
 	isFahrenheit ifTrue: [^9/5*aNumber + 32] ifFalse: [^aNumber - equivalenciaACelsius ]! !
-
-
-!UnitTemperature methodsFor: 'as yet unclassified' stamp: 'JI 6/6/2017 15:33:14'!
-convert: aQuantity to: anUnitTemperature 
-	
-	^ anUnitTemperature transformarCelsiusAMi: (self convertirACelsiusLaCantidad: aQuantity)! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -1680,3 +2284,88 @@ initializeFahrenheit
 !UnitTemperature class methodsFor: 'initialization' stamp: 'JI 6/6/2017 15:15:27'!
 initializeKelvin
 	^ self new initializeKelvin.! !
+
+
+!classDefinition: #UnitTime category: #'Measure-Solution'!
+Unit subclass: #UnitTime
+	instanceVariableNames: 'equivalentToDays equivalentToHours equivalentToMinutes equivalentToSeconds'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Measure-Solution'!
+
+!UnitTime methodsFor: 'initialization' stamp: 'JAK 6/6/2017 19:32:37'!
+initializeDay
+	equivalentToDays := 1.
+	equivalentToHours := 24.
+	equivalentToMinutes := 1440.
+	equivalentToSeconds := 86400.
+	unitType := 'day'.! !
+
+!UnitTime methodsFor: 'initialization' stamp: 'JAK 6/6/2017 19:34:12'!
+initializeHours
+	equivalentToDays := 1/24.
+	equivalentToHours := 1.
+	equivalentToMinutes := 60.
+	equivalentToSeconds := 3600.
+	unitType := 'hour'.! !
+
+!UnitTime methodsFor: 'initialization' stamp: 'JAK 6/6/2017 19:34:37'!
+initializeMinutes
+	equivalentToDays := 1/1440.
+	equivalentToHours := 1/60.
+	equivalentToMinutes := 1.
+	equivalentToSeconds := 60.
+	unitType := 'minute'.! !
+
+!UnitTime methodsFor: 'initialization' stamp: 'JAK 6/6/2017 19:35:06'!
+initializeSeconds
+	equivalentToDays := 1/86400.
+	equivalentToHours := 1/3600.
+	equivalentToMinutes := 1/60.
+	equivalentToSeconds := 1.
+	unitType := 'second'.! !
+
+
+!UnitTime methodsFor: 'conversion' stamp: 'JAK 6/6/2017 19:43:50'!
+convert: aQuantity to: aUnit
+	
+	^equivalentToSeconds * aQuantity / (aUnit equivalentToSeconds)  .! !
+
+!UnitTime methodsFor: 'conversion' stamp: 'JAK 6/6/2017 19:43:10'!
+equivalentToSeconds
+	^equivalentToSeconds ! !
+
+
+!UnitTime methodsFor: 'comparing' stamp: 'JAK 6/6/2017 19:46:23'!
+= anotherUnit
+	"falta comletar"
+	^(self class = anotherUnit class)! !
+
+!UnitTime methodsFor: 'comparing' stamp: 'JAK 6/6/2017 19:46:44'!
+hash
+	"falta completar"! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'UnitTime class' category: #'Measure-Solution'!
+UnitTime class
+	instanceVariableNames: ''!
+
+!UnitTime class methodsFor: 'initialization' stamp: 'JAK 6/6/2017 19:30:25'!
+initializeDay
+
+	^self new initializeDay.! !
+
+!UnitTime class methodsFor: 'initialization' stamp: 'JAK 6/6/2017 19:17:33'!
+initializeHours
+		^self new initializeHours.! !
+
+!UnitTime class methodsFor: 'initialization' stamp: 'JAK 6/6/2017 19:17:12'!
+initializeMinutes
+
+	^self new initializeMinutes.! !
+
+!UnitTime class methodsFor: 'initialization' stamp: 'JAK 6/6/2017 19:17:19'!
+initializeSeconds
+
+	^self new initializeSeconds.! !
