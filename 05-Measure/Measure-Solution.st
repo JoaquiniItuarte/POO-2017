@@ -249,7 +249,7 @@ test003DivisionDeUnidades
 
 !classDefinition: #TestsCurrency category: #'Measure-Solution'!
 TestCase subclass: #TestsCurrency
-	instanceVariableNames: 'onePeso zeroPeso oneDolar twoDolars threeDolars twoPesos minusOneDolar oneAndHalfDolars'
+	instanceVariableNames: 'onePeso zeroPeso oneDolar twoDolars threeDolars twoPesos minusOneDolar oneAndHalfDolars tenPesos halfPeso intervalFrom1PesoToTenPesosByHalfpeso'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Measure-Solution'!
@@ -269,6 +269,25 @@ test001CurrencyMinusAnotherCurrency
 ! !
 
 
+!TestsCurrency methodsFor: 'Test comparision' stamp: 'JAK 6/8/2017 14:09:14'!
+test001ComparingEquals
+	self assert: onePeso = onePeso .
+	self assert: oneDolar = oneDolar .
+	self deny: onePeso = oneDolar .! !
+
+!TestsCurrency methodsFor: 'Test comparision' stamp: 'JAK 6/8/2017 14:10:17'!
+test002ComparingGreaterAndGreaterEqual
+	self assert: onePeso < twoPesos .
+	self assert: oneDolar < oneAndHalfDolars .
+	self assert: onePeso <= onePeso .! !
+
+!TestsCurrency methodsFor: 'Test comparision' stamp: 'JAK 6/8/2017 14:11:20'!
+test003ComparingLessAndLessEqual
+	self assert: twoPesos > onePeso .
+	self assert: oneAndHalfDolars >= oneDolar .
+	self assert: twoDolars > oneDolar .! !
+
+
 !TestsCurrency methodsFor: 'Test * y /' stamp: 'JAK 6/6/2017 20:42:12'!
 test001ACurrencyMultiplyByNumber
 	self assert: twoPesos * 1 = (1*twoPesos ).
@@ -282,23 +301,38 @@ test002ACurrencyDivideByNumber
 ! !
 
 
-!TestsCurrency methodsFor: 'setUp' stamp: 'JAK 6/6/2017 20:43:50'!
+!TestsCurrency methodsFor: 'setUp' stamp: 'JAK 6/8/2017 14:28:28'!
 setUp
-	onePeso := Measure initializeWith: 1 asUnit: UnitCurrency initializePeso.
-	zeroPeso := Measure initializeWith: 0 asUnit: UnitCurrency initializePeso.
-	oneDolar := Measure initializeWith: 1 asUnit: UnitCurrency initializeDolar.
-	twoDolars := Measure initializeWith: 2 asUnit: UnitCurrency initializeDolar.
-	threeDolars := Measure initializeWith: 3 asUnit: UnitCurrency initializeDolar.
-	twoPesos := Measure initializeWith: 2 asUnit: UnitCurrency initializePeso.
-	minusOneDolar := Measure initializeWith: -1 asUnit: UnitCurrency initializeDolar.
-	oneAndHalfDolars := Measure initializeWith: 1.5 asUnit: UnitCurrency initializeDolar.! !
+	onePeso := Measure initializeWith: 1 asUnit: UnitPeso initializePeso.
+	zeroPeso := Measure initializeWith: 0 asUnit: UnitPeso initializePeso.
+	oneDolar := Measure initializeWith: 1 asUnit: UnitDollar initializeDollar.
+	twoDolars := Measure initializeWith: 2 asUnit: UnitDollar initializeDollar.
+	threeDolars := Measure initializeWith: 3 asUnit: UnitDollar initializeDollar.
+	twoPesos := Measure initializeWith: 2 asUnit: UnitPeso initializePeso.
+	minusOneDolar := Measure initializeWith: -1 asUnit: UnitDollar initializeDollar.
+	oneAndHalfDolars := Measure initializeWith: 1.5 asUnit: UnitDollar initializeDollar.
+	tenPesos := Measure initializeWith: 10 asUnit: UnitPeso initializePeso .
+	halfPeso := Measure initializeWith: 1/2 asUnit: UnitPeso initializePeso .
+	intervalFrom1PesoToTenPesosByHalfpeso := onePeso to: tenPesos by: halfPeso.! !
 
 
-!TestsCurrency methodsFor: 'Operating Between Cross Currency' stamp: 'JAK 6/6/2017 21:01:01'!
+!TestsCurrency methodsFor: 'Operating Between Cross Currency' stamp: 'JAK 6/8/2017 12:24:01'!
 test001SumOrMinusBetweenCrossCurrencyRaiseError
 	self should: [onePeso + oneDolar ]
 	raise: Error
 	withExceptionDo: [:anError | self assert: anError messageText equals: UnitCurrency canNotOperateBetweenCrossCurrencyinitializePeso ]! !
+
+
+!TestsCurrency methodsFor: 'Test interval' stamp: 'JAK 6/8/2017 14:29:00'!
+test001_IntervalFromToByDoTime	
+	| i |
+	
+	i _ onePeso .
+	onePeso to: tenPesos by: halfPeso do: [ :aCurrency | 
+		self assert: aCurrency = i.
+		i _ i+ halfPeso .].
+	
+	self assert: intervalFrom1PesoToTenPesosByHalfpeso size = 19.! !
 
 
 !classDefinition: #TestsDistance category: #'Measure-Solution'!
@@ -1671,7 +1705,7 @@ setUp
 
 !classDefinition: #TestsTime category: #'Measure-Solution'!
 TestCase subclass: #TestsTime
-	instanceVariableNames: 'zeroSecond oneHoundreadSeconds tenSeconds nintySeconds oneMinute fortySeconds seconds3500 fiftyNineMinutes twoHours oneHour seconds110 seconds70 seconds3670 seconds3610 oneDay seconds86410 minute1With10Seconds'
+	instanceVariableNames: 'zeroSecond oneHoundreadSeconds tenSeconds nintySeconds oneMinute fortySeconds seconds3500 fiftyNineMinutes twoHours oneHour seconds110 seconds70 seconds3670 seconds3610 oneDay seconds86410 minute1With10Seconds twoDays seconds60 seconds86400 minutes60 seconds3600 hours24 oneSecond intervalFrom60SecondsToTwoHoursByOneMinute'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Measure-Solution'!
@@ -1710,7 +1744,7 @@ test002ATimeDivideByNumber
 	self assert: twoHours /2 = oneHour .! !
 
 
-!TestsTime methodsFor: 'setUp' stamp: 'JAK 6/6/2017 20:12:30'!
+!TestsTime methodsFor: 'setUp' stamp: 'JAK 6/8/2017 14:21:00'!
 setUp
 	zeroSecond := Measure initializeWith: 0 asUnit: UnitTime initializeSeconds .
 	oneHoundreadSeconds:= Measure initializeWith: 100 asUnit: UnitTime initializeSeconds.
@@ -1724,10 +1758,61 @@ setUp
 	oneHour := Measure initializeWith: 1 asUnit: UnitTime initializeHours .
 	seconds110 := Measure initializeWith: 110 asUnit: UnitTime initializeSeconds .
 	seconds70 := Measure initializeWith: 70 asUnit: UnitTime initializeSeconds .
+	seconds60 := Measure initializeWith: 60 asUnit: UnitTime initializeSeconds .
 	seconds3610 := Measure initializeWith: 3610 asUnit: UnitTime initializeSeconds .
 	oneDay := Measure initializeWith: 1 asUnit: UnitTime initializeDay .
+	twoDays := Measure initializeWith: 2 asUnit: UnitTime initializeDay .
 	seconds86410 := Measure initializeWith: 86410 asUnit: UnitTime initializeSeconds .
-	minute1With10Seconds := Measure initializeWith: 1 + (1/6) asUnit: UnitTime initializeMinutes .! !
+	minute1With10Seconds := Measure initializeWith: 1 + (1/6) asUnit: UnitTime initializeMinutes .
+	seconds86400 := Measure initializeWith: 86400 asUnit: UnitTime initializeSeconds.
+	minutes60 := Measure initializeWith: 60 asUnit: UnitTime initializeMinutes .
+	seconds3600 := Measure initializeWith: 3600 asUnit: UnitTime initializeSeconds.
+	hours24 := Measure initializeWith: 24 asUnit: UnitTime initializeHours .
+	intervalFrom60SecondsToTwoHoursByOneMinute := seconds60 to: twoHours by: oneMinute.
+	! !
+
+
+!TestsTime methodsFor: 'Test interval' stamp: 'JAK 6/8/2017 14:23:31'!
+test001_IntervalFromToByDoTime	
+	| i |
+	
+	i _ seconds60 .
+	seconds60 to: twoHours by: oneMinute do: [ :aTIme | 
+		self assert: aTIme = i.
+		i _ i+ seconds60 .].
+	
+	self assert: intervalFrom60SecondsToTwoHoursByOneMinute size = 120.! !
+
+
+!TestsTime methodsFor: 'Test Comparision' stamp: 'JAK 6/8/2017 14:05:44'!
+test001ComparingEquals
+	
+	self assert: oneDay = seconds86400 .
+	self assert: oneHour = minutes60 .
+	self assert: seconds3600 = oneHour .
+	self assert: oneDay = hours24.
+	self assert: seconds60 = oneMinute.
+	self assert: oneHour = oneHour.! !
+
+!TestsTime methodsFor: 'Test Comparision' stamp: 'JAK 6/8/2017 14:07:49'!
+test002ComparingGreaterAndGreaterEqual
+	
+	self assert: oneDay > zeroSecond .
+	self assert: oneHour > oneMinute .
+	self assert: seconds86410 > twoHours .
+	self assert: twoDays > oneDay .
+	self assert: seconds60 >= oneMinute.
+	self assert: oneHour >= oneHour.! !
+
+!TestsTime methodsFor: 'Test Comparision' stamp: 'JAK 6/8/2017 14:08:04'!
+test003ComparingLessAndLessEqual
+	
+	self assert: seconds3500  < oneDay.
+	self assert: oneMinute < oneHour .
+	self assert: twoHours < seconds86410 .
+	self assert: oneDay < twoDays.
+	self assert: oneMinute <= seconds60.
+	self assert: oneHour <= oneHour.! !
 
 
 !classDefinition: #CompoundMeasure category: #'Measure-Solution'!
@@ -2406,27 +2491,19 @@ Unit subclass: #UnitCurrency
 	poolDictionaries: ''
 	category: 'Measure-Solution'!
 
-!UnitCurrency methodsFor: 'initialization' stamp: 'JAK 6/6/2017 21:02:45'!
-initializeDolar
-	isDollar := true.
-	unitType := 'dollar'! !
+!UnitCurrency methodsFor: 'initialization' stamp: 'JAK 6/8/2017 12:19:30'!
+initializeDollar
+	self subclassResponsibility ! !
 
-!UnitCurrency methodsFor: 'initialization' stamp: 'JAK 6/6/2017 21:03:03'!
+!UnitCurrency methodsFor: 'initialization' stamp: 'JAK 6/8/2017 12:19:40'!
 initializePeso
-	isDollar := false.
-	unitType = 'peso'.! !
+	self subclassResponsibility ! !
 
 
-!UnitCurrency methodsFor: 'conversion' stamp: 'JAK 6/6/2017 21:04:21'!
+!UnitCurrency methodsFor: 'conversion' stamp: 'JAK 6/8/2017 12:16:55'!
 convert: aQuantity to: aUnit
-	"self class = aUnit class ifFalse: [self error: self class canNotOperateBetweenCrossCurrencyinitializePeso ]."
-	self isDollar = aUnit isDollar ifFalse:[self error: self class canNotOperateBetweenCrossCurrencyinitializePeso ].
+	(self isMemberOf: aUnit class) ifFalse: [self error: self class canNotOperateBetweenCrossCurrencyinitializePeso ].
 	^aQuantity .! !
-
-
-!UnitCurrency methodsFor: 'inspecting' stamp: 'JAK 6/6/2017 21:04:10'!
-isDollar
-	^isDollar ! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -2434,16 +2511,70 @@ isDollar
 UnitCurrency class
 	instanceVariableNames: ''!
 
-!UnitCurrency class methodsFor: 'initialization' stamp: 'JAK 6/6/2017 20:36:55'!
-initializeDolar
-	^self new initializeDolar .! !
+!UnitCurrency class methodsFor: 'initialization' stamp: 'JAK 6/8/2017 12:22:02'!
+initializeDollar
+	self subclassResponsibility ! !
 
-!UnitCurrency class methodsFor: 'initialization' stamp: 'JAK 6/6/2017 20:30:35'!
+!UnitCurrency class methodsFor: 'initialization' stamp: 'JAK 6/8/2017 12:22:14'!
+initializePeso
+	self subclassResponsibility ! !
+
+
+!UnitCurrency class methodsFor: 'error' stamp: 'JAK 6/6/2017 20:51:32'!
+canNotOperateBetweenCrossCurrencyinitializePeso
+	^'No existe mercado cambiario, larga vida al cepo'! !
+
+
+!classDefinition: #UnitDollar category: #'Measure-Solution'!
+UnitCurrency subclass: #UnitDollar
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Measure-Solution'!
+
+!UnitDollar methodsFor: 'initialization' stamp: 'JAK 6/8/2017 12:19:54'!
+initializeDollar
+	unitType = 'dollar'.! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'UnitDollar class' category: #'Measure-Solution'!
+UnitDollar class
+	instanceVariableNames: ''!
+
+!UnitDollar class methodsFor: 'initialization' stamp: 'JAK 6/8/2017 12:22:29'!
+initializeDollar
+	^self new initializeDollar .! !
+
+
+!UnitDollar class methodsFor: 'error' stamp: 'JAK 6/8/2017 12:15:32'!
+canNotOperateBetweenCrossCurrencyinitializePeso
+	^'No existe mercado cambiario, larga vida al cepo'! !
+
+
+!classDefinition: #UnitPeso category: #'Measure-Solution'!
+UnitCurrency subclass: #UnitPeso
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Measure-Solution'!
+
+!UnitPeso methodsFor: 'initialization' stamp: 'JAK 6/8/2017 12:14:54'!
+initializePeso
+	unitType = 'peso'.! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'UnitPeso class' category: #'Measure-Solution'!
+UnitPeso class
+	instanceVariableNames: ''!
+
+!UnitPeso class methodsFor: 'initialization' stamp: 'JAK 6/8/2017 12:13:13'!
 initializePeso
 	^self new initializePeso.! !
 
 
-!UnitCurrency class methodsFor: 'error' stamp: 'JAK 6/6/2017 20:51:32'!
+!UnitPeso class methodsFor: 'error' stamp: 'JAK 6/8/2017 12:13:13'!
 canNotOperateBetweenCrossCurrencyinitializePeso
 	^'No existe mercado cambiario, larga vida al cepo'! !
 
