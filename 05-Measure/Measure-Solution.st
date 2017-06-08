@@ -15,9 +15,9 @@ Magnitude subclass: #Measure
 	(self isKindOf: aMeasure class) ifTrue: [ ^(unitType = aMeasure unit) and: [  quantity = (aMeasure amountAsUnit: unitType )] ]
 		ifFalse: [^ aMeasure terminos size = 1 and: [aMeasure terminos first = self] ].! !
 
-!Measure methodsFor: 'comparing' stamp: 'JI 6/6/2017 12:52:09'!
+!Measure methodsFor: 'comparing' stamp: 'JAK 6/8/2017 11:25:36'!
 hash
-	^ self amount  ! !
+	^ (self amount hash + unitType hash) hash! !
 
 
 !Measure methodsFor: 'operating' stamp: 'JI 6/7/2017 19:23:42'!
@@ -2343,14 +2343,14 @@ printString
 	^ unitType! !
 
 
-!Unit methodsFor: 'comparing' stamp: 'JI 6/7/2017 21:46:59'!
+!Unit methodsFor: 'comparing' stamp: 'JAK 6/8/2017 11:20:19'!
 = anotherUnit
 
-	^ unitType = anotherUnit unit! !
+	^ self isMemberOf: anotherUnit class.! !
 
-!Unit methodsFor: 'comparing' stamp: 'JAK 6/6/2017 19:48:32'!
+!Unit methodsFor: 'comparing' stamp: 'JAK 6/8/2017 11:15:41'!
 hash
-	^ self subclassResponsibility ! !
+	^unitType hash! !
 
 
 !Unit methodsFor: 'conversion' stamp: 'JI 6/6/2017 14:06:23'!
@@ -2454,10 +2454,6 @@ Unit subclass: #UnitDistance
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Measure-Solution'!
-
-!UnitDistance methodsFor: 'comparing' stamp: 'JAK 6/6/2017 19:48:20'!
-hash
-	"falta completar"! !
 
 
 !UnitDistance methodsFor: 'conversion' stamp: 'JI 6/6/2017 14:18:05'!
@@ -2757,11 +2753,6 @@ initializeKelvin
 	unitType _ 'kelvin'.! !
 
 
-!UnitTemperature methodsFor: 'comparing' stamp: 'JI 6/6/2017 15:15:27'!
-hash
-	"falta completar"
-	^equivalenciaAKelvin ! !
-
 
 !UnitTemperature methodsFor: 'conversion' stamp: 'JI 6/6/2017 15:33:14'!
 convert: aQuantity to: anUnitTemperature 
@@ -2845,10 +2836,6 @@ convert: aQuantity to: aUnit
 equivalentToSeconds
 	^equivalentToSeconds ! !
 
-
-!UnitTime methodsFor: 'comparing' stamp: 'JAK 6/6/2017 19:46:44'!
-hash
-	"falta completar"! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
