@@ -9,20 +9,21 @@ Magnitude subclass: #Measure
 < aMeasure
 	^ quantity <  ( aMeasure amountAsUnit: unitType )! !
 
-!Measure methodsFor: 'comparing' stamp: 'JI 6/6/2017 14:01:22'!
+!Measure methodsFor: 'comparing' stamp: 'JI 6/8/2017 01:25:50'!
 = aMeasure
 
-	^ quantity = (aMeasure amountAsUnit: unitType )! !
+	(self isKindOf: aMeasure class) ifTrue: [ ^(unitType = aMeasure unit) and: [  quantity = (aMeasure amountAsUnit: unitType )] ]
+		ifFalse: [^ aMeasure terminos size = 1 and: [aMeasure terminos first = self] ].! !
 
 !Measure methodsFor: 'comparing' stamp: 'JI 6/6/2017 12:52:09'!
 hash
 	^ self amount  ! !
 
 
-!Measure methodsFor: 'operating' stamp: 'JI 6/6/2017 12:46:41'!
-* aSmallInteger 
+!Measure methodsFor: 'operating' stamp: 'JI 6/7/2017 19:23:42'!
+* anObject
 
-	^ self class initializeWith: ( quantity * aSmallInteger ) asUnit: unitType ! !
+	anObject isNaN ifTrue: [^ self multipliedBy: anObject ] ifFalse: [ ^ self class initializeWith: ( quantity * anObject ) asUnit: unitType ]! !
 
 !Measure methodsFor: 'operating' stamp: 'JI 6/6/2017 12:57:30'!
 + aMeasure
@@ -33,9 +34,10 @@ hash
 - aMeasure
 	^ self + ( aMeasure convertTo: unitType) negated! !
 
-!Measure methodsFor: 'operating' stamp: 'JI 6/6/2017 12:44:42'!
-/ aSmallInteger 
-	^ self * (1/aSmallInteger )! !
+!Measure methodsFor: 'operating' stamp: 'JI 6/8/2017 01:16:36'!
+/ anObject 
+	
+	anObject isNaN ifTrue: [^ self dividirPorCompoundMeasure: anObject ] ifFalse: [^ self * (1/anObject )].! !
 
 !Measure methodsFor: 'operating' stamp: 'JI 6/6/2017 12:31:36'!
 adaptToNumber: aNumber andSend: selector 
@@ -83,9 +85,13 @@ unit
 amountAsUnit: unitType
 	^  (self convertTo: unitType) amount ! !
 
-!Measure methodsFor: 'conversion' stamp: 'JI 6/6/2017 15:32:28'!
+!Measure methodsFor: 'conversion' stamp: 'JI 6/7/2017 19:18:34'!
 convertTo: aUnit
 	^ Measure initializeWith: ( unitType convert: quantity to: aUnit)  asUnit: aUnit ! !
+
+!Measure methodsFor: 'conversion' stamp: 'JI 6/7/2017 23:54:26'!
+tieneMismoTipo: aMeasure
+	^ unitType = aMeasure unit ! !
 
 
 !Measure methodsFor: 'printing' stamp: 'JI 6/6/2017 12:31:36'!
@@ -94,6 +100,61 @@ printString
 	extraS := String new.
 	quantity > 1 ifTrue: [extraS := 's'].
 	^ quantity printString, ' ' , unitType printString, extraS ! !
+
+
+!Measure methodsFor: 'as yet unclassified' stamp: 'JI 6/8/2017 00:57:25'!
+contieneAlTermino: aMeasure 
+	^ self = aMeasure ! !
+
+!Measure methodsFor: 'as yet unclassified' stamp: 'JI 6/7/2017 18:56:58'!
+createCompoundMeasureWith: aSmallInteger andCompoundUnit: aCompoundUnit 
+	
+	^ CompoundMeasure initializeWith: aSmallInteger withCompoundUnit: aCompoundUnit .! !
+
+!Measure methodsFor: 'as yet unclassified' stamp: 'JI 6/8/2017 02:13:44'!
+dividirPorCompoundMeasure: aCompoundMeasure 
+	
+	| misTerminos nuevosTerminos |
+	misTerminos _ self terminos .
+	nuevosTerminos _ OrderedCollection new.
+	
+	misTerminos do: [:unTermino | nuevosTerminos add: (unTermino over: aCompoundMeasure) ].
+	
+	^ CompoundMeasure initializeWithTerms: nuevosTerminos .! !
+
+!Measure methodsFor: 'as yet unclassified' stamp: 'JI 6/8/2017 00:05:49'!
+isCompoundMeasure
+	^ false! !
+
+!Measure methodsFor: 'as yet unclassified' stamp: 'JI 6/7/2017 18:51:43'!
+isNaN
+	^true! !
+
+!Measure methodsFor: 'as yet unclassified' stamp: 'JI 6/8/2017 00:37:11'!
+multipliedBy: aMeasure 
+	
+	aMeasure isCompoundMeasure ifTrue: [^aMeasure multiplies: self ] ifFalse: [ ^ self createCompoundMeasureWith: quantity * aMeasure amount andCompoundUnit: (unitType * aMeasure unit) ]! !
+
+!Measure methodsFor: 'as yet unclassified' stamp: 'JI 6/7/2017 18:48:02'!
+multiplies: aMeasure 
+	self shouldBeImplemented! !
+
+!Measure methodsFor: 'as yet unclassified' stamp: 'JI 6/8/2017 02:15:43'!
+over: aMeasure 
+	
+	self = aMeasure ifTrue: [ ^ 1 ] ifFalse: [ ^ CompoundMeasure initializeWith: self over: aMeasure ]! !
+
+!Measure methodsFor: 'as yet unclassified' stamp: 'JI 6/8/2017 01:04:13'!
+terminos
+	
+	| terminos |
+	terminos _ OrderedCollection new.
+	terminos  add: self.
+	^terminos.! !
+
+!Measure methodsFor: 'as yet unclassified' stamp: 'JI 6/7/2017 18:56:05'!
+units
+	^ unitType ! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -105,6 +166,68 @@ Measure class
 initializeWith: aSmallInteger asUnit: anUnitType
 	
 	^self new initializeWith: aSmallInteger asUnit: anUnitType .! !
+
+
+!classDefinition: #TestsCompoundMeasure category: #'Measure-Solution'!
+TestCase subclass: #TestsCompoundMeasure
+	instanceVariableNames: 'metrosCuadrados1 otroMetrosCuadrados1 metrosCuadrados metrosCuadrados2 otroMetrosCuadrados2 metros1 kilometros2 kilometrosMetros2 metrosCuadradosKilometros2 kilometrosMetros metrosCuadradosKilometros litros1 pesos1 kelvin1 horas1 kilogramos1 metro'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Measure-Solution'!
+
+!TestsCompoundMeasure methodsFor: 'as yet unclassified' stamp: 'JI 6/7/2017 22:29:56'!
+setUp
+
+	metro _ UnitDistance initializeMetro .
+	litros1 _ Measure initializeWith: 1 asUnit: UnitLiquid initializeLitro .
+	kilogramos1 _ Measure initializeWith: 1 asUnit: UnitMass initializeKilogramo .
+	metros1 _ Measure initializeWith: 1 asUnit: UnitDistance initializeMetro .
+	kelvin1  _ Measure initializeWith: 1 asUnit: UnitTemperature initializeKelvin .
+	horas1 _ Measure initializeWith: 1 asUnit: UnitTime initializeHours .
+	pesos1 _ Measure initializeWith: 1 asUnit: UnitCurrency initializePeso .
+	
+	kilometrosMetros _ UnitDistance initializeKilometro * UnitDistance initializeMetro.
+	metrosCuadrados _ UnitDistance initializeMetro * UnitDistance initializeMetro.
+	metrosCuadradosKilometros _ metrosCuadrados * UnitDistance initializeKilometro .
+	
+	metrosCuadrados1 _ CompoundMeasure initializeWith: 1 withCompoundUnit: metrosCuadrados .
+	otroMetrosCuadrados1 _ CompoundMeasure initializeWith: 1 withCompoundUnit: metrosCuadrados .
+	metrosCuadrados2 _ CompoundMeasure initializeWith: 2 withCompoundUnit: metrosCuadrados .
+	otroMetrosCuadrados2 _ CompoundMeasure initializeWith: 2 withCompoundUnit: metrosCuadrados .
+	
+	kilometros2 _ Measure initializeWith: 2 asUnit: UnitDistance initializeKilometro .
+
+	kilometrosMetros2 _ CompoundMeasure initializeWith: 2 withCompoundUnit: kilometrosMetros .
+	metrosCuadradosKilometros2  _ CompoundMeasure initializeWith: 2 withCompoundUnit: metrosCuadradosKilometros.! !
+
+!TestsCompoundMeasure methodsFor: 'as yet unclassified' stamp: 'JI 6/7/2017 19:36:31'!
+test001MetroCuadradoEqualMetroCuadrado
+
+	self assert: metros1 * metros1 = metrosCuadrados1 .
+	self assert: metrosCuadrados1 = otroMetrosCuadrados1.
+	self assert: metrosCuadrados2 = otroMetrosCuadrados2.
+	self deny: metrosCuadrados1 = metrosCuadrados2 .! !
+
+!TestsCompoundMeasure methodsFor: 'as yet unclassified' stamp: 'JI 6/7/2017 21:35:39'!
+test002MultiplicacionDeUnidades
+
+	self assert: metros1 * metros1 = metrosCuadrados1 .
+	self assert: metros1 * kilometros2 = kilometrosMetros2.
+	self assert: metros1 * metros1 * kilometros2 = metrosCuadradosKilometros2.
+	self assert: metros1 * kilometros2  = (kilometros2 *metros1).
+	self deny: metros1 * kilometros2  = (kilometros2 *metros1 * metros1).
+	self assert: litros1 * (metros1 * (pesos1 * (kelvin1 * (horas1 * kilogramos1)))) = (litros1 * metros1 * pesos1 * kelvin1 * horas1 * kilogramos1).! !
+
+!TestsCompoundMeasure methodsFor: 'as yet unclassified' stamp: 'JI 6/7/2017 22:07:56'!
+test003DivisionDeUnidades
+
+
+	self assert: metrosCuadrados / metro = metro.
+	self assert: kilometrosMetros2 / kilometros2 = metros1 .
+	self assert: metros1 / metros1 = 1 .
+	self assert: metrosCuadradosKilometros2 / metrosCuadrados = kilometros2  .
+	self deny: metros1 / kilometros2  = (kilometros2 /metros1 / metros1).
+	self assert: litros1 * (metros1 * (pesos1 * (kelvin1 * (horas1 * kilogramos1)))) / litros1 / metros1 / pesos1 / kelvin1 / horas1 / kilogramos1 = 1.! !
 
 
 !classDefinition: #TestsCurrency category: #'Measure-Solution'!
@@ -793,7 +916,7 @@ setUp
 
 !classDefinition: #TestsLiquid category: #'Measure-Solution'!
 TestCase subclass: #TestsLiquid
-	instanceVariableNames: 'gramo1 otroGramo1 gramo1000 otroGramo1000 kilogramo1Over1000 kilogramo1 hectogramo1Over100 decagramo1Over10 miligramo1000 centigramo100 decigramo10 gramo2 gramo2000 gramo0 kilogramo3Over1000 gramo30 decigramo3 centilitro100 decalitro1Over10 decilitro3 decilitro10 litro0 litro1 otroLitro1 litro2 litro30 litro1000 otroLitro1000 litro2000 hectolitro1Over100 kilolitro1 kilolitro1Over1000 kilolitro3Over1000 mililitro1000'
+	instanceVariableNames: 'centilitro100 decalitro1Over10 decilitro3 decilitro10 litro0 litro1 otroLitro1 litro2 litro30 litro1000 otroLitro1000 litro2000 hectolitro1Over100 kilolitro1 kilolitro1Over1000 kilolitro3Over1000 mililitro1000'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Measure-Solution'!
@@ -1590,6 +1713,315 @@ setUp
 	minute1With10Seconds := Measure initializeWith: 1 + (1/6) asUnit: UnitTime initializeMinutes .! !
 
 
+!classDefinition: #CompoundMeasure category: #'Measure-Solution'!
+Object subclass: #CompoundMeasure
+	instanceVariableNames: 'terminos'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Measure-Solution'!
+
+!CompoundMeasure methodsFor: 'as yet unclassified' stamp: 'JI 6/8/2017 01:06:42'!
+* aMeasure 
+	
+	| terminosCopia terminosNuevos|
+	
+	terminosNuevos _ OrderedCollection new.
+	terminosCopia _ terminos copy.
+	
+	terminosCopia do: [ :unTermino |  terminosNuevos addAll: (unTermino * aMeasure) terminos ].
+	
+	^ self class initializeWithTerms: terminosNuevos .! !
+
+!CompoundMeasure methodsFor: 'as yet unclassified' stamp: 'JI 6/7/2017 23:38:37'!
++ aMeasure 
+	
+	| terminosCopia terminosNuevos terminosDeMeasure |
+	
+	terminosNuevos _ OrderedCollection new.
+	terminosCopia _ terminos copy.
+	terminosDeMeasure _ aMeasure terminos.
+	
+	terminos do: [ :unTermino | 
+		terminosDeMeasure do: [ :otroTermino | 
+			(unTermino tieneMismoTipo: aMeasure)
+			ifTrue: [ terminosNuevos add: unTermino + otroTermino.
+				terminosDeMeasure remove: otroTermino.
+				terminosCopia remove: unTermino.] 
+			].
+		].
+	terminosNuevos addAll: terminosCopia .
+	terminosNuevos addAll: terminosDeMeasure.
+	
+	^ self class initializeWithTerms: terminosNuevos .! !
+
+!CompoundMeasure methodsFor: 'as yet unclassified' stamp: 'JI 6/7/2017 23:39:20'!
+- aMeasure 
+	
+	^ self + aMeasure negated.! !
+
+!CompoundMeasure methodsFor: 'as yet unclassified' stamp: 'JI 6/7/2017 23:27:19'!
+/ aMeasure 
+	
+	| terminosCopia terminosNuevos|
+	
+	terminosNuevos _ OrderedCollection new.
+	terminosCopia _ terminos copy.
+	
+	terminosCopia do: [ :unTermino |  terminosNuevos add: unTermino / aMeasure ].
+	
+	^ self class initializeWithTerms: terminosCopia .! !
+
+!CompoundMeasure methodsFor: 'as yet unclassified' stamp: 'JI 6/8/2017 01:23:22'!
+= anotherMeasure
+	
+	| misTerminos susTerminos |
+	misTerminos _ terminos copy.
+	susTerminos _ anotherMeasure terminos.
+	
+	terminos do: [ :miTermino |  susTerminos remove: miTermino  ifAbsent: [^false].
+		misTerminos remove: miTermino ].
+	
+	^ misTerminos size = 0! !
+
+!CompoundMeasure methodsFor: 'as yet unclassified' stamp: 'JI 6/7/2017 23:21:39'!
+amount
+	terminos size = 1 ifTrue: [^terminos first amount] ifFalse: [^'No se puede pedir amount']! !
+
+!CompoundMeasure methodsFor: 'as yet unclassified' stamp: 'JI 6/8/2017 00:00:47'!
+contieneAlTermino: unTermino
+
+	terminos do: [ :unTerminoDeSelf | unTerminoDeSelf = unTermino ifTrue: [^true]].
+	
+	^false.! !
+
+!CompoundMeasure methodsFor: 'as yet unclassified' stamp: 'JI 6/8/2017 02:23:03'!
+initializeWith: aMeasure over: aMeasure2 
+	
+	terminos _ OrderedCollection new.
+	terminos add: (CompoundMeasureFraction numerador: aMeasure denominador: aMeasure2). ! !
+
+!CompoundMeasure methodsFor: 'as yet unclassified' stamp: 'JI 6/7/2017 22:48:10'!
+initializeWith: aSmallInteger withCompoundUnit: aCompoundUnit 
+	
+	terminos _ OrderedCollection new.
+	terminos add: (Measure initializeWith: aSmallInteger asUnit: aCompoundUnit ).! !
+
+!CompoundMeasure methodsFor: 'as yet unclassified' stamp: 'JI 6/7/2017 23:26:36'!
+initializeWithTerms: coleccionDeTerminos
+
+	terminos _ coleccionDeTerminos .! !
+
+!CompoundMeasure methodsFor: 'as yet unclassified' stamp: 'JI 6/7/2017 22:36:54'!
+isCompoundMeasure
+	^true! !
+
+!CompoundMeasure methodsFor: 'as yet unclassified' stamp: 'JI 6/7/2017 21:33:39'!
+isNaN
+	^true! !
+
+!CompoundMeasure methodsFor: 'as yet unclassified' stamp: 'JI 6/8/2017 01:09:57'!
+isZero
+	^false! !
+
+!CompoundMeasure methodsFor: 'as yet unclassified' stamp: 'JI 6/7/2017 23:25:22'!
+multiplies: aMeasure 
+	
+	| nuevosTerminos |
+	
+	nuevosTerminos _ OrderedCollection new.
+	
+	
+	terminos do: [ :unTermino | aMeasure terminos do: [ :otroTermino | nuevosTerminos add: unTermino * otroTermino ] ].
+	
+	^ self class initializeWithTerms: nuevosTerminos .! !
+
+!CompoundMeasure methodsFor: 'as yet unclassified' stamp: 'JI 6/7/2017 23:39:47'!
+terminos
+	^terminos copy! !
+
+
+!CompoundMeasure methodsFor: 'accessing' stamp: 'JI 6/8/2017 01:12:26'!
+invertir
+	self shouldBeImplemented! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'CompoundMeasure class' category: #'Measure-Solution'!
+CompoundMeasure class
+	instanceVariableNames: 'quantity units'!
+
+!CompoundMeasure class methodsFor: 'as yet unclassified' stamp: 'JI 6/8/2017 02:16:07'!
+initializeWith: aMeasure over: aMeasure2 
+	
+	^self new initializeWith: aMeasure over: aMeasure2 ! !
+
+!CompoundMeasure class methodsFor: 'as yet unclassified' stamp: 'JI 6/7/2017 18:57:12'!
+initializeWith: aSmallInteger withCompoundUnit: aCompoundUnit 
+	^ self new initializeWith: aSmallInteger withCompoundUnit: aCompoundUnit ! !
+
+!CompoundMeasure class methodsFor: 'as yet unclassified' stamp: 'JI 6/7/2017 23:27:00'!
+initializeWithTerms: coleccionDeTerminos
+	^ self new initializeWithTerms: coleccionDeTerminos ! !
+
+
+!classDefinition: #CompoundMeasureFraction category: #'Measure-Solution'!
+Object subclass: #CompoundMeasureFraction
+	instanceVariableNames: 'numerador denominador'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Measure-Solution'!
+
+!CompoundMeasureFraction methodsFor: 'as yet unclassified' stamp: 'JI 6/8/2017 02:26:38'!
+* unCompoundMeasureFraction
+	
+	^ self class numerador: numerador * unCompoundMeasureFraction numerador denominador: denominador * unCompoundMeasureFraction denominador! !
+
+!CompoundMeasureFraction methodsFor: 'as yet unclassified' stamp: 'JI 6/8/2017 02:31:31'!
++ unCompoundMeasureFraction
+	
+	| miEquivalencia suEquivalencia |
+	miEquivalencia _ numerador * unCompoundMeasureFraction denominador .
+	suEquivalencia _  denominador * unCompoundMeasureFraction numerador.
+	
+	^ self class numerador: miEquivalencia + suEquivalencia denominador: denominador * suEquivalencia denominador ! !
+
+!CompoundMeasureFraction methodsFor: 'as yet unclassified' stamp: 'JI 6/8/2017 02:31:39'!
+- unCompoundMeasureFraction
+	
+	| miEquivalencia suEquivalencia |
+	miEquivalencia _ numerador * unCompoundMeasureFraction denominador .
+	suEquivalencia _  denominador * unCompoundMeasureFraction numerador.
+	
+	^ self class numerador: miEquivalencia - suEquivalencia denominador: denominador * suEquivalencia denominador ! !
+
+!CompoundMeasureFraction methodsFor: 'as yet unclassified' stamp: 'JI 6/8/2017 02:27:22'!
+/ unCompoundMeasureFraction
+	
+	^ self class numerador: numerador * unCompoundMeasureFraction denominador denominador: denominador * unCompoundMeasureFraction numerador! !
+
+!CompoundMeasureFraction methodsFor: 'as yet unclassified' stamp: 'JI 6/8/2017 02:26:57'!
+denominador
+^denominador! !
+
+!CompoundMeasureFraction methodsFor: 'as yet unclassified' stamp: 'JI 6/8/2017 02:26:50'!
+numerador
+	^numerador ! !
+
+!CompoundMeasureFraction methodsFor: 'as yet unclassified' stamp: 'JI 6/8/2017 02:24:52'!
+numerador: aCompoundMeasure denominador: aCompoundMeasure2
+	numerador _ aCompoundMeasure .
+	denominador _ aCompoundMeasure2 .! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'CompoundMeasureFraction class' category: #'Measure-Solution'!
+CompoundMeasureFraction class
+	instanceVariableNames: ''!
+
+!CompoundMeasureFraction class methodsFor: 'as yet unclassified' stamp: 'JI 6/8/2017 02:24:31'!
+numerador: aCompoundMeasure denominador: aCompoundMeasure2
+	^self new numerador: aCompoundMeasure denominador: aCompoundMeasure2! !
+
+
+!classDefinition: #CompoundUnit category: #'Measure-Solution'!
+Object subclass: #CompoundUnit
+	instanceVariableNames: 'unitType unitsNumeradores unitsDenominadores'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Measure-Solution'!
+
+!CompoundUnit methodsFor: 'as yet unclassified' stamp: 'JI 6/8/2017 01:31:42'!
+* aCompoundUnit
+	
+	| newUnitsNumerador newUnitsDenominador  aCompoundUnitDenominador aCompoundUnitsNumerador |
+	newUnitsNumerador _ unitsNumeradores copy.
+	newUnitsDenominador _ unitsDenominadores copy.
+	
+	aCompoundUnitsNumerador _ aCompoundUnit numerador.
+	aCompoundUnitDenominador _ aCompoundUnit  denominador.
+	aCompoundUnitsNumerador do: [ :aUnit | newUnitsDenominador remove: aUnit  ifAbsent: [newUnitsNumerador add: aUnit ] ].
+	aCompoundUnitDenominador do: [ :aUnit | newUnitsNumerador remove: aUnit  ifAbsent: [newUnitsDenominador add: aUnit ] ].
+	
+	^ self class initializeWithUnits: newUnitsNumerador over: newUnitsDenominador .! !
+
+!CompoundUnit methodsFor: 'as yet unclassified' stamp: 'JI 6/8/2017 01:33:06'!
+/ aCompoundUnit
+	
+	| compoundUnitInversa |
+	
+	compoundUnitInversa _ aCompoundUnit asCompoundUnit invertir.
+
+	^ self * compoundUnitInversa
+	
+	! !
+
+!CompoundUnit methodsFor: 'as yet unclassified' stamp: 'JI 6/8/2017 00:20:31'!
+= anotherCompoundUnit
+
+	| aCompoundUnit |
+	aCompoundUnit _ self / anotherCompoundUnit .
+	
+	^aCompoundUnit numerador isEmpty and: [aCompoundUnit denominador isEmpty ].
+	
+	! !
+
+!CompoundUnit methodsFor: 'as yet unclassified' stamp: 'JI 6/8/2017 02:42:46'!
+asCompoundUnit
+	^self! !
+
+!CompoundUnit methodsFor: 'as yet unclassified' stamp: 'JI 6/7/2017 23:58:42'!
+convert: aSmallInteger to: aUnit 
+	(self isKindOf: aUnit class) ifTrue: [^aSmallInteger ] ifFalse: [^ self fail].! !
+
+!CompoundUnit methodsFor: 'as yet unclassified' stamp: 'JI 6/8/2017 00:16:40'!
+denominador
+	^unitsDenominadores copy.! !
+
+!CompoundUnit methodsFor: 'as yet unclassified' stamp: 'JI 6/8/2017 00:23:37'!
+initializeWithUnit: anUnitDistance and: anUnitDistance2 
+	
+	| units |
+	unitType _ 'CompoundUnit'.
+	unitsDenominadores _ OrderedCollection new.
+	
+	units _ OrderedCollection new.
+	units add: anUnitDistance .
+	units add: anUnitDistance2 .
+	unitsNumeradores _ units.! !
+
+!CompoundUnit methodsFor: 'as yet unclassified' stamp: 'JI 6/8/2017 00:11:51'!
+initializeWithUnits: someUnitsNumerador over: someUnitsDenominador .
+
+	unitType _'compoundUnit'.
+	unitsNumeradores  _ someUnitsNumerador .
+	unitsDenominadores _ someUnitsDenominador .
+	! !
+
+!CompoundUnit methodsFor: 'as yet unclassified' stamp: 'JI 6/8/2017 00:18:27'!
+invertir
+	
+	^self class initializeWithUnits: unitsDenominadores copy over: unitsNumeradores copy! !
+
+!CompoundUnit methodsFor: 'as yet unclassified' stamp: 'JI 6/8/2017 00:16:31'!
+numerador
+	^unitsNumeradores copy! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'CompoundUnit class' category: #'Measure-Solution'!
+CompoundUnit class
+	instanceVariableNames: ''!
+
+!CompoundUnit class methodsFor: 'as yet unclassified' stamp: 'JI 6/7/2017 17:44:59'!
+initializeWithUnit: anUnitDistance and: anUnitDistance2 
+	
+	^ self new initializeWithUnit: anUnitDistance and: anUnitDistance2 .! !
+
+!CompoundUnit class methodsFor: 'as yet unclassified' stamp: 'JI 6/8/2017 00:23:59'!
+initializeWithUnits: anOrderedCollection over: anOrderedCollection2 
+	^self new initializeWithUnits: anOrderedCollection over: anOrderedCollection2 ! !
+
+
 !classDefinition: #IntervalOfMeasure category: #'Measure-Solution'!
 Object subclass: #IntervalOfMeasure
 	instanceVariableNames: 'intervalo unitType byDistance'
@@ -1891,9 +2323,10 @@ printString
 	^ unitType! !
 
 
-!Unit methodsFor: 'comparing' stamp: 'JI 6/6/2017 13:54:10'!
+!Unit methodsFor: 'comparing' stamp: 'JI 6/7/2017 21:46:59'!
 = anotherUnit
-	^ self subclassResponsibility ! !
+
+	^ unitType = anotherUnit unit! !
 
 !Unit methodsFor: 'comparing' stamp: 'JAK 6/6/2017 19:48:32'!
 hash
@@ -1903,6 +2336,47 @@ hash
 !Unit methodsFor: 'conversion' stamp: 'JI 6/6/2017 14:06:23'!
 convert: aQuantity to: aUnit
 	^ self subclassResponsibility ! !
+
+
+!Unit methodsFor: 'as yet unclassified' stamp: 'JI 6/7/2017 17:44:22'!
+* anUnitDistance 
+	
+	^ CompoundUnit initializeWithUnit: self and: anUnitDistance.! !
+
+!Unit methodsFor: 'as yet unclassified' stamp: 'JI 6/8/2017 01:36:01'!
+asCompoundUnit
+	
+	| numerador |
+	numerador _ OrderedCollection new.
+	numerador add: self.
+	
+	^CompoundUnit initializeWithUnits: numerador over: OrderedCollection new.! !
+
+!Unit methodsFor: 'as yet unclassified' stamp: 'JI 6/8/2017 00:22:07'!
+denominador
+	^OrderedCollection new.! !
+
+!Unit methodsFor: 'as yet unclassified' stamp: 'JI 6/8/2017 00:04:21'!
+isCompoundMeasure
+	^false! !
+
+!Unit methodsFor: 'as yet unclassified' stamp: 'JI 6/8/2017 00:34:13'!
+numerador
+	| unaColeccion |
+	unaColeccion _ OrderedCollection new.
+	unaColeccion add: self .
+	^ unaColeccion ! !
+
+!Unit methodsFor: 'as yet unclassified' stamp: 'JI 6/7/2017 21:45:40'!
+unit
+	^unitType ! !
+
+!Unit methodsFor: 'as yet unclassified' stamp: 'JI 6/7/2017 22:33:43'!
+units
+	|aCollection|
+	aCollection _ OrderedCollection new.
+	aCollection add: self copy.
+	^ aCollection ! !
 
 
 !classDefinition: #UnitCurrency category: #'Measure-Solution'!
@@ -1960,10 +2434,6 @@ Unit subclass: #UnitDistance
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Measure-Solution'!
-
-!UnitDistance methodsFor: 'comparing' stamp: 'JI 6/6/2017 13:55:41'!
-= anotherUnit
-	^(self class isKindOf: anotherUnit class) and: [convertionFactor = anotherUnit convertionFactor]! !
 
 !UnitDistance methodsFor: 'comparing' stamp: 'JAK 6/6/2017 19:48:20'!
 hash
@@ -2060,34 +2530,41 @@ Unit subclass: #UnitLiquid
 convert: aNumber to: anUnitLiquid
 	^ anUnitLiquid transformarLitrosAMi: (self transformarALitro: aNumber )! !
 
-!UnitLiquid methodsFor: 'as yet unclassified' stamp: 'Ji 6/6/2017 20:42:58'!
+!UnitLiquid methodsFor: 'as yet unclassified' stamp: 'JI 6/7/2017 21:47:15'!
 initializeCentilitro
-	proporcionALitro _ 1/100.! !
+	proporcionALitro _ 1/100.
+	unitType _ 'centilitro'.! !
 
-!UnitLiquid methodsFor: 'as yet unclassified' stamp: 'Ji 6/6/2017 20:43:07'!
+!UnitLiquid methodsFor: 'as yet unclassified' stamp: 'JI 6/7/2017 21:47:30'!
 initializeDecalitro
-	proporcionALitro _ 10! !
+	proporcionALitro _ 10.
+	unitType _ 'decalitro'.! !
 
-!UnitLiquid methodsFor: 'as yet unclassified' stamp: 'Ji 6/6/2017 20:43:16'!
+!UnitLiquid methodsFor: 'as yet unclassified' stamp: 'JI 6/7/2017 21:47:37'!
 initializeDecilitro
-	proporcionALitro _ 1/10! !
+	proporcionALitro _ 1/10.
+	unitType _ 'decilitro'.! !
 
-!UnitLiquid methodsFor: 'as yet unclassified' stamp: 'Ji 6/6/2017 20:43:45'!
+!UnitLiquid methodsFor: 'as yet unclassified' stamp: 'JI 6/7/2017 21:47:44'!
 initializeHectolitro
-	 proporcionALitro _ 100! !
+	 proporcionALitro _ 100.
+	unitType _ 'hectolitro'.! !
 
-!UnitLiquid methodsFor: 'as yet unclassified' stamp: 'Ji 6/6/2017 20:44:01'!
+!UnitLiquid methodsFor: 'as yet unclassified' stamp: 'JI 6/7/2017 21:47:50'!
 initializeKilolitro
 	
-	proporcionALitro _ 1000.! !
+	proporcionALitro _ 1000.
+	unitType _ 'kilolitro'.! !
 
-!UnitLiquid methodsFor: 'as yet unclassified' stamp: 'Ji 6/6/2017 20:43:37'!
+!UnitLiquid methodsFor: 'as yet unclassified' stamp: 'JI 6/7/2017 21:47:56'!
 initializeLitro
-	proporcionALitro  _ 1! !
+	proporcionALitro  _ 1.
+	unitType _ 'litro'.! !
 
-!UnitLiquid methodsFor: 'as yet unclassified' stamp: 'Ji 6/6/2017 20:44:14'!
+!UnitLiquid methodsFor: 'as yet unclassified' stamp: 'JI 6/7/2017 21:48:01'!
 initializeMililitro
-	proporcionALitro _ 1/1000! !
+	proporcionALitro _ 1/1000.
+	unitType _ 'mililitro'.! !
 
 !UnitLiquid methodsFor: 'as yet unclassified' stamp: 'Ji 6/6/2017 20:44:24'!
 transformarALitro: aNumber 
@@ -2143,34 +2620,45 @@ Unit subclass: #UnitMass
 convert: aNumber to: anUnitMass 
 	^ anUnitMass transformarGramosAMi: (self transformarAGramos: aNumber )! !
 
-!UnitMass methodsFor: 'as yet unclassified' stamp: 'Ji 6/6/2017 19:57:48'!
+!UnitMass methodsFor: 'as yet unclassified' stamp: 'JI 6/7/2017 21:48:58'!
 initializeCentigramo
-	proporcionAGramos _ 1/100.! !
+	proporcionAGramos _ 1/100.
+	unitType _ 'centigramo'.! !
 
-!UnitMass methodsFor: 'as yet unclassified' stamp: 'Ji 6/6/2017 20:00:02'!
+!UnitMass methodsFor: 'as yet unclassified' stamp: 'JI 6/7/2017 21:48:22'!
 initializeDecagramo
-	proporcionAGramos _ 10! !
+	proporcionAGramos _ 10.
+	unitType _ 'decagramo'.! !
 
-!UnitMass methodsFor: 'as yet unclassified' stamp: 'Ji 6/6/2017 19:58:22'!
+!UnitMass methodsFor: 'as yet unclassified' stamp: 'JI 6/7/2017 21:48:44'!
 initializeDecigramo
-	proporcionAGramos _ 1/10! !
+	proporcionAGramos _ 1/10.
+	unitType _ 'decigramo'.! !
 
-!UnitMass methodsFor: 'as yet unclassified' stamp: 'Ji 6/6/2017 19:31:59'!
+!UnitMass methodsFor: 'as yet unclassified' stamp: 'JI 6/7/2017 21:48:48'!
 initializeGramo
-	proporcionAGramos _ 1! !
+	proporcionAGramos _ 1.
+	unitType _ 'gramo'.! !
 
-!UnitMass methodsFor: 'as yet unclassified' stamp: 'Ji 6/6/2017 19:59:23'!
+!UnitMass methodsFor: 'as yet unclassified' stamp: 'JI 6/7/2017 21:48:54'!
 initializeHectogramo
-	 proporcionAGramos _ 100! !
+	 proporcionAGramos _ 100.
+	unitType _ 'hectogramo'.! !
 
-!UnitMass methodsFor: 'as yet unclassified' stamp: 'Ji 6/6/2017 19:32:15'!
+!UnitMass methodsFor: 'as yet unclassified' stamp: 'JI 6/7/2017 21:49:06'!
 initializeKilogramo
 	
-	proporcionAGramos _ 1000.! !
+	proporcionAGramos _ 1000.
+	unitType _ 'kilogramo'.! !
 
-!UnitMass methodsFor: 'as yet unclassified' stamp: 'Ji 6/6/2017 19:52:44'!
+!UnitMass methodsFor: 'as yet unclassified' stamp: 'JI 6/7/2017 21:49:11'!
 initializeMiligramo
-	proporcionAGramos _ 1/1000! !
+	proporcionAGramos _ 1/1000.
+	unitType _ 'miligramo'.! !
+
+!UnitMass methodsFor: 'as yet unclassified' stamp: 'JI 6/7/2017 21:43:20'!
+proporcion
+	^proporcionAGramos ! !
 
 !UnitMass methodsFor: 'as yet unclassified' stamp: 'Ji 6/6/2017 19:31:28'!
 transformarAGramos: aNumber 
@@ -2179,6 +2667,10 @@ transformarAGramos: aNumber
 !UnitMass methodsFor: 'as yet unclassified' stamp: 'Ji 6/6/2017 19:34:06'!
 transformarGramosAMi: aNumber
 	^ aNumber / proporcionAGramos ! !
+
+!UnitMass methodsFor: 'as yet unclassified' stamp: 'JI 6/7/2017 21:43:11'!
+unit
+	^unitType ! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -2223,29 +2715,27 @@ Unit subclass: #UnitTemperature
 	poolDictionaries: ''
 	category: 'Measure-Solution'!
 
-!UnitTemperature methodsFor: 'initialization' stamp: 'JI 6/6/2017 15:15:27'!
+!UnitTemperature methodsFor: 'initialization' stamp: 'JI 6/7/2017 21:49:39'!
 initializeCelsius
 	equivalenciaAKelvin _ 273 + (15/100).
 	equivalenciaACelsius _ 0.
-	isFahrenheit _ false.! !
+	isFahrenheit _ false.
+	unitType _ 'celsius'.! !
 
-!UnitTemperature methodsFor: 'initialization' stamp: 'JI 6/6/2017 15:15:27'!
+!UnitTemperature methodsFor: 'initialization' stamp: 'JI 6/7/2017 21:49:46'!
 initializeFahrenheit
 	equivalenciaAKelvin _ 0.
 	equivalenciaACelsius _ 0.
-	isFahrenheit _ true.! !
+	isFahrenheit _ true.
+	unitType _ 'fahrenheit'.! !
 
-!UnitTemperature methodsFor: 'initialization' stamp: 'JI 6/6/2017 15:15:27'!
+!UnitTemperature methodsFor: 'initialization' stamp: 'JI 6/7/2017 21:49:52'!
 initializeKelvin
 	equivalenciaAKelvin _ 0.
 	equivalenciaACelsius _ -273 - (15/100).
-	isFahrenheit _ false.! !
+	isFahrenheit _ false.
+	unitType _ 'kelvin'.! !
 
-
-!UnitTemperature methodsFor: 'comparing' stamp: 'JI 6/6/2017 15:15:27'!
-= anotherUnit
-	"falta comletar"
-	^(self class = anotherUnit class)! !
 
 !UnitTemperature methodsFor: 'comparing' stamp: 'JI 6/6/2017 15:15:27'!
 hash
@@ -2335,11 +2825,6 @@ convert: aQuantity to: aUnit
 equivalentToSeconds
 	^equivalentToSeconds ! !
 
-
-!UnitTime methodsFor: 'comparing' stamp: 'JAK 6/6/2017 19:46:23'!
-= anotherUnit
-	"falta comletar"
-	^(self class = anotherUnit class)! !
 
 !UnitTime methodsFor: 'comparing' stamp: 'JAK 6/6/2017 19:46:44'!
 hash
