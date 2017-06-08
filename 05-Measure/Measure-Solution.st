@@ -122,6 +122,23 @@ dividirPorCompoundMeasure: aCompoundMeasure
 	
 	^ CompoundMeasure initializeWithTerms: nuevosTerminos .! !
 
+!Measure methodsFor: 'as yet unclassified' stamp: 'JI 6/8/2017 03:44:21'!
+eliminarIguales: aMeasure 
+	
+	| misUnitsDenominador misUnitsNumerador susUnitsDenominador susUnitsNumerador |
+	misUnitsNumerador _ unitType numerador .
+	misUnitsDenominador _ unitType denominador .
+	susUnitsNumerador _ aMeasure units numerador.
+	susUnitsDenominador _ aMeasure units denominador.
+	
+	misUnitsNumerador do: [ :aUnit | susUnitsDenominador remove: aUnit ifAbsent: [] ].
+	misUnitsDenominador do: [ :aUnit | susUnitsNumerador remove: aUnit ifAbsent: [] ].
+	aMeasure units numerador do: [ :aUnit | misUnitsDenominador remove: aUnit ifAbsent: [] ].
+	aMeasure units denominador do: [ :aUnit | misUnitsNumerador remove: aUnit ifAbsent: [] ].
+	
+	
+	^self class initializeWith: quantity asUnit:  (CompoundUnit initializeWithUnits: (misUnitsNumerador addAll: susUnitsNumerador ) over: (misUnitsDenominador addAll: susUnitsDenominador ) ).! !
+
 !Measure methodsFor: 'as yet unclassified' stamp: 'JI 6/8/2017 00:05:49'!
 isCompoundMeasure
 	^ false! !
@@ -1907,10 +1924,13 @@ denominador
 numerador
 	^numerador ! !
 
-!CompoundMeasureFraction methodsFor: 'as yet unclassified' stamp: 'JI 6/8/2017 02:24:52'!
+!CompoundMeasureFraction methodsFor: 'as yet unclassified' stamp: 'JI 6/8/2017 03:26:05'!
 numerador: aCompoundMeasure denominador: aCompoundMeasure2
 	numerador _ aCompoundMeasure .
-	denominador _ aCompoundMeasure2 .! !
+	denominador _ aCompoundMeasure2 .
+	
+	numerador _ numerador eliminarIguales: denominador.
+	denominador _ denominador eliminarIguales: numerador .! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
