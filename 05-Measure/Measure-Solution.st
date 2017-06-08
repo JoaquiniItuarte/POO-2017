@@ -5,8 +5,9 @@ Magnitude subclass: #Measure
 	poolDictionaries: ''
 	category: 'Measure-Solution'!
 
-!Measure methodsFor: 'comparing' stamp: 'JI 6/6/2017 15:30:03'!
+!Measure methodsFor: 'comparing' stamp: 'JAK 6/8/2017 15:34:07'!
 < aMeasure
+	(unitType isMemberOf: aMeasure unit class) ifFalse: [self error: Unit canNotCompareBetweenDifferentsUnits ].
 	^ quantity <  ( aMeasure amountAsUnit: unitType )! !
 
 !Measure methodsFor: 'comparing' stamp: 'JI 6/8/2017 01:25:50'!
@@ -183,6 +184,53 @@ Measure class
 initializeWith: aSmallInteger asUnit: anUnitType
 	
 	^self new initializeWith: aSmallInteger asUnit: anUnitType .! !
+
+
+!classDefinition: #TestCrossUnits category: #'Measure-Solution'!
+TestCase subclass: #TestCrossUnits
+	instanceVariableNames: 'onePeso metros1 miligramo1000 hectogramo1Over100 kelvin1 fortySeconds'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Measure-Solution'!
+
+!TestCrossUnits methodsFor: 'Test comparision' stamp: 'JAK 6/8/2017 15:38:39'!
+test001ComparingEqualsReturnFalse
+	self deny: onePeso = metros1 .
+	self deny: metros1 = miligramo1000 .
+	self deny: miligramo1000 = kelvin1 .
+	self deny: kelvin1 = fortySeconds .
+	self deny: fortySeconds = onePeso .! !
+
+!TestCrossUnits methodsFor: 'Test comparision' stamp: 'JAK 6/8/2017 15:38:49'!
+test002ComparingGreaterAndGreaterEqualRaiseError
+	self should: [onePeso > metros1 ]
+	raise: Error
+	withExceptionDo: [:anError | self assert: anError messageText equals: Unit canNotCompareBetweenDifferentsUnits ].
+	
+	self should: [metros1 >= miligramo1000 ]
+	raise: Error
+	withExceptionDo: [:anError | self assert: anError messageText equals: Unit canNotCompareBetweenDifferentsUnits ]
+! !
+
+!TestCrossUnits methodsFor: 'Test comparision' stamp: 'JAK 6/8/2017 15:38:54'!
+test003ComparingLessAndLessEqualRaiseError
+	self should: [miligramo1000 < kelvin1 ]
+	raise: Error
+	withExceptionDo: [:anError | self assert: anError messageText equals: Unit canNotCompareBetweenDifferentsUnits ].
+	
+	self should: [kelvin1 <= fortySeconds ]
+	raise: Error
+	withExceptionDo: [:anError | self assert: anError messageText equals: Unit canNotCompareBetweenDifferentsUnits ]
+! !
+
+
+!TestCrossUnits methodsFor: 'setUp' stamp: 'JAK 6/8/2017 15:36:14'!
+setUp
+	onePeso := Measure initializeWith: 1 asUnit: UnitPeso initializePeso.
+	metros1 _ Measure initializeWith: 1 asUnit:  UnitDistance initializeMetro .
+	miligramo1000 _ Measure initializeWith: 1000 asUnit: UnitMass initializeMiligramo.
+	kelvin1 _ Measure initializeWith: 1 asUnit: UnitTemperature initializeKelvin .
+	fortySeconds := Measure initializeWith: 40 asUnit: UnitTime initializeSeconds.! !
 
 
 !classDefinition: #TestsCompoundMeasure category: #'Measure-Solution'!
@@ -2482,6 +2530,16 @@ units
 	aCollection _ OrderedCollection new.
 	aCollection add: self copy.
 	^ aCollection ! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'Unit class' category: #'Measure-Solution'!
+Unit class
+	instanceVariableNames: ''!
+
+!Unit class methodsFor: 'as yet unclassified' stamp: 'JAK 6/8/2017 15:28:33'!
+canNotCompareBetweenDifferentsUnits
+	^'No se puede comparar dos unidades de distinta categoria'! !
 
 
 !classDefinition: #UnitCurrency category: #'Measure-Solution'!
