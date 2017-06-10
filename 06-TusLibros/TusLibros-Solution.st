@@ -42,6 +42,15 @@ test004canListTheElementsAddedToTheCart
 	self assert: addedBook = anIsbnBook.
 	self assert: addedBook2 = anIsbnBook2.! !
 
+!TestTusLibros methodsFor: 'Testing Shopping Cart' stamp: 'JAK 6/10/2017 19:55:56'!
+test005canAddTheSameBookTwiceToTheShoppingCartAndKnowTheQuantiy
+	|shoppingCart anIsbnBook |
+	anIsbnBook := 123123.
+	shoppingCart := ShoppingCart initialize.
+	shoppingCart add: anIsbnBook withQuantity: 2.
+	self assert: ((shoppingCart quantity: anIsbnBook) = 2).
+! !
+
 
 !TestTusLibros methodsFor: 'Testing Catalog' stamp: 'JAK 6/10/2017 19:22:39'!
 test001anIsbnBelongsToCatalog
@@ -110,10 +119,23 @@ contents
 isEmpty
 	^collectionOfElements isEmpty .! !
 
+!ShoppingCart methodsFor: 'inspecting' stamp: 'JAK 6/10/2017 19:55:08'!
+quantity: anElement 
+	^collectionOfElements count: [:element | element = anElement ]! !
 
-!ShoppingCart methodsFor: 'operating' stamp: 'JAK 6/10/2017 19:01:15'!
+
+!ShoppingCart methodsFor: 'operating' stamp: 'JAK 6/10/2017 19:55:49'!
 add: anElement
-	collectionOfElements add: anElement .! !
+	self add: anElement withQuantity: 1.! !
+
+!ShoppingCart methodsFor: 'operating' stamp: 'JAK 6/10/2017 19:51:07'!
+add: anElement withQuantity: quantity
+	|remains|
+	remains := quantity .
+	[remains ~= 0] whileTrue: [
+		collectionOfElements add: anElement .
+		remains := remains - 1.
+		]! !
 
 !ShoppingCart methodsFor: 'operating' stamp: 'JAK 6/10/2017 19:07:15'!
 remove: anElement 
