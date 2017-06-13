@@ -51,6 +51,18 @@ test005canAddTheSameBookTwiceToTheShoppingCartAndKnowTheQuantiy
 	self assert: ((shoppingCart quantity: anIsbnBook) = 2).
 ! !
 
+!TestTusLibros methodsFor: 'Testing Shopping Cart' stamp: 'jak 6/13/2017 16:22:14'!
+test006addLessThanOneBookRaiseError
+	|shoppingCart anIsbnBook |
+	anIsbnBook := 123123.
+	shoppingCart := ShoppingCart initialize.
+	
+	self 
+		should: [ shoppingCart add: anIsbnBook withQuantity: 0. ]
+		raise: Error
+		withExceptionDo: [ :anError | self assert: anError messageText equals: ShoppingCart canNotAddLessThanOneBook ]
+! !
+
 
 !TestTusLibros methodsFor: 'Testing Catalog' stamp: 'JAK 6/10/2017 19:22:39'!
 test001anIsbnBelongsToCatalog
@@ -65,16 +77,6 @@ test002anIsbnDoesNotBelongsToCatalog
 	catalog := Catalog initializeWithListOfBooks: {0987654321} .
 	anIsbnBook := 1234567890.
 	self deny: (catalog has: anIsbnBook) .! !
-
-"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
-
-!classDefinition: 'TestTusLibros class' category: #'TusLibros-Solution'!
-TestTusLibros class
-	instanceVariableNames: ''!
-
-!TestTusLibros class methodsFor: 'Instance Creation' stamp: 'JAK 6/10/2017 18:55:19'!
-initialize
-! !
 
 
 !classDefinition: #Catalog category: #'TusLibros-Solution'!
@@ -128,9 +130,10 @@ quantity: anElement
 add: anElement
 	self add: anElement withQuantity: 1.! !
 
-!ShoppingCart methodsFor: 'operating' stamp: 'JAK 6/10/2017 19:51:07'!
+!ShoppingCart methodsFor: 'operating' stamp: 'jak 6/13/2017 16:26:04'!
 add: anElement withQuantity: quantity
 	|remains|
+	quantity < 1 ifTrue: [self error: (self class canNotAddLessThanOneBook )].
 	remains := quantity .
 	[remains ~= 0] whileTrue: [
 		collectionOfElements add: anElement .
@@ -156,5 +159,9 @@ ShoppingCart class
 initialize
 	^self new initialize! !
 
-TestTusLibros initialize!
+
+!ShoppingCart class methodsFor: 'errors' stamp: 'jak 6/13/2017 16:23:03'!
+canNotAddLessThanOneBook
+	^'No se puede agregar menos de un libro'! !
+
 ShoppingCart initialize!
