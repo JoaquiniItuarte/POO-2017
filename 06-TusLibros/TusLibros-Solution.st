@@ -28,19 +28,18 @@ test003addAnElementIntoThenRemoveTheElementTheShoopingCartIsEmpty
 	shoppingCart remove: anIsbnBook .
 	self assert: shoppingCart isEmpty.! !
 
-!TestTusLibros methodsFor: 'Testing Shopping Cart' stamp: 'JAK 6/10/2017 19:12:25'!
+!TestTusLibros methodsFor: 'Testing Shopping Cart' stamp: 'Ji 6/13/2017 19:09:35'!
 test004canListTheElementsAddedToTheCart
-	|shoppingCart anIsbnBook anIsbnBook2 contentsOfShoppingCart addedBook addedBook2 |
+	|shoppingCart anIsbnBook anIsbnBook2 contentsOfShoppingCart |
 	anIsbnBook := 123123.
 	anIsbnBook2 := 321321.
 	shoppingCart := ShoppingCart initialize.
 	shoppingCart add: anIsbnBook.
 	shoppingCart add: anIsbnBook2 .
 	contentsOfShoppingCart := shoppingCart contents.
-	addedBook := contentsOfShoppingCart at:1.
-	addedBook2 := contentsOfShoppingCart at:2.
-	self assert: addedBook = anIsbnBook.
-	self assert: addedBook2 = anIsbnBook2.! !
+	
+	self assert: (contentsOfShoppingCart includes: anIsbnBook ).
+	self assert: (contentsOfShoppingCart includes: anIsbnBook2 ).! !
 
 !TestTusLibros methodsFor: 'Testing Shopping Cart' stamp: 'JAK 6/10/2017 19:55:56'!
 test005canAddTheSameBookTwiceToTheShoppingCartAndKnowTheQuantiy
@@ -78,22 +77,54 @@ test002anIsbnDoesNotBelongsToCatalog
 	anIsbnBook := 1234567890.
 	self deny: (catalog has: anIsbnBook) .! !
 
+!TestTusLibros methodsFor: 'Testing Catalog' stamp: 'Ji 6/13/2017 19:43:08'!
+test003aNewCatalogIsEmpty
+
+	| catalog |
+	catalog _ Catalog createEmptyCatalog.
+	self assert: catalog size = 0.! !
+
+!TestTusLibros methodsFor: 'Testing Catalog' stamp: 'Ji 6/13/2017 19:46:58'!
+test004addingElementsMakesTheCatalogNotEmpty
+
+	| catalog |
+	catalog _ Catalog createEmptyCatalog.
+	catalog add: 123123.
+	
+	self deny: catalog size = 0.! !
+
 
 !classDefinition: #Catalog category: #'TusLibros-Solution'!
 Object subclass: #Catalog
-	instanceVariableNames: 'elementsBelongsToCatalog'
+	instanceVariableNames: 'elements'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'TusLibros-Solution'!
 
-!Catalog methodsFor: 'initialization' stamp: 'JAK 6/10/2017 19:24:34'!
-initializeWithListOfBooks: aListOfElements 
-	elementsBelongsToCatalog := aListOfElements .! !
+!Catalog methodsFor: 'initialization' stamp: 'Ji 6/13/2017 19:48:39'!
+initializeWithListOfBooks: aSetOfElements 
+	elements := aSetOfElements asSet .! !
 
 
-!Catalog methodsFor: 'inspecting' stamp: 'JAK 6/10/2017 19:28:32'!
+!Catalog methodsFor: 'inspecting' stamp: 'Ji 6/13/2017 19:48:16'!
 has: anElement
-	^elementsBelongsToCatalog includes: anElement .! !
+	^elements includes: anElement .! !
+
+
+!Catalog methodsFor: 'as yet unclassified' stamp: 'Ji 6/13/2017 19:47:26'!
+add: aSmallInteger 
+	elements add: aSmallInteger ! !
+
+!Catalog methodsFor: 'as yet unclassified' stamp: 'Ji 6/13/2017 19:44:23'!
+createEmptyCatalog
+	
+	
+	elements _ Set new.
+! !
+
+!Catalog methodsFor: 'as yet unclassified' stamp: 'Ji 6/13/2017 19:45:34'!
+size
+	^ elements size! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -105,6 +136,11 @@ Catalog class
 initializeWithListOfBooks: aListOfElements
 	^self new initializeWithListOfBooks: aListOfElements ! !
 
+
+!Catalog class methodsFor: 'as yet unclassified' stamp: 'Ji 6/13/2017 19:43:34'!
+createEmptyCatalog
+	^ self new createEmptyCatalog ! !
+
 
 !classDefinition: #ShoppingCart category: #'TusLibros-Solution'!
 Object subclass: #ShoppingCart
@@ -113,41 +149,41 @@ Object subclass: #ShoppingCart
 	poolDictionaries: ''
 	category: 'TusLibros-Solution'!
 
-!ShoppingCart methodsFor: 'inspecting' stamp: 'JAK 6/10/2017 19:12:52'!
+!ShoppingCart methodsFor: 'inspecting' stamp: 'Ji 6/13/2017 19:37:00'!
 contents
-	^collectionOfElements ! !
+	^collectionOfElements keys! !
 
 !ShoppingCart methodsFor: 'inspecting' stamp: 'JAK 6/10/2017 19:04:20'!
 isEmpty
 	^collectionOfElements isEmpty .! !
 
-!ShoppingCart methodsFor: 'inspecting' stamp: 'JAK 6/10/2017 19:55:08'!
+!ShoppingCart methodsFor: 'inspecting' stamp: 'Ji 6/13/2017 19:41:20'!
 quantity: anElement 
-	^collectionOfElements count: [:element | element = anElement ]! !
+
+	(collectionOfElements includesKey: anElement) ifTrue: [	^collectionOfElements at: anElement]  ifFalse:  [^0] 
+! !
 
 
 !ShoppingCart methodsFor: 'operating' stamp: 'JAK 6/10/2017 19:55:49'!
 add: anElement
 	self add: anElement withQuantity: 1.! !
 
-!ShoppingCart methodsFor: 'operating' stamp: 'jak 6/13/2017 16:26:04'!
+!ShoppingCart methodsFor: 'operating' stamp: 'Ji 6/13/2017 19:34:41'!
 add: anElement withQuantity: quantity
-	|remains|
+	
 	quantity < 1 ifTrue: [self error: (self class canNotAddLessThanOneBook )].
-	remains := quantity .
-	[remains ~= 0] whileTrue: [
-		collectionOfElements add: anElement .
-		remains := remains - 1.
-		]! !
+	
+	collectionOfElements at: anElement ifPresent: [ collectionOfElements at: anElement put: ((collectionOfElements at: anElement)+quantity) ] 
+											ifAbsent: [ collectionOfElements at: anElement put: quantity ] .! !
 
-!ShoppingCart methodsFor: 'operating' stamp: 'JAK 6/10/2017 19:07:15'!
+!ShoppingCart methodsFor: 'operating' stamp: 'Ji 6/13/2017 19:39:18'!
 remove: anElement 
-	collectionOfElements remove: anElement .! !
+	collectionOfElements removeKey: anElement ifAbsent: [] .! !
 
 
-!ShoppingCart methodsFor: 'initialization' stamp: 'JAK 6/10/2017 19:02:39'!
+!ShoppingCart methodsFor: 'initialization' stamp: 'Ji 6/13/2017 19:27:13'!
 initialize
-	collectionOfElements := OrderedCollection new.! !
+	collectionOfElements := Dictionary new.! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
