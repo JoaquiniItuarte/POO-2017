@@ -62,6 +62,11 @@ test006addLessThanOneBookRaiseError
 		withExceptionDo: [ :anError | self assert: anError messageText equals: ShoppingCart canNotAddLessThanOneBook ]
 ! !
 
+!TestTusLibros methodsFor: 'Testing Shopping Cart' stamp: 'Ji 6/13/2017 21:05:26'!
+testsdenopoderagregarunacantidadnoenbteradelibros
+| testearqueelerrortirebienelerroryquetampocohayahechonadasobreelobjetoquehayasidoutilizado |
+testearqueelerrortirebienelerroryquetampocohayahechonadasobreelobjetoquehayasidoutilizado! !
+
 
 !TestTusLibros methodsFor: 'Testing Catalog' stamp: 'JAK 6/10/2017 19:22:39'!
 test001anIsbnBelongsToCatalog
@@ -101,6 +106,13 @@ Object subclass: #Catalog
 	poolDictionaries: ''
 	category: 'TusLibros-Solution'!
 
+!Catalog methodsFor: 'initialization' stamp: 'Ji 6/13/2017 19:44:23'!
+createEmptyCatalog
+	
+	
+	elements _ Set new.
+! !
+
 !Catalog methodsFor: 'initialization' stamp: 'Ji 6/13/2017 19:48:39'!
 initializeWithListOfBooks: aSetOfElements 
 	elements := aSetOfElements asSet .! !
@@ -110,21 +122,14 @@ initializeWithListOfBooks: aSetOfElements
 has: anElement
 	^elements includes: anElement .! !
 
-
-!Catalog methodsFor: 'as yet unclassified' stamp: 'Ji 6/13/2017 19:47:26'!
-add: aSmallInteger 
-	elements add: aSmallInteger ! !
-
-!Catalog methodsFor: 'as yet unclassified' stamp: 'Ji 6/13/2017 19:44:23'!
-createEmptyCatalog
-	
-	
-	elements _ Set new.
-! !
-
-!Catalog methodsFor: 'as yet unclassified' stamp: 'Ji 6/13/2017 19:45:34'!
+!Catalog methodsFor: 'inspecting' stamp: 'Ji 6/13/2017 19:45:34'!
 size
 	^ elements size! !
+
+
+!Catalog methodsFor: 'modification' stamp: 'Ji 6/13/2017 19:47:26'!
+add: aSmallInteger 
+	elements add: aSmallInteger ! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -132,14 +137,13 @@ size
 Catalog class
 	instanceVariableNames: ''!
 
+!Catalog class methodsFor: 'initialization' stamp: 'Ji 6/13/2017 19:43:34'!
+createEmptyCatalog
+	^ self new createEmptyCatalog ! !
+
 !Catalog class methodsFor: 'initialization' stamp: 'JAK 6/10/2017 19:23:28'!
 initializeWithListOfBooks: aListOfElements
 	^self new initializeWithListOfBooks: aListOfElements ! !
-
-
-!Catalog class methodsFor: 'as yet unclassified' stamp: 'Ji 6/13/2017 19:43:34'!
-createEmptyCatalog
-	^ self new createEmptyCatalog ! !
 
 
 !classDefinition: #ShoppingCart category: #'TusLibros-Solution'!
