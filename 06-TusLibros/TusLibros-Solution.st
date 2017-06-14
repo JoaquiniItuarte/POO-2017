@@ -1,92 +1,83 @@
 !classDefinition: #TestTusLibros category: #'TusLibros-Solution'!
 TestCase subclass: #TestTusLibros
-	instanceVariableNames: ''
+	instanceVariableNames: 'shoppingCartWithEmptyCatalog anIsbnBook anIsbnBook2 catalog1 catalog2 shoppingCartWithCatalog1 shoppingCartWithCatalog2 aCashier'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'TusLibros-Solution'!
 
-!TestTusLibros methodsFor: 'Testing Shopping Cart' stamp: 'Ji 6/13/2017 21:29:12'!
+!TestTusLibros methodsFor: 'Testing Shopping Cart' stamp: 'JAK 6/14/2017 10:12:41'!
 test001createAnEmptyShoppingCart
-	|shoppingCart|
-	shoppingCart := ShoppingCart initializeWithCatalog: {}.
-	self assert: shoppingCart isEmpty.! !
 
-!TestTusLibros methodsFor: 'Testing Shopping Cart' stamp: 'Ji 6/13/2017 21:31:26'!
+	self assert: shoppingCartWithEmptyCatalog isEmpty.! !
+
+!TestTusLibros methodsFor: 'Testing Shopping Cart' stamp: 'JAK 6/14/2017 10:18:04'!
 test002whenAddAnElementIntoTheShoopingCartItIsNotEmpty
-	|shoppingCart anIsbnBook|
-	anIsbnBook := 123123.
-	shoppingCart := ShoppingCart initializeWithCatalog: {anIsbnBook}.
-	shoppingCart add: anIsbnBook.
-	self deny: shoppingCart isEmpty.! !
 
-!TestTusLibros methodsFor: 'Testing Shopping Cart' stamp: 'Ji 6/13/2017 21:32:14'!
+	shoppingCartWithCatalog1 add: anIsbnBook.
+	self deny: shoppingCartWithCatalog1 isEmpty.! !
+
+!TestTusLibros methodsFor: 'Testing Shopping Cart' stamp: 'JAK 6/14/2017 10:17:31'!
 test004canListTheElementsAddedToTheCart
-	|shoppingCart anIsbnBook anIsbnBook2 contentsOfShoppingCart |
-	anIsbnBook := 123123.
-	anIsbnBook2 := 321321.
-	shoppingCart := ShoppingCart initializeWithCatalog: {anIsbnBook. anIsbnBook2}.
-	shoppingCart add: anIsbnBook.
-	shoppingCart add: anIsbnBook2 .
-	contentsOfShoppingCart := shoppingCart contents.
+	
+	|contentsOfShoppingCart |
+	shoppingCartWithCatalog2 add: anIsbnBook.
+	shoppingCartWithCatalog2 add: anIsbnBook2 .
+	contentsOfShoppingCart := shoppingCartWithCatalog2 contents.
 	
 	self assert: (contentsOfShoppingCart includes: anIsbnBook ).
 	self assert: (contentsOfShoppingCart includes: anIsbnBook2 ).! !
 
-!TestTusLibros methodsFor: 'Testing Shopping Cart' stamp: 'Ji 6/13/2017 21:32:52'!
+!TestTusLibros methodsFor: 'Testing Shopping Cart' stamp: 'JAK 6/14/2017 10:18:37'!
 test005canAddTheSameBookTwiceToTheShoppingCartAndKnowTheQuantiy
-	|shoppingCart anIsbnBook |
-	anIsbnBook := 123123.
-	shoppingCart := ShoppingCart initializeWithCatalog: {anIsbnBook}.
-	shoppingCart add: anIsbnBook withQuantity: 2.
-	self assert: ((shoppingCart quantity: anIsbnBook) = 2).
+
+	shoppingCartWithCatalog1 add: anIsbnBook withQuantity: 2.
+	self assert: ((shoppingCartWithCatalog1 quantity: anIsbnBook) = 2).
 ! !
 
-!TestTusLibros methodsFor: 'Testing Shopping Cart' stamp: 'Ji 6/13/2017 21:29:36'!
+!TestTusLibros methodsFor: 'Testing Shopping Cart' stamp: 'JAK 6/14/2017 10:19:02'!
 test006addLessThanOneBookRaiseError
-	|shoppingCart anIsbnBook |
-	anIsbnBook := 123123.
-	shoppingCart := ShoppingCart initializeWithCatalog: {}.
-	
+
 	self 
-		should: [ shoppingCart add: anIsbnBook withQuantity: 0. ]
+		should: [ shoppingCartWithCatalog1 add: anIsbnBook withQuantity: 0. ]
 		raise: Error
 		withExceptionDo: [ :anError | self assert: anError messageText equals: ShoppingCart canNotAddLessThanOneBook ]
 ! !
 
-!TestTusLibros methodsFor: 'Testing Shopping Cart' stamp: 'Ji 6/13/2017 21:24:14'!
+!TestTusLibros methodsFor: 'Testing Shopping Cart' stamp: 'JAK 6/14/2017 10:19:40'!
 test007cannotAddABokkThatIsNotInTheCatalog
 	
-	| aCart aCatalog aBook |
-	aCatalog _ { 12 }.
-	aCart _ ShoppingCart initializeWithCatalog: aCatalog.
-	aBook _ 13.
-	self should: [ aCart add: aBook] 
+	self should: [ shoppingCartWithCatalog1 add: anIsbnBook2] 
 		raise: Error  
 		withExceptionDo: [ :anError | self assert: anError messageText equals: 'No se puede agregar libro'.
-				self assert: aCart isEmpty.]! !
+				self assert: shoppingCartWithCatalog1 isEmpty.]! !
 
-!TestTusLibros methodsFor: 'Testing Shopping Cart' stamp: 'Ji 6/13/2017 21:37:36'!
+!TestTusLibros methodsFor: 'Testing Shopping Cart' stamp: 'JAK 6/14/2017 10:20:07'!
 test008cannotAddABookWithANonIntegerAmount
 	
-	| aCart aCatalog aBook |
-	aCatalog _ { 12 }.
-	aCart _ ShoppingCart initializeWithCatalog: aCatalog.
-	aBook _ 12.
-	self should: [ aCart add: aBook withQuantity: 2/3] 
+	self should: [ shoppingCartWithCatalog1 add: anIsbnBook withQuantity: 2/3] 
 		raise: Error  
 		withExceptionDo: [ :anError | self assert: anError messageText equals: 'No se puede agregar una cantidad no entera de libros'.
-				self assert: aCart isEmpty.]! !
+				self assert: shoppingCartWithCatalog1 isEmpty.]! !
 
-!TestTusLibros methodsFor: 'Testing Shopping Cart' stamp: 'Ji 6/13/2017 21:45:04'!
+!TestTusLibros methodsFor: 'Testing Shopping Cart' stamp: 'JAK 6/14/2017 10:21:13'!
 test009aCashierCanNotCheckOutEmptyCart
 	
-	| aCart aCatalog aCashier |
-	aCatalog _ { 12 }.
-	aCart _ ShoppingCart initializeWithCatalog: aCatalog.
-	aCashier _ Cashier new.
-	self should: [ aCashier checkOut: aCart.]  
+	self should: [ aCashier checkOut: shoppingCartWithCatalog1.]  
 		raise: Error  
 		withExceptionDo: [ :anError | self assert: anError messageText equals: 'No se puede hacer checkout de un carrito vacio'.]! !
+
+
+!TestTusLibros methodsFor: 'setUp' stamp: 'JAK 6/14/2017 10:21:04'!
+setUp
+	shoppingCartWithEmptyCatalog _ ShoppingCart initializeWithCatalog: {}.
+	anIsbnBook _ 123123.
+	anIsbnBook2 := 321321.
+	catalog1 _ {anIsbnBook }.
+	catalog2 _ {anIsbnBook. anIsbnBook2 }.
+	shoppingCartWithCatalog1 _ ShoppingCart initializeWithCatalog: catalog1.
+	shoppingCartWithCatalog2 _ ShoppingCart initializeWithCatalog: catalog2.
+	aCashier _ Cashier new.
+! !
 
 
 !classDefinition: #Cashier category: #'TusLibros-Solution'!
@@ -98,7 +89,7 @@ Object subclass: #Cashier
 
 !Cashier methodsFor: 'as yet unclassified' stamp: 'Ji 6/13/2017 21:47:01'!
 checkOut: aShoppingCart
-	aShoppingCart isEmpty ifTrue: [self error: (self class cannotCheckOutEmptyCart]! !
+	aShoppingCart isEmpty ifTrue: [self error: (self class cannotCheckOutEmptyCart)]! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
