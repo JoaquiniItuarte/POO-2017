@@ -1,6 +1,6 @@
 !classDefinition: #TestTusLibros category: #'TusLibros-Solution'!
 TestCase subclass: #TestTusLibros
-	instanceVariableNames: 'shoppingCartWithEmptyCatalog anIsbnBook anIsbnBook2 catalog1 catalog2 shoppingCartWithCatalog1 shoppingCartWithCatalog2 aCashier shoppingCartWithCatalog1Price shoppingCartWithCatalog2Price aCashier2'
+	instanceVariableNames: 'shoppingCartWithEmptyCatalog anIsbnBook anIsbnBook2 catalog1 catalog2 shoppingCartWithCatalog1 shoppingCartWithCatalog2 aCashier shoppingCartWithCatalog1Price shoppingCartWithCatalog2Price aCashier2 aCard1 today aCard2'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'TusLibros-Solution'!
@@ -66,38 +66,81 @@ test009aCashierCanNotCheckOutEmptyCart
 		raise: Error  
 		withExceptionDo: [ :anError | self assert: anError messageText equals: 'No se puede hacer checkout de un carrito vacio'.]! !
 
-!TestTusLibros methodsFor: 'Testing Shopping Cart' stamp: 'JI 6/15/2017 14:40:42'!
+!TestTusLibros methodsFor: 'Testing Shopping Cart' stamp: 'Ji 6/15/2017 19:49:58'!
 test010aCashierChecksOutAnItem
 	
-	self assert: ( (aCashier checkOut: shoppingCartWithCatalog1) = 10).
+	self assert: (aCashier checkOut: shoppingCartWithCatalog1) = shoppingCartWithCatalog1Price .
 	! !
 
-!TestTusLibros methodsFor: 'Testing Shopping Cart' stamp: 'JI 6/15/2017 14:28:22'!
+!TestTusLibros methodsFor: 'Testing Shopping Cart' stamp: 'Ji 6/15/2017 19:50:08'!
 test011aCashierChecksOutItems
 	
-	self assert: ( (aCashier2 checkOut: shoppingCartWithCatalog2) = 50).
+	self assert: (aCashier2 checkOut: shoppingCartWithCatalog2) = shoppingCartWithCatalog2Price .
 	! !
 
+!TestTusLibros methodsFor: 'Testing Shopping Cart' stamp: 'Ji 6/15/2017 19:50:20'!
+test012aCashierCanUseNotDatedCard
+	
+	self assert: (aCashier2 checkOut: shoppingCartWithCatalog2 withCard: aCard1 asTodayBeing: today) = shoppingCartWithCatalog2Price .! !
 
-!TestTusLibros methodsFor: 'setUp' stamp: 'JI 6/15/2017 14:34:19'!
-setUp
-	shoppingCartWithEmptyCatalog _ ShoppingCart initializeWithCatalog: Dictionary new.
-	anIsbnBook _ 123123.
-	anIsbnBook2 := 321321.
+!TestTusLibros methodsFor: 'Testing Shopping Cart' stamp: 'Ji 6/15/2017 19:41:22'!
+test013aCashierCantUseDatedCard
+	
+	self should: [aCashier2 checkOut: shoppingCartWithCatalog2 withCard: aCard2 asTodayBeing: today.]
+	raise: Error
+	withExceptionDo: [ :anError | self assert: anError messageText = 'La tarjeta esta vencida']! !
+
+
+!TestTusLibros methodsFor: 'setUp' stamp: 'Ji 6/15/2017 19:29:57'!
+cardSetUp
+	today _ DateAndTime year: 2017 month: 10  day: 1. 
+	aCard1 _ DateAndTime year: 2020 month:  1 day:  1.
+	aCard2 _ DateAndTime year: 2010 month:  6 day:  4.! !
+
+!TestTusLibros methodsFor: 'setUp' stamp: 'Ji 6/15/2017 19:12:36'!
+cashierSetUp
+	aCashier _ Cashier initializeWithCatalog: catalog1 .
+	aCashier2 _ Cashier initializeWithCatalog: catalog2 .
+! !
+
+!TestTusLibros methodsFor: 'setUp' stamp: 'Ji 6/15/2017 19:12:26'!
+catalogSetUp
+	
 	catalog1 _ Dictionary new.
 	catalog1 at: anIsbnBook put: 10.
 	catalog2 _ Dictionary new.
 	catalog2 at: anIsbnBook put: 10.
 	catalog2 at: anIsbnBook2 put: 20.
+	! !
+
+!TestTusLibros methodsFor: 'setUp' stamp: 'Ji 6/15/2017 19:12:07'!
+isbnSetUp
+	
+	anIsbnBook _ 123123.
+	anIsbnBook2 := 321321.
+	! !
+
+!TestTusLibros methodsFor: 'setUp' stamp: 'Ji 6/15/2017 19:22:47'!
+setUp
+	
+	self isbnSetUp .
+	self catalogSetUp .
+	self shoppingCartsetUp .
+	self cardSetUp.
+	self cashierSetUp .! !
+
+!TestTusLibros methodsFor: 'setUp' stamp: 'Ji 6/15/2017 19:49:19'!
+shoppingCartsetUp
+	shoppingCartWithEmptyCatalog _ ShoppingCart initializeWithCatalog: Dictionary new.
+	
 	shoppingCartWithCatalog1 _ ShoppingCart initializeWithCatalog: catalog1.
 	shoppingCartWithCatalog1 add: anIsbnBook.
+	shoppingCartWithCatalog1Price _ 10.
+	
 	shoppingCartWithCatalog2 _ ShoppingCart initializeWithCatalog: catalog2.
 	shoppingCartWithCatalog2 add: anIsbnBook .
 	shoppingCartWithCatalog2 add: anIsbnBook2 withQuantity:2. 
-
-	
-	aCashier _ Cashier initializeWithCatalog: catalog1 .
-	aCashier2 _ Cashier initializeWithCatalog: catalog2 .
+	shoppingCartWithCatalog2Price _ 50.
 ! !
 
 
@@ -108,7 +151,12 @@ Object subclass: #Cashier
 	poolDictionaries: ''
 	category: 'TusLibros-Solution'!
 
-!Cashier methodsFor: 'as yet unclassified' stamp: 'JI 6/15/2017 14:30:07'!
+!Cashier methodsFor: 'initialization' stamp: 'JI 6/15/2017 14:12:16'!
+initializeWithCatalog: aCatalog
+	 catalog _ aCatalog! !
+
+
+!Cashier methodsFor: 'checkOut' stamp: 'JI 6/15/2017 14:30:07'!
 checkOut: aShoppingCart
 	| total |
 	aShoppingCart isEmpty ifTrue: [self error: (self class cannotCheckOutEmptyCart)].
@@ -118,20 +166,23 @@ checkOut: aShoppingCart
 	
 	^total.! !
 
-!Cashier methodsFor: 'as yet unclassified' stamp: 'JI 6/15/2017 14:30:42'!
+!Cashier methodsFor: 'checkOut' stamp: 'Ji 6/15/2017 19:47:01'!
+checkOut: aShoppingCart withCard: aCard asTodayBeing: aDate
+	
+	
+	(aCard yearNumber > aDate yearNumber or: [ aCard yearNumber = aDate yearNumber and: [aCard monthIndex > aDate monthIndex ] ])
+	ifTrue:[	^self checkOut: aShoppingCart ] ifFalse:[self error: self class cannotCheckOutWithDatedCard].
+	! !
+
+!Cashier methodsFor: 'checkOut' stamp: 'JI 6/15/2017 14:30:42'!
 checkoutItem: aBook 
 	
 	^self checkoutItem: aBook withAmount: 1! !
 
-!Cashier methodsFor: 'as yet unclassified' stamp: 'JI 6/15/2017 14:10:34'!
+!Cashier methodsFor: 'checkOut' stamp: 'JI 6/15/2017 14:10:34'!
 checkoutItem: aBook withAmount: anAmount
 	
 	^ (catalog at: aBook) * anAmount ! !
-
-
-!Cashier methodsFor: 'initialization' stamp: 'JI 6/15/2017 14:12:16'!
-initializeWithCatalog: aCatalog
-	 catalog _ aCatalog! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -142,6 +193,10 @@ Cashier class
 !Cashier class methodsFor: 'as yet unclassified' stamp: 'Ji 6/13/2017 21:47:39'!
 cannotCheckOutEmptyCart
 	^'No se puede hacer checkout de un carrito vacio'! !
+
+!Cashier class methodsFor: 'as yet unclassified' stamp: 'Ji 6/15/2017 19:46:39'!
+cannotCheckOutWithDatedCard
+	^'La tarjeta esta vencida'! !
 
 
 !Cashier class methodsFor: 'initialization' stamp: 'JI 6/15/2017 14:11:38'!
@@ -163,6 +218,11 @@ contents
 !ShoppingCart methodsFor: 'inspecting' stamp: 'JAK 6/10/2017 19:04:20'!
 isEmpty
 	^collectionOfElements isEmpty .! !
+
+!ShoppingCart methodsFor: 'inspecting' stamp: 'JI 6/15/2017 14:39:00'!
+occurrencesOf: aBook 
+	
+^collectionOfElements contents at:aBook ifAbsent: [0]! !
 
 !ShoppingCart methodsFor: 'inspecting' stamp: 'Ji 6/13/2017 21:33:49'!
 quantity: anElement 
@@ -190,12 +250,6 @@ initializeWithCatalog: aCatalog
 	
 	collectionOfElements _ Bag new.
 	catalogo _ aCatalog.! !
-
-
-!ShoppingCart methodsFor: 'as yet unclassified' stamp: 'JI 6/15/2017 14:39:00'!
-occurrencesOf: aBook 
-	
-^collectionOfElements contents at:aBook ifAbsent: [0]! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
