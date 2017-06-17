@@ -1,6 +1,6 @@
 !classDefinition: #TestTusLibros category: #'TusLibros-Solution'!
 TestCase subclass: #TestTusLibros
-	instanceVariableNames: 'shoppingCartWithEmptyCatalog anIsbnBook anIsbnBook2 catalog1 catalog2 shoppingCartWithCatalog1 shoppingCartWithCatalog2 aCashier shoppingCartWithCatalog1Price shoppingCartWithCatalog2Price aCashier2 aCard1 today aCard2'
+	instanceVariableNames: 'shoppingCartWithEmptyCatalog anIsbnBook anIsbnBook2 catalog1 catalog2 shoppingCartWithCatalog1 shoppingCartWithCatalog2 aCashier shoppingCartWithCatalog1Price shoppingCartWithCatalog2Price aCashier2 aCard1 today aCard2 nameOfOwner numberOfPlastic numberOfPlastic2'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'TusLibros-Solution'!
@@ -78,6 +78,25 @@ test011aCashierChecksOutItems
 	self assert: (aCashier2 checkOut: shoppingCartWithCatalog2) = shoppingCartWithCatalog2Price .
 	! !
 
+!TestTusLibros methodsFor: 'Testing Shopping Cart' stamp: 'JAK 6/17/2017 19:34:52'!
+test012CreditCardCanNotInitializeWithEmptyOwner
+	
+	self should: [CreditCard initializeForOwner: '' withNumber: 1234123412341234 expiredAt: (Month month: 1 year: 2020)]
+	raise: Error
+	withExceptionDo: [ :anError | self assert: anError messageText = 'El nombre no puede ser vacio']! !
+
+!TestTusLibros methodsFor: 'Testing Shopping Cart' stamp: 'JAK 6/17/2017 19:36:34'!
+test012CreditCardCanNotInitializeWithLessOrMoreThan16Digits
+	
+	self should: [CreditCard initializeForOwner: 'Nombre del titular' withNumber: 14 expiredAt: (Month month: 1 year: 2020)]
+	raise: Error
+	withExceptionDo: [ :anError | self assert: anError messageText = 'Los digitos deben ser 16 exactos'].
+	
+	
+	self should: [CreditCard initializeForOwner: 'Nombre del titular' withNumber: 123413132131223412341234 expiredAt: (Month month: 1 year: 2020)]
+	raise: Error
+	withExceptionDo: [ :anError | self assert: anError messageText = 'Los digitos deben ser 16 exactos']! !
+
 !TestTusLibros methodsFor: 'Testing Shopping Cart' stamp: 'Ji 6/15/2017 19:50:20'!
 test012aCashierCanUseNotDatedCard
 	
@@ -91,11 +110,16 @@ test013aCashierCantUseDatedCard
 	withExceptionDo: [ :anError | self assert: anError messageText = 'La tarjeta esta vencida']! !
 
 
-!TestTusLibros methodsFor: 'setUp' stamp: 'Ji 6/15/2017 19:29:57'!
+!TestTusLibros methodsFor: 'setUp' stamp: 'JAK 6/17/2017 19:41:36'!
 cardSetUp
-	today _ DateAndTime year: 2017 month: 10  day: 1. 
-	aCard1 _ DateAndTime year: 2020 month:  1 day:  1.
-	aCard2 _ DateAndTime year: 2010 month:  6 day:  4.! !
+
+	today _ Month month: 10 year: 2017.
+	nameOfOwner _ 'John Kaplan'.
+	numberOfPlastic _ 1234567812345678.
+	numberOfPlastic2 _ 4321567812345678.
+	
+	aCard1 _ CreditCard initializeForOwner: nameOfOwner withNumber: numberOfPlastic expiredAt: (Month month: 1 year: 2020).
+	aCard2 _ CreditCard initializeForOwner: nameOfOwner withNumber: numberOfPlastic expiredAt:(Month month: 6 year: 2010).! !
 
 !TestTusLibros methodsFor: 'setUp' stamp: 'Ji 6/15/2017 19:12:36'!
 cashierSetUp
@@ -166,11 +190,10 @@ checkOut: aShoppingCart
 	
 	^total.! !
 
-!Cashier methodsFor: 'checkOut' stamp: 'Ji 6/15/2017 19:47:01'!
+!Cashier methodsFor: 'checkOut' stamp: 'JAK 6/17/2017 19:07:20'!
 checkOut: aShoppingCart withCard: aCard asTodayBeing: aDate
 	
-	
-	(aCard yearNumber > aDate yearNumber or: [ aCard yearNumber = aDate yearNumber and: [aCard monthIndex > aDate monthIndex ] ])
+	(aCard isNotExpiredAt: aDate)
 	ifTrue:[	^self checkOut: aShoppingCart ] ifFalse:[self error: self class cannotCheckOutWithDatedCard].
 	! !
 
@@ -202,6 +225,50 @@ cannotCheckOutWithDatedCard
 !Cashier class methodsFor: 'initialization' stamp: 'JI 6/15/2017 14:11:38'!
 initializeWithCatalog: aCatalog 
 	^self new initializeWithCatalog: aCatalog ! !
+
+
+!classDefinition: #CreditCard category: #'TusLibros-Solution'!
+Object subclass: #CreditCard
+	instanceVariableNames: 'nameInTheCard numberInTheCard expiredAt'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'TusLibros-Solution'!
+
+!CreditCard methodsFor: 'initialization' stamp: 'JAK 6/17/2017 19:41:55'!
+initializeForOwner: nameOfOwner withNumber: numberOfPlastic expiredAt: expiredDate
+	
+	(nameOfOwner size) = 0 ifTrue: [self error: (self class canNotCreateCreditCardWithoutOwner)].
+	(numberOfPlastic printString size) ~= 16 ifTrue: [self error: (self class digitsMustBeExactly16)].
+	nameInTheCard _ nameOfOwner .
+	numberInTheCard _ numberOfPlastic .
+	expiredAt _ expiredDate .! !
+
+
+!CreditCard methodsFor: 'inspecting' stamp: 'JAK 6/17/2017 19:10:39'!
+isNotExpiredAt: aDate
+
+	^ (expiredAt yearNumber > aDate yearNumber) or: [(expiredAt yearNumber = aDate yearNumber) and: [expiredAt monthIndex >= aDate monthIndex] ]
+	! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'CreditCard class' category: #'TusLibros-Solution'!
+CreditCard class
+	instanceVariableNames: ''!
+
+!CreditCard class methodsFor: 'initialization' stamp: 'JAK 6/17/2017 19:39:16'!
+initializeForOwner: nameOfOwner withNumber: numberOfPlastic expiredAt: expiredDate
+
+	^self new initializeForOwner: nameOfOwner withNumber: numberOfPlastic expiredAt: expiredDate.! !
+
+
+!CreditCard class methodsFor: 'errors' stamp: 'JAK 6/17/2017 19:31:36'!
+canNotCreateCreditCardWithoutOwner
+	^'El nombre no puede ser vacio'! !
+
+!CreditCard class methodsFor: 'errors' stamp: 'JAK 6/17/2017 19:32:01'!
+digitsMustBeExactly16
+	^'Los digitos deben ser 16 exactos'! !
 
 
 !classDefinition: #ShoppingCart category: #'TusLibros-Solution'!
