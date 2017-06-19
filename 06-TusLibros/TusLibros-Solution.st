@@ -1,9 +1,55 @@
 !classDefinition: #TestTusLibros category: #'TusLibros-Solution'!
 TestCase subclass: #TestTusLibros
-	instanceVariableNames: 'shoppingCartWithEmptyCatalog anIsbnBook anIsbnBook2 catalog1 catalog2 shoppingCartWithCatalog1 shoppingCartWithCatalog2 aCashier shoppingCartWithCatalog1Price shoppingCartWithCatalog2Price aCashier2 aCard1 today aCard2 nameOfOwner numberOfPlastic numberOfPlastic2'
+	instanceVariableNames: 'shoppingCartWithEmptyCatalog anIsbnBook anIsbnBook2 catalog1 catalog2 shoppingCartWithCatalog1 shoppingCartWithCatalog2 aCashier shoppingCartWithCatalog1Price shoppingCartWithCatalog2Price aCashier2 aCard1 today aCard2 nameOfOwner numberOfPlastic numberOfPlastic2 aSalesBook1 salesBookEmpty aSalesBook1Exacto aSalesBook2 aSalesBook2Exacto'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'TusLibros-Solution'!
+
+!TestTusLibros methodsFor: 'Testing Cashier' stamp: 'JI 6/18/2017 22:05:50'!
+test009aCashierCanNotCheckOutEmptyCart
+	
+	self should: [ aCashier checkOut: shoppingCartWithEmptyCatalog  withCard: aCard1 asTodayBeing: today withSalesBook: aSalesBook1 .]  
+		raise: Error  
+		withExceptionDo: [ :anError | self assert: anError messageText equals: 'No se puede hacer checkout de un carrito vacio'.
+			self assert: salesBookEmpty isEmpty.
+			TestTusLibros toDo: 'Que no se use el merchant processor']! !
+
+!TestTusLibros methodsFor: 'Testing Cashier' stamp: 'JI 6/18/2017 23:53:12'!
+test010aCashierChecksOutAnItem
+	
+	| total |
+	total _ aCashier checkOut: shoppingCartWithCatalog1  withCard: aCard1 asTodayBeing: today withSalesBook: aSalesBook1.
+	
+	self assert: total  = shoppingCartWithCatalog1Price .
+	self assert: aSalesBook1 = aSalesBook1Exacto .
+	TestTusLibros toDo: 'Usar el merchan processor'! !
+
+!TestTusLibros methodsFor: 'Testing Cashier' stamp: 'JI 6/18/2017 23:54:02'!
+test011aCashierChecksOutItems
+	
+		
+	| total |
+	total _ aCashier2 checkOut: shoppingCartWithCatalog2  withCard: aCard1 asTodayBeing: today withSalesBook: aSalesBook2.
+	
+	self assert: total  = shoppingCartWithCatalog2Price .
+	self assert: aSalesBook2 = aSalesBook2Exacto .
+	TestTusLibros toDo: 'Usar el merchan processor'! !
+
+!TestTusLibros methodsFor: 'Testing Cashier' stamp: 'JI 6/19/2017 00:27:29'!
+test012aCashierCanUseNotDatedCard
+	
+	self assert: (aCashier2 checkOut: shoppingCartWithCatalog2 withCard: aCard1 asTodayBeing: today withSalesBook: aSalesBook2) = shoppingCartWithCatalog2Price .
+	self assert: aSalesBook2 = aSalesBook2Exacto .! !
+
+!TestTusLibros methodsFor: 'Testing Cashier' stamp: 'JI 6/19/2017 00:28:48'!
+test013aCashierCantUseDatedCard
+	
+	self should: [aCashier2 checkOut: shoppingCartWithCatalog2 withCard: aCard2 asTodayBeing: today withSalesBook: aSalesBook2]
+	raise: Error
+	withExceptionDo: [ :anError | self assert: anError messageText = 'La tarjeta esta vencida'.
+		self assert: aSalesBook2 isEmpty.
+		TestTusLibros toDo: 'No usa el merchan processor']! !
+
 
 !TestTusLibros methodsFor: 'Testing Shopping Cart' stamp: 'JAK 6/14/2017 10:12:41'!
 test001createAnEmptyShoppingCart
@@ -59,33 +105,15 @@ test008cannotAddABookWithANonIntegerAmount
 		withExceptionDo: [ :anError | self assert: anError messageText equals: 'No se puede agregar una cantidad no entera de libros'.
 				self assert: (shoppingCartWithCatalog1 occurrencesOf: anIsbnBook) = 1 .]! !
 
-!TestTusLibros methodsFor: 'Testing Shopping Cart' stamp: 'JI 6/15/2017 14:40:21'!
-test009aCashierCanNotCheckOutEmptyCart
-	
-	self should: [ aCashier checkOut: shoppingCartWithEmptyCatalog .]  
-		raise: Error  
-		withExceptionDo: [ :anError | self assert: anError messageText equals: 'No se puede hacer checkout de un carrito vacio'.]! !
 
-!TestTusLibros methodsFor: 'Testing Shopping Cart' stamp: 'Ji 6/15/2017 19:49:58'!
-test010aCashierChecksOutAnItem
-	
-	self assert: (aCashier checkOut: shoppingCartWithCatalog1) = shoppingCartWithCatalog1Price .
-	! !
-
-!TestTusLibros methodsFor: 'Testing Shopping Cart' stamp: 'Ji 6/15/2017 19:50:08'!
-test011aCashierChecksOutItems
-	
-	self assert: (aCashier2 checkOut: shoppingCartWithCatalog2) = shoppingCartWithCatalog2Price .
-	! !
-
-!TestTusLibros methodsFor: 'Testing Shopping Cart' stamp: 'JAK 6/17/2017 19:34:52'!
+!TestTusLibros methodsFor: 'Testing Credit Card' stamp: 'JAK 6/17/2017 19:34:52'!
 test012CreditCardCanNotInitializeWithEmptyOwner
 	
 	self should: [CreditCard initializeForOwner: '' withNumber: 1234123412341234 expiredAt: (Month month: 1 year: 2020)]
 	raise: Error
 	withExceptionDo: [ :anError | self assert: anError messageText = 'El nombre no puede ser vacio']! !
 
-!TestTusLibros methodsFor: 'Testing Shopping Cart' stamp: 'JAK 6/17/2017 19:36:34'!
+!TestTusLibros methodsFor: 'Testing Credit Card' stamp: 'JAK 6/17/2017 19:36:34'!
 test012CreditCardCanNotInitializeWithLessOrMoreThan16Digits
 	
 	self should: [CreditCard initializeForOwner: 'Nombre del titular' withNumber: 14 expiredAt: (Month month: 1 year: 2020)]
@@ -96,18 +124,6 @@ test012CreditCardCanNotInitializeWithLessOrMoreThan16Digits
 	self should: [CreditCard initializeForOwner: 'Nombre del titular' withNumber: 123413132131223412341234 expiredAt: (Month month: 1 year: 2020)]
 	raise: Error
 	withExceptionDo: [ :anError | self assert: anError messageText = 'Los digitos deben ser 16 exactos']! !
-
-!TestTusLibros methodsFor: 'Testing Shopping Cart' stamp: 'Ji 6/15/2017 19:50:20'!
-test012aCashierCanUseNotDatedCard
-	
-	self assert: (aCashier2 checkOut: shoppingCartWithCatalog2 withCard: aCard1 asTodayBeing: today) = shoppingCartWithCatalog2Price .! !
-
-!TestTusLibros methodsFor: 'Testing Shopping Cart' stamp: 'Ji 6/15/2017 19:41:22'!
-test013aCashierCantUseDatedCard
-	
-	self should: [aCashier2 checkOut: shoppingCartWithCatalog2 withCard: aCard2 asTodayBeing: today.]
-	raise: Error
-	withExceptionDo: [ :anError | self assert: anError messageText = 'La tarjeta esta vencida']! !
 
 
 !TestTusLibros methodsFor: 'setUp' stamp: 'JAK 6/17/2017 19:41:36'!
@@ -144,14 +160,29 @@ isbnSetUp
 	anIsbnBook2 := 321321.
 	! !
 
-!TestTusLibros methodsFor: 'setUp' stamp: 'Ji 6/15/2017 19:22:47'!
+!TestTusLibros methodsFor: 'setUp' stamp: 'JI 6/18/2017 23:53:38'!
+salesBookSetup
+
+	salesBookEmpty _ SalesBook createSalesBook.
+	
+	aSalesBook1 _ SalesBook createSalesBook.
+	aSalesBook1Exacto _ SalesBook createSalesBook.
+	aSalesBook1Exacto add: anIsbnBook withAmount: 1 eachWithPrice: 10.
+	
+	aSalesBook2 _ SalesBook createSalesBook.
+	aSalesBook2Exacto _ SalesBook createSalesBook.
+	aSalesBook2Exacto add: anIsbnBook withAmount: 1 eachWithPrice: 10.
+	aSalesBook2Exacto add: anIsbnBook2 withAmount: 2 eachWithPrice: 20.! !
+
+!TestTusLibros methodsFor: 'setUp' stamp: 'JI 6/18/2017 21:58:29'!
 setUp
 	
 	self isbnSetUp .
 	self catalogSetUp .
 	self shoppingCartsetUp .
 	self cardSetUp.
-	self cashierSetUp .! !
+	self cashierSetUp .
+	self salesBookSetup .! !
 
 !TestTusLibros methodsFor: 'setUp' stamp: 'Ji 6/15/2017 19:49:19'!
 shoppingCartsetUp
@@ -165,6 +196,16 @@ shoppingCartsetUp
 	shoppingCartWithCatalog2 add: anIsbnBook .
 	shoppingCartWithCatalog2 add: anIsbnBook2 withQuantity:2. 
 	shoppingCartWithCatalog2Price _ 50.
+! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'TestTusLibros class' category: #'TusLibros-Solution'!
+TestTusLibros class
+	instanceVariableNames: ''!
+
+!TestTusLibros class methodsFor: 'as yet unclassified' stamp: 'JI 6/18/2017 22:06:22'!
+toDo: aString 
 ! !
 
 
@@ -196,6 +237,14 @@ checkOut: aShoppingCart withCard: aCard asTodayBeing: aDate
 	(aCard isNotExpiredAt: aDate)
 	ifTrue:[	^self checkOut: aShoppingCart ] ifFalse:[self error: self class cannotCheckOutWithDatedCard].
 	! !
+
+!Cashier methodsFor: 'checkOut' stamp: 'JI 6/18/2017 23:39:29'!
+checkOut: aShoppingCart withCard: aCreditCard asTodayBeing: aDate withSalesBook: aSalesBook 
+	
+	|total|
+	total _ self checkOut: aShoppingCart withCard: aCreditCard  asTodayBeing: aDate .
+	aShoppingCart contents do: [ :anItem | aSalesBook addItem: anItem withPrice: (catalog at: anItem )].
+	^total! !
 
 !Cashier methodsFor: 'checkOut' stamp: 'JI 6/15/2017 14:30:42'!
 checkoutItem: aBook 
@@ -269,6 +318,96 @@ canNotCreateCreditCardWithoutOwner
 !CreditCard class methodsFor: 'errors' stamp: 'JAK 6/17/2017 19:32:01'!
 digitsMustBeExactly16
 	^'Los digitos deben ser 16 exactos'! !
+
+
+!classDefinition: #SalesBook category: #'TusLibros-Solution'!
+Object subclass: #SalesBook
+	instanceVariableNames: 'books amounts prices'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'TusLibros-Solution'!
+
+!SalesBook methodsFor: 'as yet unclassified' stamp: 'JI 6/19/2017 00:21:01'!
+= anotherSalesBook
+
+	| myBooks theirBooks myPrices theirPrices |
+
+	myBooks _ books copy.
+	theirBooks _ anotherSalesBook books.
+	myPrices _ prices copy.
+	theirPrices _ anotherSalesBook prices.
+	
+	myBooks size = theirBooks size ifFalse: [^false].
+	
+	
+	(1 to: books size) do: [ :index | | myBook myAmount myPrice match matchIndex|
+		myBook _ books at: index.
+		myPrice _ prices at: index.
+		match _ false.		
+		
+		(1 to: theirBooks size) do: [ :theirIndex | | theirBook theirAmount theirPrice|
+			theirBook _ theirBooks at: theirIndex .
+			
+			theirPrice _ theirPrices at: theirIndex .
+			
+			(theirBook = myBook and: [  theirPrice = myPrice ] ) ifTrue: [
+				match _ true.
+				matchIndex _ theirIndex .
+				]
+			].
+		match 
+		ifTrue: [
+			theirBooks	removeAt: matchIndex.
+			theirPrices removeAt: matchIndex .
+			]
+		ifFalse: [^false].
+		].
+	
+	^true.
+	! !
+
+!SalesBook methodsFor: 'as yet unclassified' stamp: 'JI 6/19/2017 00:02:14'!
+add: aBook withAmount: anAmount eachWithPrice: aPrice
+	
+	(1 to: anAmount) do: [ :i | self addItem: aBook withPrice: aPrice]
+	! !
+
+!SalesBook methodsFor: 'as yet unclassified' stamp: 'JI 6/19/2017 00:19:58'!
+addItem: anItem withPrice: aPrice
+
+	books add: anItem.
+	prices add: aPrice.! !
+
+!SalesBook methodsFor: 'as yet unclassified' stamp: 'JI 6/18/2017 22:21:46'!
+amounts
+	^ amounts copy! !
+
+!SalesBook methodsFor: 'as yet unclassified' stamp: 'JI 6/18/2017 22:21:38'!
+books
+	^ books copy! !
+
+!SalesBook methodsFor: 'as yet unclassified' stamp: 'JI 6/19/2017 00:19:42'!
+createSalesBook
+	books _ OrderedCollection new.
+	prices _ OrderedCollection new.! !
+
+!SalesBook methodsFor: 'as yet unclassified' stamp: 'JI 6/19/2017 00:29:09'!
+isEmpty
+	^ books size = 0! !
+
+!SalesBook methodsFor: 'as yet unclassified' stamp: 'JI 6/18/2017 22:21:50'!
+prices
+	^ prices copy! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'SalesBook class' category: #'TusLibros-Solution'!
+SalesBook class
+	instanceVariableNames: ''!
+
+!SalesBook class methodsFor: 'as yet unclassified' stamp: 'JI 6/18/2017 22:15:08'!
+createSalesBook
+	^self new createSalesBook! !
 
 
 !classDefinition: #ShoppingCart category: #'TusLibros-Solution'!
