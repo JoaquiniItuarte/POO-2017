@@ -262,11 +262,11 @@ checkoutItem: aBook withAmount: anAmount
 Cashier class
 	instanceVariableNames: ''!
 
-!Cashier class methodsFor: 'as yet unclassified' stamp: 'Ji 6/13/2017 21:47:39'!
+!Cashier class methodsFor: 'errors' stamp: 'Ji 6/13/2017 21:47:39'!
 cannotCheckOutEmptyCart
 	^'No se puede hacer checkout de un carrito vacio'! !
 
-!Cashier class methodsFor: 'as yet unclassified' stamp: 'Ji 6/15/2017 19:46:39'!
+!Cashier class methodsFor: 'errors' stamp: 'Ji 6/15/2017 19:46:39'!
 cannotCheckOutWithDatedCard
 	^'La tarjeta esta vencida'! !
 
@@ -322,12 +322,25 @@ digitsMustBeExactly16
 
 !classDefinition: #SalesBook category: #'TusLibros-Solution'!
 Object subclass: #SalesBook
-	instanceVariableNames: 'books amounts prices'
+	instanceVariableNames: 'books prices'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'TusLibros-Solution'!
 
-!SalesBook methodsFor: 'as yet unclassified' stamp: 'JI 6/19/2017 00:21:01'!
+!SalesBook methodsFor: 'inspecting' stamp: 'JI 6/18/2017 22:21:38'!
+books
+	^ books copy! !
+
+!SalesBook methodsFor: 'inspecting' stamp: 'JI 6/19/2017 00:29:09'!
+isEmpty
+	^ books size = 0! !
+
+!SalesBook methodsFor: 'inspecting' stamp: 'JI 6/18/2017 22:21:50'!
+prices
+	^ prices copy! !
+
+
+!SalesBook methodsFor: 'comparing' stamp: 'JI 6/19/2017 00:21:01'!
 = anotherSalesBook
 
 	| myBooks theirBooks myPrices theirPrices |
@@ -366,38 +379,24 @@ Object subclass: #SalesBook
 	^true.
 	! !
 
-!SalesBook methodsFor: 'as yet unclassified' stamp: 'JI 6/19/2017 00:02:14'!
+
+!SalesBook methodsFor: 'adding' stamp: 'JI 6/19/2017 00:02:14'!
 add: aBook withAmount: anAmount eachWithPrice: aPrice
 	
 	(1 to: anAmount) do: [ :i | self addItem: aBook withPrice: aPrice]
 	! !
 
-!SalesBook methodsFor: 'as yet unclassified' stamp: 'JI 6/19/2017 00:19:58'!
+!SalesBook methodsFor: 'adding' stamp: 'JI 6/19/2017 00:19:58'!
 addItem: anItem withPrice: aPrice
 
 	books add: anItem.
 	prices add: aPrice.! !
 
-!SalesBook methodsFor: 'as yet unclassified' stamp: 'JI 6/18/2017 22:21:46'!
-amounts
-	^ amounts copy! !
 
-!SalesBook methodsFor: 'as yet unclassified' stamp: 'JI 6/18/2017 22:21:38'!
-books
-	^ books copy! !
-
-!SalesBook methodsFor: 'as yet unclassified' stamp: 'JI 6/19/2017 00:19:42'!
+!SalesBook methodsFor: 'initialization' stamp: 'JI 6/19/2017 00:19:42'!
 createSalesBook
 	books _ OrderedCollection new.
 	prices _ OrderedCollection new.! !
-
-!SalesBook methodsFor: 'as yet unclassified' stamp: 'JI 6/19/2017 00:29:09'!
-isEmpty
-	^ books size = 0! !
-
-!SalesBook methodsFor: 'as yet unclassified' stamp: 'JI 6/18/2017 22:21:50'!
-prices
-	^ prices copy! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -405,7 +404,7 @@ prices
 SalesBook class
 	instanceVariableNames: ''!
 
-!SalesBook class methodsFor: 'as yet unclassified' stamp: 'JI 6/18/2017 22:15:08'!
+!SalesBook class methodsFor: 'initialization' stamp: 'JI 6/18/2017 22:15:08'!
 createSalesBook
 	^self new createSalesBook! !
 
