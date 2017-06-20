@@ -1,6 +1,6 @@
 !classDefinition: #TestTusLibros category: #'TusLibros-Solution'!
 TestCase subclass: #TestTusLibros
-	instanceVariableNames: 'shoppingCartWithEmptyCatalog anIsbnBook anIsbnBook2 catalog1 catalog2 shoppingCartWithCatalog1 shoppingCartWithCatalog2 aCashier shoppingCartWithCatalog1Price shoppingCartWithCatalog2Price aCashier2 aCard1 today aCard2 nameOfOwner numberOfPlastic numberOfPlastic2 aSalesBook1 salesBookEmpty aSalesBook1Exacto aSalesBook2 aSalesBook2Exacto'
+	instanceVariableNames: 'shoppingCartWithEmptyCatalog anIsbnBook anIsbnBook2 catalog1 catalog2 shoppingCartWithCatalog1 shoppingCartWithCatalog2 aCashier shoppingCartWithCatalog1Price shoppingCartWithCatalog2Price aCashier2 aCard1 today aCard2 nameOfOwner numberOfPlastic numberOfPlastic2 aSalesBook1 salesBookEmpty aSalesBook1Exacto aSalesBook2 aSalesBook2Exacto merchantProcessor owner3 aCard3'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'TusLibros-Solution'!
@@ -126,16 +126,18 @@ test012CreditCardCanNotInitializeWithLessOrMoreThan16Digits
 	withExceptionDo: [ :anError | self assert: anError messageText = 'Los digitos deben ser 16 exactos']! !
 
 
-!TestTusLibros methodsFor: 'setUp' stamp: 'JAK 6/17/2017 19:41:36'!
+!TestTusLibros methodsFor: 'setUp' stamp: 'JI 6/20/2017 17:22:04'!
 cardSetUp
 
 	today _ Month month: 10 year: 2017.
 	nameOfOwner _ 'John Kaplan'.
 	numberOfPlastic _ 1234567812345678.
 	numberOfPlastic2 _ 4321567812345678.
+	owner3 _ 'abcdefghijklmnopqrstuvwxyzzzzzzzzzzzzzzzzzzzz'.
 	
 	aCard1 _ CreditCard initializeForOwner: nameOfOwner withNumber: numberOfPlastic expiredAt: (Month month: 1 year: 2020).
-	aCard2 _ CreditCard initializeForOwner: nameOfOwner withNumber: numberOfPlastic expiredAt:(Month month: 6 year: 2010).! !
+	aCard2 _ CreditCard initializeForOwner: nameOfOwner withNumber: numberOfPlastic expiredAt:(Month month: 6 year: 2010).
+	aCard3 _ CreditCard initializeForOwner: owner3 withNumber: numberOfPlastic expiredAt: (Month month: 1 year: 2020)! !
 
 !TestTusLibros methodsFor: 'setUp' stamp: 'Ji 6/15/2017 19:12:36'!
 cashierSetUp
@@ -160,6 +162,11 @@ isbnSetUp
 	anIsbnBook2 := 321321.
 	! !
 
+!TestTusLibros methodsFor: 'setUp' stamp: 'JI 6/20/2017 17:15:56'!
+merchantProcessortSetUp
+
+	merchantProcessor _ MerchantProcessorSimulator new.! !
+
 !TestTusLibros methodsFor: 'setUp' stamp: 'JI 6/18/2017 23:53:38'!
 salesBookSetup
 
@@ -174,7 +181,7 @@ salesBookSetup
 	aSalesBook2Exacto add: anIsbnBook withAmount: 1 eachWithPrice: 10.
 	aSalesBook2Exacto add: anIsbnBook2 withAmount: 2 eachWithPrice: 20.! !
 
-!TestTusLibros methodsFor: 'setUp' stamp: 'JI 6/18/2017 21:58:29'!
+!TestTusLibros methodsFor: 'setUp' stamp: 'JI 6/20/2017 17:15:24'!
 setUp
 	
 	self isbnSetUp .
@@ -182,7 +189,8 @@ setUp
 	self shoppingCartsetUp .
 	self cardSetUp.
 	self cashierSetUp .
-	self salesBookSetup .! !
+	self salesBookSetup .
+	self merchantProcessortSetUp.! !
 
 !TestTusLibros methodsFor: 'setUp' stamp: 'Ji 6/15/2017 19:49:19'!
 shoppingCartsetUp
@@ -197,6 +205,41 @@ shoppingCartsetUp
 	shoppingCartWithCatalog2 add: anIsbnBook2 withQuantity:2. 
 	shoppingCartWithCatalog2Price _ 50.
 ! !
+
+
+!TestTusLibros methodsFor: 'Testing MPSimulator' stamp: 'JI 6/20/2017 17:29:45'!
+test014CantChargeIfThePersonDoesntOwnTheCard
+
+	self should: [merchantProcessor charge: 30 to: 'aGhost'  withCard: aCard1 atDate: today]
+	raise: Error
+	withExceptionDo: [ :anError | self assert: anError messageText = 'La persona no es dueña de la tarjeta'.
+		TestTusLibros toDo: 'No haberle cobrado a la tarjeta'].! !
+
+!TestTusLibros methodsFor: 'Testing MPSimulator' stamp: 'JI 6/20/2017 17:29:48'!
+test015NameCantBeMoreThan30CharLong
+
+	self should: [merchantProcessor charge: 30 to: owner3  withCard: aCard3  atDate: today ]
+	raise: Error
+	withExceptionDo: [ :anError | self assert: anError messageText = 'El nombre es demasiado largo'.
+		TestTusLibros toDo: 'No haberle cobrado a la tarjeta' ].! !
+
+!TestTusLibros methodsFor: 'Testing MPSimulator' stamp: 'JI 6/20/2017 17:29:50'!
+test016CardCannotBeDated
+
+	self should: [merchantProcessor charge: 30 to: nameOfOwner  withCard: aCard2  atDate: today ]
+	raise: Error
+	withExceptionDo: [ :anError | self assert: anError messageText = 'La tarjeta esta vencida'.
+		TestTusLibros toDo: 'No haberle cobrado a la tarjeta' ].! !
+
+!TestTusLibros methodsFor: 'Testing MPSimulator' stamp: 'JI 6/20/2017 17:32:45'!
+test017TheBankAccountHasEnoughMoney
+
+	TestTusLibros toDo: 'Hacer este test'! !
+
+!TestTusLibros methodsFor: 'Testing MPSimulator' stamp: 'JI 6/20/2017 17:33:52'!
+test018CanChargeAnAmount
+
+	TestTusLibros toDo: 'Hacer este test'! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -299,6 +342,11 @@ isNotExpiredAt: aDate
 	^ (expiredAt yearNumber > aDate yearNumber) or: [(expiredAt yearNumber = aDate yearNumber) and: [expiredAt monthIndex >= aDate monthIndex] ]
 	! !
 
+
+!CreditCard methodsFor: 'as yet unclassified' stamp: 'JI 6/20/2017 17:19:33'!
+owner
+	^nameInTheCard ! !
+
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
 !classDefinition: 'CreditCard class' category: #'TusLibros-Solution'!
@@ -318,6 +366,39 @@ canNotCreateCreditCardWithoutOwner
 !CreditCard class methodsFor: 'errors' stamp: 'JAK 6/17/2017 19:32:01'!
 digitsMustBeExactly16
 	^'Los digitos deben ser 16 exactos'! !
+
+
+!classDefinition: #MerchantProcessorSimulator category: #'TusLibros-Solution'!
+Object subclass: #MerchantProcessorSimulator
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'TusLibros-Solution'!
+
+!MerchantProcessorSimulator methodsFor: 'as yet unclassified' stamp: 'JI 6/20/2017 17:29:22'!
+charge: anAmount to: anOwner withCard: aCreditCard atDate: aDate
+	
+	self checkOwnerNameSize: anOwner .
+	self checkOwner: anOwner toOwn: aCreditCard .
+	self checkCardIsNotDated: aCreditCard atDate: aDate.! !
+
+!MerchantProcessorSimulator methodsFor: 'as yet unclassified' stamp: 'JI 6/20/2017 17:30:18'!
+checkCardIsNotDated: aCreditCard atDate: aDate
+
+	(aCreditCard isNotExpiredAt: aDate) ifFalse: [ self error: 'La tarjeta esta vencida']! !
+
+!MerchantProcessorSimulator methodsFor: 'as yet unclassified' stamp: 'JI 6/20/2017 17:18:24'!
+checkOwner: anOwner toOwn: aCreditCard 
+	
+	aCreditCard owner = anOwner ifFalse: [self error: 'La persona no es dueña de la tarjeta']! !
+
+!MerchantProcessorSimulator methodsFor: 'as yet unclassified' stamp: 'JI 6/20/2017 17:24:20'!
+checkOwnerNameSize: anOwner
+
+	anOwner size <= 30 ifFalse: [ self error: 'El nombre es demasiado largo']
+
+
+! !
 
 
 !classDefinition: #SalesBook category: #'TusLibros-Solution'!
