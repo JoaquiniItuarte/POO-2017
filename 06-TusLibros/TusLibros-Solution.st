@@ -294,6 +294,12 @@ test016CardCannotBeDated
 		self assert: uses +1 = merchantProcessor uses.
 		 ].! !
 
+
+!TestTusLibros methodsFor: 'as yet unclassified' stamp: 'Ji 6/22/2017 19:48:48'!
+todo
+
+	'hacer que el merchant processor sim tenga una lista de las tarjetas validas e invalidas'! !
+
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
 !classDefinition: 'TestTusLibros class' category: #'TusLibros-Solution'!
