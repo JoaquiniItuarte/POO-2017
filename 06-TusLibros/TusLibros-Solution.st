@@ -1,6 +1,6 @@
 !classDefinition: #TestTusLibros category: #'TusLibros-Solution'!
 TestCase subclass: #TestTusLibros
-	instanceVariableNames: 'shoppingCartWithEmptyCatalog anIsbnBook anIsbnBook2 catalog1 catalog2 shoppingCartWithCatalog1 shoppingCartWithCatalog2 aCashier shoppingCartWithCatalog1Price shoppingCartWithCatalog2Price aCashier2 aCard1 today aCard2 nameOfOwner numberOfPlastic numberOfPlastic2 aSalesBook1 salesBookEmpty aSalesBook1Exacto aSalesBook2 aSalesBook2Exacto merchantProcessor owner3 aCard3 merchantProcessor2 aCashier3 factoryCard card card2 userValid passwordValid userPass interfaceSimulator merchantProcessor3'
+	instanceVariableNames: 'shoppingCartWithEmptyCatalog anIsbnBook anIsbnBook2 catalog1 catalog2 shoppingCartWithCatalog1 shoppingCartWithCatalog2 aCashier shoppingCartWithCatalog1Price shoppingCartWithCatalog2Price aCashier2 aCard1 today aCard2 nameOfOwner numberOfPlastic numberOfPlastic2 aSalesBook1 salesBookEmpty aSalesBook1Exacto aSalesBook2 aSalesBook2Exacto merchantProcessor owner3 aCard3 merchantProcessor2 aCashier3 factoryCard card card2 userValid passwordValid userPass interfaceSimulator merchantProcessor3 aCartId dateAndTime3 dateAndTime2 dateAndTime4 dateAndTime1'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'TusLibros-Solution'!
@@ -200,7 +200,7 @@ catalogSetUp
 	catalog2 at: anIsbnBook2 put: 20.
 	! !
 
-!TestTusLibros methodsFor: 'setUp' stamp: 'JAK 6/27/2017 00:15:07'!
+!TestTusLibros methodsFor: 'setUp' stamp: 'JI 6/27/2017 15:19:43'!
 interfaceCartsetUp
 
 	userValid _ 'bobby32'.
@@ -208,6 +208,12 @@ interfaceCartsetUp
 	userPass _ Dictionary new.
 	userPass at:userValid put:passwordValid .
 	interfaceSimulator _ InterfaceSimulator initializeWithUserAndPassword: userPass andCatalog: catalog2 andCreditCard: aCard1 andMerchantProcessor: merchantProcessor2 withSalesBook: aSalesBook2 withCashier: aCashier2 asToday: today .
+	
+	dateAndTime1 _ DateAndTime date: (Date year: 2017 month: 6 day: 1) time: (Time hour: 12 minute: 0 second: 0).
+	dateAndTime2 _ DateAndTime date: (Date year: 2017 month: 6 day: 1) time: (Time hour: 12 minute: 15 second: 0).
+	dateAndTime3 _ DateAndTime date: (Date year: 2017 month: 6 day: 1) time: (Time hour: 12 minute: 30 second: 0).	
+	dateAndTime4 _ DateAndTime date: (Date year: 2017 month: 6 day: 1) time: (Time hour: 12 minute: 45 second: 0).
+	aCartId _ interfaceSimulator createCartForClientId: userValid withPassword: passwordValid atMoment: dateAndTime1 .
 	
 ! !
 
@@ -319,92 +325,116 @@ test017CardIsOk
 ! !
 
 
-!TestTusLibros methodsFor: 'Testing Interface' stamp: 'JAK 6/26/2017 23:07:23'!
+!TestTusLibros methodsFor: 'Testing Interface' stamp: 'JI 6/27/2017 15:22:11'!
 test17CanCreateAnEmptyCart
 	| aCartId contentsOfACart |
-	aCartId _ interfaceSimulator createCartForClientId: userValid withPassword: passwordValid .
-	contentsOfACart _ interfaceSimulator listCart: aCartId.
+	aCartId _ interfaceSimulator createCartForClientId: userValid withPassword: passwordValid atMoment: dateAndTime1.
+	contentsOfACart _ interfaceSimulator listCart: aCartId atMoment: dateAndTime2.
 	self assert: contentsOfACart size = 0.! !
 
-!TestTusLibros methodsFor: 'Testing Interface' stamp: 'JAK 6/26/2017 23:22:49'!
+!TestTusLibros methodsFor: 'Testing Interface' stamp: 'JI 6/27/2017 15:22:26'!
 test18CanNotCreateAnEmptyCartWithUserOrPasswordInvalid
 	| aCartId|
 	
-	self should: [aCartId _ interfaceSimulator createCartForClientId: 'usuarioNoExite' withPassword: passwordValid ]
+	self should: [aCartId _ interfaceSimulator createCartForClientId: 'usuarioNoExite' withPassword: passwordValid atMoment: dateAndTime1 ]
 	raise: Error
 	withExceptionDo: [ :anError | self assert: anError messageText = 'Usuario inexistente'. 
 									self assert: aCartId = nil.
 						].
 	
-	self should: [aCartId _ interfaceSimulator createCartForClientId: userValid withPassword: 'passwordIncorrecta' ]
+	self should: [aCartId _ interfaceSimulator createCartForClientId: userValid withPassword: 'passwordIncorrecta'  atMoment: dateAndTime1]
 	raise: Error
 	withExceptionDo: [ :anError | self assert: anError messageText = 'Contraseña incorrecta'. 
 									self assert: aCartId = nil.
 						].
 ! !
 
-!TestTusLibros methodsFor: 'Testing Interface' stamp: 'JAK 6/26/2017 23:26:08'!
+!TestTusLibros methodsFor: 'Testing Interface' stamp: 'JI 6/27/2017 15:23:58'!
 test19CanNotListACartWithInvalidId
 	| aCartId|
-	aCartId _ interfaceSimulator createCartForClientId: userValid withPassword: passwordValid.
+	aCartId _ interfaceSimulator createCartForClientId: userValid withPassword: passwordValid atMoment: dateAndTime1.
 	
-	self should: [ interfaceSimulator listCart: (aCartId + 10)]
+	self should: [ interfaceSimulator listCart: 'Manteca' atMoment: dateAndTime2]
 	raise: Error
 	withExceptionDo: [ :anError | self assert: anError messageText = 'Id de carrito inexistente'. ].! !
 
-!TestTusLibros methodsFor: 'Testing Interface' stamp: 'JAK 6/26/2017 23:44:13'!
+!TestTusLibros methodsFor: 'Testing Interface' stamp: 'JI 6/27/2017 15:24:25'!
 test20CanAddABookToAnEmptyCart
 	| aCartId contentsOfShoppingCart |
-	aCartId _ interfaceSimulator createCartForClientId: userValid withPassword: passwordValid .
-	interfaceSimulator addToCart: aCartId withBook: anIsbnBook  withQuantity: 1.
-	contentsOfShoppingCart := interfaceSimulator listCart: aCartId .
+	aCartId _ interfaceSimulator createCartForClientId: userValid withPassword: passwordValid atMoment: dateAndTime1 .
+	interfaceSimulator addToCart: aCartId withBook: anIsbnBook  withQuantity: 1 atMoment: dateAndTime2 .
+	contentsOfShoppingCart := interfaceSimulator listCart: aCartId atMoment: dateAndTime2.
 	self assert: (contentsOfShoppingCart includes: anIsbnBook) .! !
 
-!TestTusLibros methodsFor: 'Testing Interface' stamp: 'JAK 6/26/2017 23:48:36'!
+!TestTusLibros methodsFor: 'Testing Interface' stamp: 'JI 6/27/2017 15:24:58'!
 test21CanNotAddABookToANonExistentCart
 	| aCartId |
-	aCartId _ interfaceSimulator createCartForClientId: userValid withPassword: passwordValid .
+	aCartId _ interfaceSimulator createCartForClientId: userValid withPassword: passwordValid atMoment: dateAndTime1 .
 	
-	self should: [ interfaceSimulator addToCart: (aCartId + 10) withBook: anIsbnBook withQuantity: 2]
+	self should: [ interfaceSimulator addToCart: 'Manteca' withBook: anIsbnBook withQuantity: 2 atMoment: dateAndTime2]
 	raise: Error
 	withExceptionDo: [ :anError | self assert: anError messageText = 'Id de carrito inexistente'. ].! !
 
-!TestTusLibros methodsFor: 'Testing Interface' stamp: 'JAK 6/27/2017 00:20:26'!
+!TestTusLibros methodsFor: 'Testing Interface' stamp: 'JI 6/27/2017 15:25:14'!
 test22CheckOutCart
 	| aCartId |
-	aCartId _ interfaceSimulator createCartForClientId: userValid withPassword: passwordValid .
-	interfaceSimulator addToCart: aCartId withBook: anIsbnBook  withQuantity: 1.
-	interfaceSimulator addToCart: aCartId withBook: anIsbnBook2  withQuantity: 2.
-	interfaceSimulator checkOutCart: aCartId creditNumber: (aCard1 number) expireAt: '012020' from: (aCard1 owner).
+	aCartId _ interfaceSimulator createCartForClientId: userValid withPassword: passwordValid atMoment: dateAndTime1.
+	interfaceSimulator addToCart: aCartId withBook: anIsbnBook  withQuantity: 1 atMoment: dateAndTime2.
+	interfaceSimulator addToCart: aCartId withBook: anIsbnBook2  withQuantity: 2 atMoment: dateAndTime2.
+	interfaceSimulator checkOutCart: aCartId creditNumber: (aCard1 number) expireAt: '012020' from: (aCard1 owner) atMoment: dateAndTime2.
 	
 	self assert: aSalesBook2 = aSalesBook2Exacto .
 ! !
 
-!TestTusLibros methodsFor: 'Testing Interface' stamp: 'JAK 6/27/2017 00:34:51'!
+!TestTusLibros methodsFor: 'Testing Interface' stamp: 'JI 6/27/2017 15:26:51'!
 test23CanNotCheckOutCartTwiceOrMore
 	| aCartId |
-	aCartId _ interfaceSimulator createCartForClientId: userValid withPassword: passwordValid .
-	interfaceSimulator addToCart: aCartId withBook: anIsbnBook  withQuantity: 1.
-	interfaceSimulator addToCart: aCartId withBook: anIsbnBook2  withQuantity: 2.
-	interfaceSimulator checkOutCart: aCartId creditNumber: (aCard1 number) expireAt: '012020' from: (aCard1 owner).
+	aCartId _ interfaceSimulator createCartForClientId: userValid withPassword: passwordValid atMoment: dateAndTime1.
+	interfaceSimulator addToCart: aCartId withBook: anIsbnBook  withQuantity: 1 atMoment: dateAndTime2.
+	interfaceSimulator addToCart: aCartId withBook: anIsbnBook2  withQuantity: 2 atMoment: dateAndTime2.
+	interfaceSimulator checkOutCart: aCartId creditNumber: (aCard1 number) expireAt: '012020' from: (aCard1 owner) atMoment: dateAndTime2.
 	
-	self should: [ interfaceSimulator checkOutCart: aCartId creditNumber: (aCard1 number) expireAt: '012020' from: (aCard1 owner)]
+	self should: [ interfaceSimulator checkOutCart: aCartId creditNumber: (aCard1 number) expireAt: '012020' from: (aCard1 owner) atMoment: dateAndTime2]
 	raise: Error
 	withExceptionDo: [ :anError | self assert: anError messageText = 'Id de carrito inexistente'. ].
 ! !
 
-!TestTusLibros methodsFor: 'Testing Interface' stamp: 'JAK 6/27/2017 00:38:27'!
+!TestTusLibros methodsFor: 'Testing Interface' stamp: 'JI 6/27/2017 15:27:05'!
 test24CheckOutCartAndListPurchases
 	| aCartId contentsOfPurchases |
-	aCartId _ interfaceSimulator createCartForClientId: userValid withPassword: passwordValid .
-	interfaceSimulator addToCart: aCartId withBook: anIsbnBook  withQuantity: 1.
-	interfaceSimulator addToCart: aCartId withBook: anIsbnBook2  withQuantity: 2.
-	interfaceSimulator checkOutCart: aCartId creditNumber: (aCard1 number) expireAt: '012020' from: (aCard1 owner).
+	aCartId _ interfaceSimulator createCartForClientId: userValid withPassword: passwordValid atMoment: dateAndTime1.
+	interfaceSimulator addToCart: aCartId withBook: anIsbnBook  withQuantity: 1 atMoment: dateAndTime2.
+	interfaceSimulator addToCart: aCartId withBook: anIsbnBook2  withQuantity: 2 atMoment: dateAndTime2.
+	interfaceSimulator checkOutCart: aCartId creditNumber: (aCard1 number) expireAt: '012020' from: (aCard1 owner) atMoment: dateAndTime2.
 	
-	contentsOfPurchases _ interfaceSimulator listPurchases: aCartId clientId: userValid withPassword: passwordValid .
+	contentsOfPurchases _ interfaceSimulator listPurchases: aCartId clientId: userValid withPassword: passwordValid atMoment: dateAndTime2.
 	
 	self assert: (contentsOfPurchases includes: anIsbnBook ).
 	self assert: (contentsOfPurchases includes: anIsbnBook2 ).
+! !
+
+!TestTusLibros methodsFor: 'Testing Interface' stamp: 'JI 6/27/2017 15:19:32'!
+test25CantUseCartAfter30MinutosOfNotUsingIt
+		
+	self should: [interfaceSimulator listCart: aCartId atMoment: dateAndTime3] 
+	raise: Error
+	withExceptionDo: [ :anError | self assert: anError messageText = 'Carrito invalido por no usarlo en 30 minutos'.].
+	
+	self should: [interfaceSimulator addToCart: aCartId withBook: anIsbnBook  withQuantity: 1 atMoment: dateAndTime3] 
+	raise: Error
+	withExceptionDo: [ :anError | self assert: anError messageText = 'Carrito invalido por no usarlo en 30 minutos'.].
+	
+	self should: [interfaceSimulator checkOutCart: aCartId creditNumber: (aCard1 number) expireAt: '012020' from: (aCard1 owner) atMoment: dateAndTime3] 
+	raise: Error
+	withExceptionDo: [ :anError | self assert: anError messageText = 'Carrito invalido por no usarlo en 30 minutos'.].
+	
+	interfaceSimulator addToCart: aCartId withBook: anIsbnBook  withQuantity: 1 atMoment: dateAndTime2.
+	self should: [interfaceSimulator checkOutCart: aCartId creditNumber: (aCard1 number) expireAt: '012020' from: (aCard1 owner) atMoment: dateAndTime4.] 
+	raise: Error
+	withExceptionDo: [ :anError | self assert: anError messageText = 'Carrito invalido por no usarlo en 30 minutos'.].
+
+
+
 ! !
 
 
@@ -545,37 +575,50 @@ digitsMustBeExactly16
 
 !classDefinition: #InterfaceSimulator category: #'TusLibros-Solution'!
 Object subclass: #InterfaceSimulator
-	instanceVariableNames: 'users catalog merchant listOfCarts salesBook cashier today credit listOfFinishedCarts'
+	instanceVariableNames: 'users catalog merchant listOfCarts salesBook cashier today credit listOfFinishedCarts timeOfCarts'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'TusLibros-Solution'!
 
-!InterfaceSimulator methodsFor: 'operating' stamp: 'JAK 6/26/2017 23:52:18'!
-addToCart: anIdCart withBook: anIsbnBook withQuantity: quantity
+!InterfaceSimulator methodsFor: 'operating' stamp: 'JI 6/27/2017 15:05:47'!
+addToCart: anIdCart withBook: anIsbnBook withQuantity: quantity atMoment: aMoment
 
 	| aCart |
 	aCart _ self getCartOrRaiseError: anIdCart.
+	self raiseErrorIfTimedOutCart: anIdCart atMoment: aMoment .
 	aCart add: anIsbnBook withQuantity: quantity .! !
 
-!InterfaceSimulator methodsFor: 'operating' stamp: 'JAK 6/27/2017 00:35:51'!
-checkOutCart: anIdCart creditNumber: creditNumber expireAt: expirationDate from: owner
+!InterfaceSimulator methodsFor: 'operating' stamp: 'JI 6/27/2017 15:08:55'!
+checkOutCart: anIdCart creditNumber: creditNumber expireAt: expirationDate from: owner atMoment: aMoment
 
 	| aCart |
 	aCart _ self getCartOrRaiseError: anIdCart.
+	self raiseErrorIfTimedOutCart: anIdCart atMoment: aMoment .
 	listOfFinishedCarts at:anIdCart put: aCart.
 	cashier checkOut: aCart withCard: credit asTodayBeing: today withSalesBook: salesBook .
 	listOfCarts removeKey: anIdCart .! !
 
-!InterfaceSimulator methodsFor: 'operating' stamp: 'JAK 6/27/2017 00:23:53'!
-createCartForClientId: aClientId withPassword: aPassword
+!InterfaceSimulator methodsFor: 'operating' stamp: 'JI 6/27/2017 15:04:35'!
+createCartForClientId: aClientId withPassword: aPassword atMoment: aMoment
+
 	self validateUser: aClientId withPassword: aPassword.
-	listOfCarts at: 10 put: (ShoppingCart initializeWithCatalog: catalog).
-	^10.! !
+	listOfCarts at: aClientId put: (ShoppingCart initializeWithCatalog: catalog).
+	timeOfCarts at: aClientId put: aMoment .
+	^ aClientId .! !
 
 !InterfaceSimulator methodsFor: 'operating' stamp: 'JAK 6/27/2017 00:26:23'!
 listCart: anIdCart
 	| aCart |
 	aCart _ self getCartOrRaiseError: anIdCart.
+	^aCart contents copy.! !
+
+!InterfaceSimulator methodsFor: 'operating' stamp: 'JI 6/27/2017 15:09:09'!
+listCart: anIdCart atMoment: aMoment
+
+	| aCart |
+	
+	aCart _ self getCartOrRaiseError: anIdCart.
+	self raiseErrorIfTimedOutCart: anIdCart atMoment: aMoment .
 	^aCart contents copy.! !
 
 !InterfaceSimulator methodsFor: 'operating' stamp: 'JAK 6/27/2017 00:33:01'!
@@ -585,8 +628,23 @@ listPurchases: anIdCart clientId: aClientId withPassword: aPassword
 	aCart _ self getFinishedCartOrRaiseError: anIdCart .
 	^aCart contents copy.! !
 
+!InterfaceSimulator methodsFor: 'operating' stamp: 'JI 6/27/2017 15:09:19'!
+listPurchases: anIdCart clientId: aClientId withPassword: aPassword atMoment: aMoment
+	| aCart |
+	
+	self validateUser: aClientId withPassword: aPassword.
+	aCart _ self getFinishedCartOrRaiseError: anIdCart .
+	self raiseErrorIfTimedOutCart: anIdCart atMoment: aMoment .
+	^aCart contents copy.! !
 
-!InterfaceSimulator methodsFor: 'initialization' stamp: 'JAK 6/27/2017 00:31:03'!
+!InterfaceSimulator methodsFor: 'operating' stamp: 'JI 6/27/2017 15:18:30'!
+raiseErrorIfTimedOutCart: anIdCart atMoment: aMoment 
+
+	(aMoment -(timeOfCarts at: anIdCart) >= (Duration minutes: 30) ) ifTrue: [ ^self error: 'Carrito invalido por no usarlo en 30 minutos'].
+	! !
+
+
+!InterfaceSimulator methodsFor: 'initialization' stamp: 'JI 6/27/2017 15:11:12'!
 initializeWithUserAndPassword: userPassDict andCatalog: aCatalog andCreditCard: creditCard andMerchantProcessor: aMerchant withSalesBook: aSalesBook withCashier: aCashier asToday: now
 	users _ userPassDict .
 	catalog _ aCatalog .
@@ -596,7 +654,8 @@ initializeWithUserAndPassword: userPassDict andCatalog: aCatalog andCreditCard: 
 	today _ now.
 	credit _ creditCard .
 	listOfCarts _ Dictionary new.
-	listOfFinishedCarts _ Dictionary new.! !
+	listOfFinishedCarts _ Dictionary new.
+	timeOfCarts _ Dictionary new.! !
 
 
 !InterfaceSimulator methodsFor: 'data validation' stamp: 'JAK 6/26/2017 23:51:51'!
