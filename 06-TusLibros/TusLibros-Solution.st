@@ -1,96 +1,97 @@
 !classDefinition: #TestTusLibros category: #'TusLibros-Solution'!
 TestCase subclass: #TestTusLibros
-	instanceVariableNames: 'shoppingCartWithEmptyCatalog anIsbnBook anIsbnBook2 catalog1 catalog2 shoppingCartWithCatalog1 shoppingCartWithCatalog2 aCashier shoppingCartWithCatalog1Price shoppingCartWithCatalog2Price aCashier2 aCard1 today aCard2 nameOfOwner numberOfPlastic numberOfPlastic2 aSalesBook1 salesBookEmpty aSalesBook1Exacto aSalesBook2 aSalesBook2Exacto merchantProcessor owner3 aCard3 merchantProcessor2 aCashier3 factoryCard card card2 userValid passwordValid userPass interfaceSimulator merchantProcessor3 aCartId dateAndTime3 dateAndTime2 dateAndTime4 dateAndTime1'
+	instanceVariableNames: 'shoppingCartWithEmptyCatalog anIsbnBook anIsbnBook2 catalog1 catalog2 shoppingCartWithCatalog1 shoppingCartWithCatalog2 aCashier shoppingCartWithCatalog1Price shoppingCartWithCatalog2Price aCashier2 aCard1 today aCard2 nameOfOwner numberOfPlastic numberOfPlastic2 aSalesBook1 salesBookEmpty aSalesBook1Exacto aSalesBook2 aSalesBook2Exacto merchantProcessor owner3 aCard3 merchantProcessor2 aCashier3 factoryCard card card2 userValid passwordValid userPass interfaceSimulator merchantProcessor3 aCartId dateAndTime3 dateAndTime2 dateAndTime4 dateAndTime1 aCard4 accountsInfo accountsInfo1 accountsInfo2'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'TusLibros-Solution'!
 
-!TestTusLibros methodsFor: 'Testing Cashier' stamp: 'JI 6/22/2017 16:27:29'!
+!TestTusLibros methodsFor: 'Testing Cashier' stamp: 'JI 6/27/2017 17:00:33'!
 test009aCashierCanNotCheckOutEmptyCart
 	
 	|balance uses|
-	balance _ merchantProcessor balance.
+	
+	balance _ merchantProcessor balanceOfCard: aCard1 .
 	uses  _ merchantProcessor uses .
 	
 	self should: [ aCashier checkOut: shoppingCartWithEmptyCatalog  withCard: aCard1 asTodayBeing: today withSalesBook: aSalesBook1 .]  
 		raise: Error  
 		withExceptionDo: [ :anError | self assert: anError messageText equals: 'No se puede hacer checkout de un carrito vacio'.
 			self assert: salesBookEmpty isEmpty.
-			self assert: balance = merchantProcessor balance.
+			self assert: balance = (merchantProcessor balanceOfCard: aCard1) .
 			self assert: uses = merchantProcessor uses.
 			]! !
 
-!TestTusLibros methodsFor: 'Testing Cashier' stamp: 'JI 6/22/2017 16:29:12'!
+!TestTusLibros methodsFor: 'Testing Cashier' stamp: 'JI 6/27/2017 17:05:02'!
 test010aCashierChecksOutAnItem
 	
 	| total balance uses|
-	balance _ merchantProcessor balance.
+	balance _ merchantProcessor balanceOfCard: aCard1.
 	uses  _ merchantProcessor uses .
 	
 	total _ aCashier checkOut: shoppingCartWithCatalog1  withCard: aCard1 asTodayBeing: today withSalesBook: aSalesBook1.
 	
 	self assert: total  = shoppingCartWithCatalog1Price .
 	self assert: aSalesBook1 = aSalesBook1Exacto .
-	self assert: balance -total  = merchantProcessor balance.
+	self assert: balance -total  = (merchantProcessor balanceOfCard: aCard1).
 	self assert: uses +1 = merchantProcessor uses.! !
 
-!TestTusLibros methodsFor: 'Testing Cashier' stamp: 'JI 6/22/2017 16:57:57'!
+!TestTusLibros methodsFor: 'Testing Cashier' stamp: 'JI 6/27/2017 17:05:19'!
 test011aCashierChecksOutItems
 	
 	| total balance uses|
-	balance _ merchantProcessor2 balance.
+	balance _ merchantProcessor2 balanceOfCard: aCard1.
 	uses  _ merchantProcessor2 uses .
 	
 	total _ aCashier2 checkOut: shoppingCartWithCatalog2  withCard: aCard1 asTodayBeing: today withSalesBook: aSalesBook2.
 	
 	self assert: total  = shoppingCartWithCatalog2Price .
 	self assert: aSalesBook2 = aSalesBook2Exacto .
-	self assert: balance -total  = merchantProcessor2 balance.
+	self assert: balance -total  = (merchantProcessor2 balanceOfCard: aCard1).
 	self assert: uses +1 = merchantProcessor2 uses.! !
 
-!TestTusLibros methodsFor: 'Testing Cashier' stamp: 'JI 6/22/2017 16:59:04'!
+!TestTusLibros methodsFor: 'Testing Cashier' stamp: 'JI 6/27/2017 17:08:30'!
 test012aCashierCanUseNotDatedCard
 	
 	| balance total uses |
 	
-	balance _ merchantProcessor2 balance.
+	balance _ merchantProcessor2 balanceOfCard: aCard1 .
 	uses  _ merchantProcessor2 uses .
 	total _ aCashier2 checkOut: shoppingCartWithCatalog2  withCard: aCard1 asTodayBeing: today withSalesBook: aSalesBook2.
 	
 	self assert: total = shoppingCartWithCatalog2Price .
 	self assert: aSalesBook2 = aSalesBook2Exacto .
-	self assert: balance -total  = merchantProcessor2 balance.
+	self assert: balance -total  = (merchantProcessor2 balanceOfCard: aCard1) .
 	self assert: uses +1 = merchantProcessor2 uses.! !
 
-!TestTusLibros methodsFor: 'Testing Cashier' stamp: 'JI 6/22/2017 16:59:19'!
+!TestTusLibros methodsFor: 'Testing Cashier' stamp: 'JI 6/27/2017 17:08:45'!
 test013aCashierCantUseDatedCard
 	
 	| balance uses |
 	
-	balance _ merchantProcessor2 balance.
+	balance _ merchantProcessor2 balanceOfCard: aCard2 .
 	uses  _ merchantProcessor2 uses .
 		
 	self should: [aCashier2 checkOut: shoppingCartWithCatalog2 withCard: aCard2 asTodayBeing: today withSalesBook: aSalesBook2]
 	raise: Error
 	withExceptionDo: [ :anError | self assert: anError messageText = 'La tarjeta esta vencida'.
 		self assert: aSalesBook2 isEmpty.
-		self assert: balance   = merchantProcessor2 balance.
+		self assert: balance   = (merchantProcessor2 balanceOfCard: aCard2).
 		self assert: uses = merchantProcessor2 uses.
 		]! !
 
-!TestTusLibros methodsFor: 'Testing Cashier' stamp: 'JAK 6/26/2017 23:02:50'!
+!TestTusLibros methodsFor: 'Testing Cashier' stamp: 'JI 6/27/2017 17:09:08'!
 test014aCashierCantChargeIfNotEnoughMoneyInBank
 	
 	| balance uses |
 	
-	balance _ merchantProcessor balance.
+	balance _ merchantProcessor balanceOfCard: aCard1.
 	uses  _ merchantProcessor uses .
 		
 	self should: [aCashier3 checkOut: shoppingCartWithCatalog2 withCard: aCard1 asTodayBeing: today withSalesBook: aSalesBook2]
 	raise: Error
 	withExceptionDo: [ :anError | self assert: anError messageText =  'No hay suficiente dinero en el banco'.
 		self assert: aSalesBook2 isEmpty.
-		self assert: balance  = merchantProcessor balance.
+		self assert: balance  = (merchantProcessor balanceOfCard: aCard1).
 		self assert: uses + 1 = merchantProcessor uses.
 		]! !
 
@@ -170,7 +171,7 @@ test012CreditCardCanNotInitializeWithLessOrMoreThan16Digits
 	withExceptionDo: [ :anError | self assert: anError messageText = 'Los digitos deben ser 16 exactos']! !
 
 
-!TestTusLibros methodsFor: 'setUp' stamp: 'JI 6/20/2017 17:22:04'!
+!TestTusLibros methodsFor: 'setUp' stamp: 'JI 6/27/2017 16:31:15'!
 cardSetUp
 
 	today _ Month month: 10 year: 2017.
@@ -181,7 +182,8 @@ cardSetUp
 	
 	aCard1 _ CreditCard initializeForOwner: nameOfOwner withNumber: numberOfPlastic expiredAt: (Month month: 1 year: 2020).
 	aCard2 _ CreditCard initializeForOwner: nameOfOwner withNumber: numberOfPlastic expiredAt:(Month month: 6 year: 2010).
-	aCard3 _ CreditCard initializeForOwner: owner3 withNumber: numberOfPlastic expiredAt: (Month month: 1 year: 2020)! !
+	aCard3 _ CreditCard initializeForOwner: owner3 withNumber: numberOfPlastic expiredAt: (Month month: 1 year: 2020).
+	aCard4 _ CreditCard initializeForOwner: 'Unknown' withNumber: 1234567812345677 expiredAt: (Month month: 1 year: 2020).! !
 
 !TestTusLibros methodsFor: 'setUp' stamp: 'JI 6/22/2017 17:10:32'!
 cashierSetUp
@@ -224,11 +226,20 @@ isbnSetUp
 	anIsbnBook2 := 321321.
 	! !
 
-!TestTusLibros methodsFor: 'setUp' stamp: 'JAK 6/27/2017 00:01:51'!
+!TestTusLibros methodsFor: 'setUp' stamp: 'JI 6/27/2017 17:12:59'!
 merchantProcessortSetUp
 
-	merchantProcessor _ MerchantProcessorSimulator initializeWithBalance: 10.
-	merchantProcessor2 _ MerchantProcessorSimulator initializeWithBalance: 60.
+	accountsInfo1 _ Dictionary new.
+	accountsInfo1 at: aCard1 put: 10.
+	
+	accountsInfo2 _ Dictionary new.
+	accountsInfo2 at: aCard1 put: 50.
+	accountsInfo2 at: aCard2 put: 60.
+	accountsInfo2 at: aCard3 put: 70.
+	
+	merchantProcessor _ MerchantProcessorSimulator initializeWithBankInfo: accountsInfo1 .
+	merchantProcessor2 _ MerchantProcessorSimulator initializeWithBankInfo: accountsInfo2 .
+	
 ! !
 
 !TestTusLibros methodsFor: 'setUp' stamp: 'JI 6/18/2017 23:53:38'!
@@ -245,13 +256,14 @@ salesBookSetup
 	aSalesBook2Exacto add: anIsbnBook withAmount: 1 eachWithPrice: 10.
 	aSalesBook2Exacto add: anIsbnBook2 withAmount: 2 eachWithPrice: 20.! !
 
-!TestTusLibros methodsFor: 'setUp' stamp: 'JAK 6/26/2017 23:14:04'!
+!TestTusLibros methodsFor: 'setUp' stamp: 'JI 6/27/2017 17:04:30'!
 setUp
+	self cardSetUp.
 	self merchantProcessortSetUp.
 	self isbnSetUp .
 	self catalogSetUp .
 	self shoppingCartsetUp .
-	self cardSetUp.
+	
 	self cashierSetUp .
 	self salesBookSetup .
 	self interfaceCartsetUp .
@@ -272,56 +284,72 @@ shoppingCartsetUp
 ! !
 
 
-!TestTusLibros methodsFor: 'Testing MPSimulator' stamp: 'JAK 6/26/2017 22:56:18'!
+!TestTusLibros methodsFor: 'Testing MPSimulator' stamp: 'JI 6/27/2017 17:13:57'!
 test014CantChargeIfThePersonDoesntOwnTheCard
 
 	|balance uses |
-	balance _ merchantProcessor balance.
+	balance _ merchantProcessor balanceOfCard: aCard1 .
 	uses _ merchantProcessor uses.
 	self should: [merchantProcessor charge: 30 to: 'aGhost'  withCard: aCard1 atDate: today]
 	raise: Error
 	withExceptionDo: [ :anError | self assert: anError messageText = 'La persona no es dueña de la tarjeta'.
-		self assert: balance = merchantProcessor balance.
+		self assert: balance = (merchantProcessor balanceOfCard: aCard1).
 		self assert: uses = merchantProcessor uses.
 		].! !
 
-!TestTusLibros methodsFor: 'Testing MPSimulator' stamp: 'JAK 6/26/2017 22:56:24'!
+!TestTusLibros methodsFor: 'Testing MPSimulator' stamp: 'JI 6/27/2017 17:15:27'!
 test015NameCantBeMoreThan30CharLong
 
 	|balance uses |
-	balance _ merchantProcessor balance.
-	uses _ merchantProcessor uses.
+	balance _ merchantProcessor2 balanceOfCard: aCard3.
+	uses _ merchantProcessor2 uses.
 	
-	self should: [merchantProcessor charge: 30 to: owner3  withCard: aCard3  atDate: today ]
+	self should: [merchantProcessor2 charge: 30 to: owner3  withCard: aCard3  atDate: today ]
 	raise: Error
 	withExceptionDo: [ :anError | self assert: anError messageText = 'El nombre es demasiado largo'.
-		self assert: balance = merchantProcessor balance.
-		self assert: uses  = merchantProcessor uses.
+		self assert: balance = (merchantProcessor2 balanceOfCard: aCard3).
+		self assert: uses  = merchantProcessor2 uses.
 		 ].! !
 
-!TestTusLibros methodsFor: 'Testing MPSimulator' stamp: 'JAK 6/26/2017 22:56:30'!
+!TestTusLibros methodsFor: 'Testing MPSimulator' stamp: 'JI 6/27/2017 17:15:48'!
 test016CardCannotBeDated
 
 	|balance uses |
-	balance _ merchantProcessor balance.
+	balance _ merchantProcessor2 balanceOfCard: aCard2.
 	uses _ merchantProcessor uses.
 	
-	self should: [merchantProcessor charge: 30 to: nameOfOwner  withCard: aCard2  atDate: today ]
+	self should: [merchantProcessor2 charge: 30 to: nameOfOwner  withCard: aCard2  atDate: today ]
 	raise: Error
 	withExceptionDo: [ :anError | self assert: anError messageText = 'La tarjeta esta vencida'.
-		self assert: balance = merchantProcessor balance.
-		self assert: uses = merchantProcessor uses.
+		self assert: balance = (merchantProcessor2 balanceOfCard: aCard2).
+		self assert: uses = merchantProcessor2 uses.
 		 ].! !
 
-!TestTusLibros methodsFor: 'Testing MPSimulator' stamp: 'JAK 6/26/2017 23:02:10'!
+!TestTusLibros methodsFor: 'Testing MPSimulator' stamp: 'JI 6/27/2017 17:15:57'!
 test017CardIsOk
 
 	|balance uses |
-	balance _ merchantProcessor2 balance.
+	balance _ merchantProcessor2 balanceOfCard: aCard1.
 	uses _ merchantProcessor2 uses.
 	merchantProcessor2 charge: 30 to: nameOfOwner  withCard: aCard1  atDate: today.
-	self assert: balance - 30 = merchantProcessor2 balance .
+	self assert: balance - 30 = (merchantProcessor2 balanceOfCard: aCard1) .
 	self assert: uses + 1 = merchantProcessor2 uses.
+! !
+
+!TestTusLibros methodsFor: 'Testing MPSimulator' stamp: 'JI 6/27/2017 17:18:18'!
+test017CardIsOkCantChargeIfCardIsInvalid
+
+	| uses |
+	
+	uses _ merchantProcessor2 uses.
+
+	self should: [merchantProcessor2 charge: 30 to: 'Unknown'  withCard: aCard4  atDate: today.]
+	raise: Error
+	withExceptionDo: [ :anError | self assert: anError messageText = 'Tarjeta invalida'.
+		self assert: uses + 1 = merchantProcessor2 uses.
+		] .
+
+	
 ! !
 
 
@@ -443,12 +471,6 @@ test25CantUseCartAfter30MinutosOfNotUsingIt
 
 
 ! !
-
-
-!TestTusLibros methodsFor: 'as yet unclassified' stamp: 'Ji 6/22/2017 19:48:48'!
-todo
-
-	'hacer que el merchant processor sim tenga una lista de las tarjetas validas e invalidas'! !
 
 
 !classDefinition: #Cashier category: #'TusLibros-Solution'!
@@ -635,12 +657,6 @@ listPurchases: anIdCart clientId: aClientId withPassword: aPassword atMoment: aM
 	self restartCart: anIdCart toMoment: aMoment .
 	^aCart contents copy.! !
 
-!InterfaceSimulator methodsFor: 'operating' stamp: 'JI 6/27/2017 15:18:30'!
-raiseErrorIfTimedOutCart: anIdCart atMoment: aMoment 
-
-	(aMoment -(timeOfCarts at: anIdCart) >= (Duration minutes: 30) ) ifTrue: [ ^self error: 'Carrito invalido por no usarlo en 30 minutos'].
-	! !
-
 !InterfaceSimulator methodsFor: 'operating' stamp: 'JI 6/27/2017 15:37:24'!
 restartCart: anIdCart toMoment: aMoment 
 
@@ -675,6 +691,12 @@ getFinishedCartOrRaiseError: anIdCart
 	aCart _ listOfFinishedCarts at: anIdCart ifAbsent: [self error: self class cartIdDoesNotExist] .
 	^aCart.! !
 
+!InterfaceSimulator methodsFor: 'data validation' stamp: 'JI 6/27/2017 15:18:30'!
+raiseErrorIfTimedOutCart: anIdCart atMoment: aMoment 
+
+	(aMoment -(timeOfCarts at: anIdCart) >= (Duration minutes: 30) ) ifTrue: [ ^self error: 'Carrito invalido por no usarlo en 30 minutos'].
+	! !
+
 !InterfaceSimulator methodsFor: 'data validation' stamp: 'JAK 6/27/2017 00:23:27'!
 validateUser: aClientId withPassword: aPassword
 	
@@ -708,25 +730,28 @@ userDoesNotExist
 
 !classDefinition: #MerchantProcessorSimulator category: #'TusLibros-Solution'!
 Object subclass: #MerchantProcessorSimulator
-	instanceVariableNames: 'balance uses validCards invalidCards'
+	instanceVariableNames: 'uses validCards invalidCards listOfValidCreditCards'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'TusLibros-Solution'!
 
-!MerchantProcessorSimulator methodsFor: 'operating' stamp: 'JAK 6/26/2017 23:03:24'!
+!MerchantProcessorSimulator methodsFor: 'operating' stamp: 'JI 6/27/2017 16:47:32'!
 charge: anAmount to: anOwner withCard: aCreditCard atDate: aDate
 	
 	self checkOwnerNameSize: anOwner .
 	self checkOwner: anOwner toOwn: aCreditCard .
 	self checkCardIsNotDated: aCreditCard atDate: aDate.
 	self increaseUses.
-	self chargeAmount: anAmount .! !
+	self chargeAmount: anAmount toCard: aCreditCard .! !
 
-!MerchantProcessorSimulator methodsFor: 'operating' stamp: 'JI 6/22/2017 17:09:21'!
-chargeAmount: anAmount .
+!MerchantProcessorSimulator methodsFor: 'operating' stamp: 'JI 6/27/2017 17:11:14'!
+chargeAmount: anAmount toCard: aCreditCard
 	
-	balance < anAmount  ifTrue: [ self error: 'No hay suficiente dinero en el banco'].
-	balance _ balance - anAmount . ! !
+	| balance | 
+	
+	balance _ listOfValidCreditCards at: aCreditCard ifAbsent: [self error: 'Tarjeta invalida'].
+	anAmount > balance  ifTrue: [ self error: 'No hay suficiente dinero en el banco'].
+	listOfValidCreditCards at: aCreditCard put: balance - anAmount . ! !
 
 !MerchantProcessorSimulator methodsFor: 'operating' stamp: 'JI 6/20/2017 17:30:18'!
 checkCardIsNotDated: aCreditCard atDate: aDate
@@ -747,9 +772,10 @@ checkOwnerNameSize: anOwner
 ! !
 
 
-!MerchantProcessorSimulator methodsFor: 'internal behaviour for simulate' stamp: 'JI 6/22/2017 16:25:36'!
-balance
-	^balance ! !
+!MerchantProcessorSimulator methodsFor: 'internal behaviour for simulate' stamp: 'JI 6/27/2017 16:58:23'!
+balanceOfCard: aCard
+	
+	^ listOfValidCreditCards at: aCard .! !
 
 !MerchantProcessorSimulator methodsFor: 'internal behaviour for simulate' stamp: 'JI 6/22/2017 16:23:38'!
 increaseUses
@@ -762,17 +788,11 @@ uses
 	^uses! !
 
 
-!MerchantProcessorSimulator methodsFor: 'initialization' stamp: 'JI 6/22/2017 16:24:41'!
-initializeWithBalance: anAmount 
-	balance _ anAmount .
-	uses _ 0.! !
-
-!MerchantProcessorSimulator methodsFor: 'initialization' stamp: 'JAK 6/26/2017 22:23:32'!
-initializeWithBalance: anAmount withValidCards: listOfValidCards andInvalidCards: listOfInvalidCards
-	balance _ anAmount .
+!MerchantProcessorSimulator methodsFor: 'initialization' stamp: 'JI 6/27/2017 16:53:44'!
+initializeWithBankInfo: accountsInfo
+	
 	uses _ 0.
-	validCards _ listOfValidCards .
-	invalidCards _ listOfInvalidCards .! !
+	listOfValidCreditCards _ accountsInfo.! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -780,13 +800,9 @@ initializeWithBalance: anAmount withValidCards: listOfValidCards andInvalidCards
 MerchantProcessorSimulator class
 	instanceVariableNames: ''!
 
-!MerchantProcessorSimulator class methodsFor: 'class initialization' stamp: 'JI 6/22/2017 16:24:05'!
-initializeWithBalance: anAmount 
-	^self new initializeWithBalance: anAmount ! !
-
-!MerchantProcessorSimulator class methodsFor: 'class initialization' stamp: 'JAK 6/26/2017 22:23:02'!
-initializeWithBalance: anAmount withValidCards: listOfValidCards andInvalidCards: listOfInvalidCards
-	^self new initializeWithBalance: anAmount withValidCards: listOfValidCards andInvalidCards: listOfInvalidCards! !
+!MerchantProcessorSimulator class methodsFor: 'class initialization' stamp: 'JI 6/27/2017 16:54:09'!
+initializeWithBankInfo: accountsInfo
+	^self new initializeWithBankInfo: accountsInfo ! !
 
 
 !classDefinition: #SalesBook category: #'TusLibros-Solution'!
