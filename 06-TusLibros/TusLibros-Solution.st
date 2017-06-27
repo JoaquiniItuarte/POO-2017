@@ -413,7 +413,7 @@ test24CheckOutCartAndListPurchases
 	self assert: (contentsOfPurchases includes: anIsbnBook2 ).
 ! !
 
-!TestTusLibros methodsFor: 'Testing Interface' stamp: 'JI 6/27/2017 15:19:32'!
+!TestTusLibros methodsFor: 'Testing Interface' stamp: 'JI 6/27/2017 15:43:31'!
 test25CantUseCartAfter30MinutosOfNotUsingIt
 		
 	self should: [interfaceSimulator listCart: aCartId atMoment: dateAndTime3] 
@@ -428,6 +428,13 @@ test25CantUseCartAfter30MinutosOfNotUsingIt
 	raise: Error
 	withExceptionDo: [ :anError | self assert: anError messageText = 'Carrito invalido por no usarlo en 30 minutos'.].
 	
+	interfaceSimulator createCartForClientId: userValid withPassword: passwordValid atMoment: dateAndTime1 .
+	interfaceSimulator addToCart: aCartId withBook: anIsbnBook  withQuantity: 1 atMoment: dateAndTime2.
+	self shouldnt: [interfaceSimulator addToCart: aCartId withBook: anIsbnBook  withQuantity: 1 atMoment: dateAndTime3.] raise: Error.
+	self shouldnt: [interfaceSimulator listCart: aCartId atMoment: dateAndTime3.] raise: Error.
+	self shouldnt: [interfaceSimulator checkOutCart: aCartId creditNumber: (aCard1 number) expireAt: '012020' from: (aCard1 owner) atMoment: dateAndTime3.] raise: Error.
+	
+	interfaceSimulator createCartForClientId: userValid withPassword: passwordValid atMoment: dateAndTime1 .
 	interfaceSimulator addToCart: aCartId withBook: anIsbnBook  withQuantity: 1 atMoment: dateAndTime2.
 	self should: [interfaceSimulator checkOutCart: aCartId creditNumber: (aCard1 number) expireAt: '012020' from: (aCard1 owner) atMoment: dateAndTime4.] 
 	raise: Error
@@ -580,20 +587,22 @@ Object subclass: #InterfaceSimulator
 	poolDictionaries: ''
 	category: 'TusLibros-Solution'!
 
-!InterfaceSimulator methodsFor: 'operating' stamp: 'JI 6/27/2017 15:05:47'!
+!InterfaceSimulator methodsFor: 'operating' stamp: 'JI 6/27/2017 15:37:04'!
 addToCart: anIdCart withBook: anIsbnBook withQuantity: quantity atMoment: aMoment
 
 	| aCart |
 	aCart _ self getCartOrRaiseError: anIdCart.
 	self raiseErrorIfTimedOutCart: anIdCart atMoment: aMoment .
+	self restartCart: anIdCart toMoment: aMoment .
 	aCart add: anIsbnBook withQuantity: quantity .! !
 
-!InterfaceSimulator methodsFor: 'operating' stamp: 'JI 6/27/2017 15:08:55'!
+!InterfaceSimulator methodsFor: 'operating' stamp: 'JI 6/27/2017 15:37:35'!
 checkOutCart: anIdCart creditNumber: creditNumber expireAt: expirationDate from: owner atMoment: aMoment
 
 	| aCart |
 	aCart _ self getCartOrRaiseError: anIdCart.
 	self raiseErrorIfTimedOutCart: anIdCart atMoment: aMoment .
+	self restartCart: anIdCart toMoment: aMoment .
 	listOfFinishedCarts at:anIdCart put: aCart.
 	cashier checkOut: aCart withCard: credit asTodayBeing: today withSalesBook: salesBook .
 	listOfCarts removeKey: anIdCart .! !
@@ -606,35 +615,24 @@ createCartForClientId: aClientId withPassword: aPassword atMoment: aMoment
 	timeOfCarts at: aClientId put: aMoment .
 	^ aClientId .! !
 
-!InterfaceSimulator methodsFor: 'operating' stamp: 'JAK 6/27/2017 00:26:23'!
-listCart: anIdCart
-	| aCart |
-	aCart _ self getCartOrRaiseError: anIdCart.
-	^aCart contents copy.! !
-
-!InterfaceSimulator methodsFor: 'operating' stamp: 'JI 6/27/2017 15:09:09'!
+!InterfaceSimulator methodsFor: 'operating' stamp: 'JI 6/27/2017 15:37:56'!
 listCart: anIdCart atMoment: aMoment
 
 	| aCart |
 	
 	aCart _ self getCartOrRaiseError: anIdCart.
 	self raiseErrorIfTimedOutCart: anIdCart atMoment: aMoment .
+	self restartCart: anIdCart toMoment: aMoment .
 	^aCart contents copy.! !
 
-!InterfaceSimulator methodsFor: 'operating' stamp: 'JAK 6/27/2017 00:33:01'!
-listPurchases: anIdCart clientId: aClientId withPassword: aPassword
-	| aCart |
-	self validateUser: aClientId withPassword: aPassword.
-	aCart _ self getFinishedCartOrRaiseError: anIdCart .
-	^aCart contents copy.! !
-
-!InterfaceSimulator methodsFor: 'operating' stamp: 'JI 6/27/2017 15:09:19'!
+!InterfaceSimulator methodsFor: 'operating' stamp: 'JI 6/27/2017 15:38:01'!
 listPurchases: anIdCart clientId: aClientId withPassword: aPassword atMoment: aMoment
 	| aCart |
 	
 	self validateUser: aClientId withPassword: aPassword.
 	aCart _ self getFinishedCartOrRaiseError: anIdCart .
 	self raiseErrorIfTimedOutCart: anIdCart atMoment: aMoment .
+	self restartCart: anIdCart toMoment: aMoment .
 	^aCart contents copy.! !
 
 !InterfaceSimulator methodsFor: 'operating' stamp: 'JI 6/27/2017 15:18:30'!
@@ -642,6 +640,11 @@ raiseErrorIfTimedOutCart: anIdCart atMoment: aMoment
 
 	(aMoment -(timeOfCarts at: anIdCart) >= (Duration minutes: 30) ) ifTrue: [ ^self error: 'Carrito invalido por no usarlo en 30 minutos'].
 	! !
+
+!InterfaceSimulator methodsFor: 'operating' stamp: 'JI 6/27/2017 15:37:24'!
+restartCart: anIdCart toMoment: aMoment 
+
+	timeOfCarts at: anIdCart put: aMoment .! !
 
 
 !InterfaceSimulator methodsFor: 'initialization' stamp: 'JI 6/27/2017 15:11:12'!
