@@ -1,47 +1,64 @@
 !classDefinition: #TestsMetaprogramacion category: #Metaprogramacion!
 TestCase subclass: #TestsMetaprogramacion
-	instanceVariableNames: 'emptyName spacedName symboledName aSuperClassWithInstance aIntermediateClassWithInstance aSubClassWithInstance aIntermediateClassWithoutInstance'
+	instanceVariableNames: 'emptyName spacedName symboledName aSuperClassWithInstance aIntermediateClassWithInstance aSubClassWithInstance aIntermediateClassWithoutInstance variableNameForSuperClass variableNameForIntermediateClass variableNameForSubClass'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Metaprogramacion'!
 
-!TestsMetaprogramacion methodsFor: 'SetUp' stamp: 'Ji 6/29/2017 21:26:55'!
-setUp
+!TestsMetaprogramacion methodsFor: 'SetUp' stamp: 'JI 7/4/2017 14:32:06'!
+classesSetUp
 
-	emptyName _ ''.
-	spacedName _ 'a b'.
-	symboledName _ 'a+'.
-	
-	
 	aSuperClassWithInstance _ Object subclass: #SuperClaseTestWithInstance
-	instanceVariableNames: 'var'
+	instanceVariableNames: variableNameForSuperClass
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Metaprogramacion'.
 	
 	aIntermediateClassWithInstance  _ aSuperClassWithInstance subclass: #IntermediateClaseTestWithInstance
-	instanceVariableNames: 'var'
+	instanceVariableNames: variableNameForIntermediateClass
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Metaprogramacion'.
 	
 	aSubClassWithInstance _ aIntermediateClassWithInstance subclass: #SubClaseTestWithInstance
-	instanceVariableNames: 'var'
+	instanceVariableNames: variableNameForSubClass
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Metaprogramacion'.! !
 
+!TestsMetaprogramacion methodsFor: 'SetUp' stamp: 'JI 7/4/2017 14:32:31'!
+setUp
 
-!TestsMetaprogramacion methodsFor: 'Adding a variable' stamp: 'Ji 6/29/2017 21:39:16'!
+	self variableNames.
+	
+	
+	self classesSetUp .! !
+
+!TestsMetaprogramacion methodsFor: 'SetUp' stamp: 'JI 7/4/2017 14:32:38'!
+variableNames
+
+	emptyName _ ''.
+	spacedName _ 'a b'.
+	symboledName _ 'a+'.
+	
+	variableNameForSuperClass _ 'superVariable'.
+	variableNameForIntermediateClass _ 'intermediateVariable'.
+	variableNameForSubClass _ 'subVariable'.! !
+
+
+!TestsMetaprogramacion methodsFor: 'Adding a variable' stamp: 'JI 7/4/2017 14:34:50'!
 test01LaVariableAAgregarNoPuedeTenerNombreVacio
 
 	self
 	 	should: [AddInstVariable named: emptyName in: aIntermediateClassWithoutInstance.]
 		raise: Error
 		withExceptionDo: [ :anError |
-			self assert: anError messageText equals: 'La variable tiene nombre invalido'].! !
+			self assert: anError messageText equals: 'La variable tiene nombre invalido'].
+		
+		
+	self deleteClases .! !
 
-!TestsMetaprogramacion methodsFor: 'Adding a variable' stamp: 'Ji 6/29/2017 21:24:33'!
+!TestsMetaprogramacion methodsFor: 'Adding a variable' stamp: 'JI 7/4/2017 14:34:57'!
 test02LaVariableAAgregarNoPuedeTenerNombreConEspacios
 
 	
@@ -49,7 +66,9 @@ test02LaVariableAAgregarNoPuedeTenerNombreConEspacios
 	 	should: [AddInstVariable named: spacedName in: self class.]
 		raise: Error
 		withExceptionDo: [ :anError |
-			self assert: anError messageText equals: 'La variable tiene nombre invalido'].! !
+			self assert: anError messageText equals: 'La variable tiene nombre invalido'].
+		
+	self deleteClases .! !
 
 !TestsMetaprogramacion methodsFor: 'Adding a variable' stamp: 'Ji 6/29/2017 21:24:50'!
 test03LaVariableAAgregarNoPuedeTenerSimbolosRaros
@@ -61,134 +80,81 @@ test03LaVariableAAgregarNoPuedeTenerSimbolosRaros
 		withExceptionDo: [ :anError |
 			self assert: anError messageText equals: 'La variable tiene nombre invalido'].! !
 
-!TestsMetaprogramacion methodsFor: 'Adding a variable' stamp: 'Ji 6/29/2017 21:28:55'!
+!TestsMetaprogramacion methodsFor: 'Adding a variable' stamp: 'JI 7/4/2017 14:35:08'!
 test05LaVariableAAgregarExisteEnLaSuperclase
 
 	
 
 	self
-	 	should: [AddInstVariable named: 'var' in: aSubClassWithInstance .]
+	 	should: [AddInstVariable named: variableNameForIntermediateClass in: aSubClassWithInstance .]
 		raise: Error
 		withExceptionDo: [ :anError |
 			self assert: anError messageText equals: 'La variable ya existe en la clase o superclase'].
 		
 	self
-	 	should: [AddInstVariable named: 'varSub' in: aIntermediateClassWithInstance .]
+	 	should: [AddInstVariable named: variableNameForSuperClass in: aIntermediateClassWithInstance .]
 		raise: Error
 		withExceptionDo: [ :anError |
 			self assert: anError messageText equals: 'La variable ya existe en la clase o superclase'].
 		
 	self
-		should: [AddInstVariable named: 'varSuper' in: aSuperClassWithInstance .]
+		should: [AddInstVariable named: variableNameForSuperClass in: aSuperClassWithInstance .]
 		raise: Error
 		withExceptionDo: [ :anError |
 			self assert: anError messageText equals: 'La variable ya existe en la clase o superclase'].
 		
+	
+	self deleteClases .! !
+
+!TestsMetaprogramacion methodsFor: 'Adding a variable' stamp: 'JI 7/4/2017 14:37:59'!
+test06LaVariableAAgregarNoExisteEnAlgunTemporalDeMiClase
+
+	
+	
+	aIntermediateClassWithInstance compile: 'met1 |var| var _ 1.' classified: 'as'.
+	self
+	 	should: [ AddInstVariable named: 'var' in: aIntermediateClassWithInstance .]
+		raise: Warning
+		withExceptionDo: [ :anError |
+			self assert: anError messageText equals: 'Variable local con el mismo nombre'].
+	
+	
+	self deleteClases .! !
+
+!TestsMetaprogramacion methodsFor: 'Adding a variable' stamp: 'JI 7/4/2017 14:38:44'!
+test07LaVariableAAgregarNoExisteEnAlgunTemporalDeMiSubclase
+
+	aSubClassWithInstance compile: 'met1 |var| var _ 1.' classified: 'as'.
+	self
+	 	should: [ AddInstVariable named: 'var' in: aSuperClassWithInstance .]
+		raise: Warning
+		withExceptionDo: [ :anError |
+			self assert: anError messageText equals: 'Variable local con el mismo nombre'].
+	
+	
+	self deleteClases .! !
+
+!TestsMetaprogramacion methodsFor: 'Adding a variable' stamp: 'JI 7/4/2017 14:41:30'!
+test08LaVariableAdecuadaSeAgregaALaClase
+	
+	| aNewClassModifier |
+	
+	aNewClassModifier _ AddInstVariable named: 'var' in: aIntermediateClassWithInstance .
+	
+	aNewClassModifier applyChanges.
+	
+	self assert: (aIntermediateClassWithInstance instVarNames includes: 'var').
+	
+	
+	self deleteClases .! !
+
+
+!TestsMetaprogramacion methodsFor: 'class modification messages' stamp: 'JI 7/4/2017 14:34:15'!
+deleteClases
+
 	aSubClassWithInstance removeFromSystem .
 	aIntermediateClassWithInstance removeFromSystem .
 	aSuperClassWithInstance removeFromSystem .! !
-
-!TestsMetaprogramacion methodsFor: 'Adding a variable' stamp: 'Ji 6/29/2017 21:10:13'!
-test06LaVariableAAgregarNoExisteEnAlgunTemporalDeMiClase
-
-	| aIntermediateClass aSubClass aSuperClass |
-	aSuperClass _ Object subclass: #SuperClaseTest
-	instanceVariableNames: 'varSuper'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'Metaprogramacion'.
-	
-	aIntermediateClass  _ aSuperClass subclass: #IntermediateClaseTest
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'Metaprogramacion'.
-	
-	aSubClass _ aIntermediateClass subclass: #SubClaseTest
-	instanceVariableNames: 'varSub'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'Metaprogramacion'.
-	
-	aIntermediateClass compile: 'met1 |var| var _ 1.' classified: 'as'.
-	self
-	 	should: [ AddInstVariable named: 'var' in: aIntermediateClass .]
-		raise: Warning
-		withExceptionDo: [ :anError |
-			self assert: anError messageText equals: 'Variable local con el mismo nombre'].
-	
-	
-	aSubClass removeFromSystem.
-	aSuperClass removeFromSystem .
-	aIntermediateClass removeFromSystem .! !
-
-!TestsMetaprogramacion methodsFor: 'Adding a variable' stamp: 'Ji 6/29/2017 21:13:59'!
-test07LaVariableAAgregarNoExisteEnAlgunTemporalDeMiSubclase
-
-	| aIntermediateClass aSubClass aSuperClass |
-	aSuperClass _ Object subclass: #SuperClaseTest
-	instanceVariableNames: 'varSuper'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'Metaprogramacion'.
-	
-	aIntermediateClass  _ aSuperClass subclass: #IntermediateClaseTest
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'Metaprogramacion'.
-	
-	aSubClass _ aIntermediateClass subclass: #SubClaseTest
-	instanceVariableNames: 's'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'Metaprogramacion'.
-	
-	aSubClass compile: 'met1 |var| var _ 1.' classified: 'as'.
-	self
-	 	should: [ AddInstVariable named: 'var' in: aIntermediateClass .]
-		raise: Warning
-		withExceptionDo: [ :anError |
-			self assert: anError messageText equals: 'Variable local con el mismo nombre'].
-	
-	
-	aSubClass removeFromSystem.
-	aSuperClass removeFromSystem .
-	aIntermediateClass removeFromSystem .! !
-
-!TestsMetaprogramacion methodsFor: 'Adding a variable' stamp: 'Ji 6/29/2017 21:19:33'!
-test08LaVariableAdecuadaSeAgregaALaClase
-
-	| aIntermediateClass aSubClass aSuperClass aNewSomething |
-	aSuperClass _ Object subclass: #SuperClaseTest
-	instanceVariableNames: 'varSuper'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'Metaprogramacion'.
-	
-	aIntermediateClass  _ aSuperClass subclass: #IntermediateClaseTest
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'Metaprogramacion'.
-	
-	aSubClass _ aIntermediateClass subclass: #SubClaseTest
-	instanceVariableNames: 's'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'Metaprogramacion'.
-	
-	
-	aNewSomething _ AddInstVariable named: 'var' in: aIntermediateClass .
-	
-	aNewSomething applyChanges.
-	
-	self assert: (aIntermediateClass instVarNames includes: 'var').
-	
-	
-	aSubClass removeFromSystem.
-	aSuperClass removeFromSystem .
-	aIntermediateClass removeFromSystem .! !
 
 
 !classDefinition: #AddInstVariable category: #Metaprogramacion!
@@ -238,35 +204,3 @@ named: aVariableName in: aClass
 	^ self new named: aVariableName in: aClass .
 	
 	! !
-
-
-!classDefinition: #SuperClaseTest category: #Metaprogramacion!
-Object subclass: #SuperClaseTest
-	instanceVariableNames: 'varSuper'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'Metaprogramacion'!
-
-
-!classDefinition: #IntermediateClaseTest category: #Metaprogramacion!
-SuperClaseTest subclass: #IntermediateClaseTest
-	instanceVariableNames: 'var'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'Metaprogramacion'!
-
-
-!classDefinition: #SubClaseTest category: #Metaprogramacion!
-IntermediateClaseTest subclass: #SubClaseTest
-	instanceVariableNames: 's'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'Metaprogramacion'!
-
-
-!classDefinition: #SuperClaseTestWithInstance category: #Metaprogramacion!
-Object subclass: #SuperClaseTestWithInstance
-	instanceVariableNames: 'var'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'Metaprogramacion'!
